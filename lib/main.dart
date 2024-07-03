@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/nav_component.dart';
+import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
+import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
@@ -14,11 +16,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'ePresence',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const NavComponent(),
+      getPages: Routes.pages,
     );
   }
 }

@@ -19,8 +19,23 @@ class AppTheme {
       secondaryHeaderColor: secondaryColor,
       scaffoldBackgroundColor: backgroundColor,
       textTheme: const TextTheme(
-        headlineLarge: TextStyle(
+        displayLarge: TextStyle(
+          fontSize: 48.0,
+          fontWeight: FontWeight.bold,
+          color: textColor,
+        ),
+        displayMedium: TextStyle(
           fontSize: 36.0,
+          fontWeight: FontWeight.bold,
+          color: textColor,
+        ),
+        displaySmall: TextStyle(
+          fontSize: 24.0,
+          fontWeight: FontWeight.bold,
+          color: textColor,
+        ),
+        headlineLarge: TextStyle(
+          fontSize: 32.0,
           fontWeight: FontWeight.bold,
           color: textColor,
         ),
@@ -30,7 +45,7 @@ class AppTheme {
           color: textColor,
         ),
         headlineSmall: TextStyle(
-          fontSize: 24.0,
+          fontSize: 20.0,
           fontWeight: FontWeight.bold,
           color: textColor,
         ),
@@ -39,6 +54,10 @@ class AppTheme {
           color: textColor,
         ),
         bodyMedium: TextStyle(
+          fontSize: 16.0,
+          color: textColor,
+        ),
+        bodySmall: TextStyle(
           fontSize: 14.0,
           color: textColor,
         ),
@@ -67,7 +86,7 @@ class AppTheme {
         elevation: 5,
         color: lightColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(5),
         ),
       ),
       colorScheme: const ColorScheme(
