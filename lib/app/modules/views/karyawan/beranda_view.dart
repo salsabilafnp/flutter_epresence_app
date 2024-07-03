@@ -33,7 +33,9 @@ class BerandaView extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton(
                     style: AppTheme.primaryOutlinedButtonStyle,
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(RouteNames.riwayatPresensiStaff);
+                    },
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: 15),
                       child: Column(

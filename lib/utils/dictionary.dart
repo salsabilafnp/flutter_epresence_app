@@ -14,9 +14,7 @@ class Dictionary {
   static const presensiHariIni = 'Presensi Hari ini';
   static const hadirMasuk = 'Masuk';
   static const hadirPulang = 'Pulang';
-  static const waktuMasuk = "Waktu Masuk";
   static const lokasiMasuk = "Lokasi Masuk";
-  static const waktuPulang = "Waktu Pulang";
   static const lokasiPulang = "Lokasi Pulang";
 
   // Cuti
@@ -29,6 +27,13 @@ class Dictionary {
   static const waktuPengajuan = 'Diajukan Pada';
   static const ajukan = 'Ajukan';
   // jenis ajuan cuti
+  static const sakit = 'Sakit';
+  static const cuti = 'Cuti';
+  static const wfh = 'Work From Home (WFH)';
+  // status
+  static const diajukan = 'Diajukan';
+  static const disetujui = 'Disetujui';
+  static const ditolak = 'Ditolak';
 
   // Auth
   static const logIn = 'Masuk';
