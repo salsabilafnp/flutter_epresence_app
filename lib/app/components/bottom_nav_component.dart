@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class BottomNavComponent extends StatelessWidget {
   final int currentIndex;
@@ -26,7 +26,7 @@ class BottomNavComponent extends StatelessWidget {
       unselectedLabelStyle: const TextStyle(fontSize: 12),
       items: [
         _bottomNavigationBarItem(
-          icon: const Icon(Icons.home_outlined),
+          icon: const Icon(Symbols.home_rounded),
           label: Dictionary.beranda,
         ),
         _bottomNavigationBarItem(
@@ -45,10 +45,5 @@ class BottomNavComponent extends StatelessWidget {
       icon: icon,
       label: label,
     );
-  }
-
-  Future<String> getUserRole() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('role') ?? 'karyawan';
   }
 }

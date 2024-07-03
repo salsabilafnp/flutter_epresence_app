@@ -10,6 +10,7 @@ class Dictionary {
   static const profil = "Profil";
 
   // Presensi
+  static const presensiHariIni = 'Presensi Hari ini';
   static const hadirMasuk = 'Masuk';
   static const hadirPulang = 'Pulang';
   static const waktuMasuk = "Waktu Masuk";

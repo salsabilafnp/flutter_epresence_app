@@ -28,16 +28,12 @@ class TimeDateDisplay extends StatelessWidget {
             children: [
               Text(
                 formattedDate,
-                style: TextStyle(
-                  fontSize: 18,
-                ),
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
                 formattedTime,
-                style: TextStyle(
-                  fontSize: 28,
-                ),
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
             ],
           );

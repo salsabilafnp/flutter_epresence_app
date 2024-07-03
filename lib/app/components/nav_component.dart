@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/bottom_nav_component.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/beranda_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/profil_view.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class NavComponent extends StatefulWidget {
   const NavComponent({super.key});
@@ -39,6 +40,12 @@ class _NavComponentState extends State<NavComponent> {
         currentIndex: _tabIndex,
         onTabTapped: changeTabIndex,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        shape: const CircleBorder(),
+        child: const Icon(Symbols.familiar_face_and_zone),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

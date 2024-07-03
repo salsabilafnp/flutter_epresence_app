@@ -3,6 +3,7 @@ import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/time_date_display.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class BerandaView extends StatelessWidget {
   const BerandaView({super.key});
@@ -22,8 +23,8 @@ class BerandaView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildPresensiHariIni(presensiMasuk, presensiPulang),
-            const SizedBox(height: 20),
+            _buildPresensiHariIni(context, presensiMasuk, presensiPulang),
+            const SizedBox(height: 30),
             Row(
               children: [
                 // Riwayat Presensi
@@ -67,25 +68,24 @@ class BerandaView extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             FilledButton.icon(
-              style: AppTheme.secondaryButtonStyle,
+              style: AppTheme.primaryButtonStyle,
               onPressed: () {},
-              icon: Icon(Icons.edit_note_outlined),
+              icon: Icon(Symbols.note_alt),
               label: Text(Dictionary.pengajuanCuti),
             )
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
-  Widget _buildPresensiHariIni(String presensiMasuk, String presensiPulang) {
+  Widget _buildPresensiHariIni(
+    BuildContext context,
+    String presensiMasuk,
+    String presensiPulang,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -93,20 +93,63 @@ class BerandaView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TimeDateDisplay(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
+            Text(
+              Dictionary.presensiHariIni,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Column(
+                Row(
                   children: [
-                    Text(Dictionary.waktuMasuk),
-                    Text(Dictionary.lokasiMasuk),
+                    Icon(
+                      Icons.login_outlined,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 15),
+                    Column(
+                      children: [
+                        Text(
+                          Dictionary.hadirMasuk,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          presensiMasuk,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-                Column(
+                Row(
                   children: [
-                    Text(Dictionary.waktuMasuk),
-                    Text(Dictionary.lokasiMasuk),
+                    Icon(
+                      Icons.logout_outlined,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    const SizedBox(width: 15),
+                    Column(
+                      children: [
+                        Text(
+                          Dictionary.hadirPulang,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          presensiPulang,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ],
