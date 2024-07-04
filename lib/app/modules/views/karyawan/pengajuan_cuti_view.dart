@@ -34,7 +34,11 @@ class _PengajuanCutiViewState extends State<PengajuanCutiView> {
                 controller: jenisPengajuanController,
                 inputLabel: Dictionary.jenisPengajuan,
                 isDropdown: true,
-                dropdownItems: ['Sakit', 'Cuti', 'WFH'],
+                dropdownItems: [
+                  Dictionary.diajukan,
+                  Dictionary.disetujui,
+                  Dictionary.ditolak,
+                ],
                 icon: Icons.assignment,
                 onChanged: (value) {
                   setState(() {

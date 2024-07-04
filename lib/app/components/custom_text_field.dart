@@ -50,7 +50,7 @@ class CustomTextField extends StatelessWidget {
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
-              isDense: true, // Mengurangi tinggi dropdown
+              isDense: true,
               value: controller?.text.isEmpty ?? true ? null : controller?.text,
               onChanged: (String? newValue) {
                 if (newValue != null) {

@@ -8,7 +8,17 @@ class Dictionary {
   static const riwayatPresensi = "Riwayat Presensi";
   static const riwayatAjuanCuti = "Riwayat Ajuan Cuti";
   static const pengajuanCuti = "Pengajuan Cuti";
+  static const detailAjuanCuti = "Detail Ajuan Cuti";
   static const profil = "Profil";
+
+  // Optional Menu
+  static const filter = "Filter";
+  static const terapkanFilter = "Terapkan";
+  static const filterTanggal = "Berdasarkan Tanggal";
+  static const tanggalMulai = "Dari Tanggal";
+  static const tanggalAkhir = "Sampai Tanggal";
+  static const filterJenisAjuan = "Berdasarkan Jenis Pengajuan";
+  static const filterStatusAjuan = "Berdasarkan Status Ajuan";
 
   // Presensi
   static const presensiHariIni = 'Presensi Hari ini';

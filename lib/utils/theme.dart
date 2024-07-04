@@ -54,11 +54,11 @@ class AppTheme {
           color: textColor,
         ),
         bodyMedium: TextStyle(
-          fontSize: 16.0,
+          fontSize: 14.0,
           color: textColor,
         ),
         bodySmall: TextStyle(
-          fontSize: 14.0,
+          fontSize: 12.0,
           color: textColor,
         ),
       ),
@@ -94,10 +94,13 @@ class AppTheme {
         secondary: secondaryColor,
         surface: backgroundColor,
         error: dangerColor,
+        errorContainer: warningColor,
+        tertiary: infoColor,
         onPrimary: lightColor,
         onSecondary: lightColor,
         onSurface: textColor,
         onError: lightColor,
+        onErrorContainer: successColor,
         brightness: Brightness.light,
       ),
     );
