@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
+import 'package:flutter_epresence_app/app/modules/views/karyawan/lokasi_view.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -175,7 +176,18 @@ class _KameraViewState extends State<KameraView> {
                     ),
                     // Lihat Lokasi
                     ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (_currentPosition != null) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => LokasiView(
+                                latitude: _currentPosition!.latitude,
+                                longitude: _currentPosition!.longitude,
+                              ),
+                            ),
+                          );
+                        }
+                      },
                       icon: Icon(Icons.location_on),
                       label: Text(Dictionary.lihatLokasi),
                     ),

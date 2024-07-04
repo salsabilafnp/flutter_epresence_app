@@ -14,16 +14,17 @@ environment:
 
 # Dependencies specify other packages that your package needs in order to work.
 dependencies:
+  camera: ^0.9.4+5
+  file_picker: ^4.2.5
   flutter:
     sdk: flutter
-  file_picker: ^4.2.5
-  camera: ^0.9.4+5
-  geolocator: ^7.7.0
   flutter_map: ^7.0.2
+  geolocator: ^7.7.0
   get: ^4.6.5
   get_cli: ^1.8.1
   get_storage: ^2.0.3
   intl: ^0.18.1
+  latlong2: ^0.9.1
   material_symbols_icons: ^4.2762.0
   shared_preferences: ^2.2.1
 
