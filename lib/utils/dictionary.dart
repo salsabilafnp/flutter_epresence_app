@@ -36,6 +36,7 @@ class Dictionary {
   static const statusAjuan = 'Status Ajuan';
   static const waktuPengajuan = 'Diajukan Pada';
   static const ajukan = 'Ajukan';
+  static const ubahAjuan = 'Simpan Perubahan';
   // jenis ajuan cuti
   static const sakit = 'Sakit';
   static const cuti = 'Cuti';

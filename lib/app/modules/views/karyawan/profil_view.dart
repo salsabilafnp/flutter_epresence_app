@@ -9,11 +9,11 @@ class ProfilView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         pageTitle: Dictionary.profil,
       ),
       body: Container(
-        margin: EdgeInsets.all(20),
+        margin: const EdgeInsets.all(20),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -41,9 +41,9 @@ class ProfilView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage('assets/images/avatar.png'),
+              backgroundImage: AssetImage('assets/images/ava.jpg'),
             ),
             const SizedBox(height: 15),
             Text(

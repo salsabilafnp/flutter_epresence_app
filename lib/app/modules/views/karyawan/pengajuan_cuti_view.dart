@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:intl/intl.dart';
 
 class PengajuanCutiView extends StatefulWidget {
   const PengajuanCutiView({super.key});
@@ -17,16 +18,21 @@ class _PengajuanCutiViewState extends State<PengajuanCutiView> {
   final TextEditingController durasiController = TextEditingController();
   final TextEditingController alasanController = TextEditingController();
   final TextEditingController buktiFileController = TextEditingController();
+  final TextEditingController statusController =
+      TextEditingController(text: Dictionary.diajukan);
+  final TextEditingController waktuPengajuanController = TextEditingController(
+      text:
+          DateFormat('EEEE, d MMMM y HH:mm').format(DateTime.now()).toString());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         pageTitle: Dictionary.pengajuanCuti,
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.all(20),
+          margin: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -34,10 +40,10 @@ class _PengajuanCutiViewState extends State<PengajuanCutiView> {
                 controller: jenisPengajuanController,
                 inputLabel: Dictionary.jenisPengajuan,
                 isDropdown: true,
-                dropdownItems: [
-                  Dictionary.diajukan,
-                  Dictionary.disetujui,
-                  Dictionary.ditolak,
+                dropdownItems: const [
+                  Dictionary.sakit,
+                  Dictionary.cuti,
+                  Dictionary.wfh,
                 ],
                 icon: Icons.assignment,
                 onChanged: (value) {
@@ -74,10 +80,12 @@ class _PengajuanCutiViewState extends State<PengajuanCutiView> {
                 icon: Icons.attach_file,
               ),
               CustomTextField(
+                controller: statusController,
                 inputLabel: Dictionary.statusAjuan,
                 readOnly: true,
               ),
               CustomTextField(
+                controller: waktuPengajuanController,
                 inputLabel: Dictionary.waktuPengajuan,
                 readOnly: true,
               ),

@@ -84,7 +84,7 @@ class CustomTextField extends StatelessWidget {
             );
             if (pickedDate != null) {
               String formattedDate =
-                  DateFormat('EEEE, d MMMM y', 'id_ID').format(pickedDate);
+                  DateFormat('EEEE, d MMMM y').format(pickedDate);
               controller?.text = formattedDate;
               if (onChanged != null) onChanged!(formattedDate);
             }

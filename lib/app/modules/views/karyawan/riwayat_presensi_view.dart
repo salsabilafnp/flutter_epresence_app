@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class RiwayatPresensiView extends StatefulWidget {
   const RiwayatPresensiView({super.key});
@@ -28,24 +30,28 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
 
   final List<Map<String, String>> _presensiData = [
     {
-      'date': '2024-07-01',
-      'day': 'Senin',
-      'timeIn': '08:00',
-      'timeOut': '17:00',
-      'locationIn': '114.56789012\n-8.1234567',
-      'locationOut': '114.56789012\n-8.1234567',
-      'locationArea': 'Dalam Area Kantor'
+      'tanggal': '2024-07-01',
+      'waktuMasuk': '08:00',
+      'waktuPulang': '17:00',
+      'lokasiMasuk': '114.56789012\n-8.1234567',
+      'lokasiPulang': '114.56789012\n-8.1234567',
     },
     {
-      'date': '2024-07-02',
-      'day': 'Selasa',
-      'timeIn': '08:15',
-      'timeOut': '17:05',
-      'locationIn': '114.56789012\n-8.1234567',
-      'locationOut': '114.56789012\n-8.1234567',
-      'locationArea': 'Dalam Area Kantor'
+      'tanggal': '2024-07-02',
+      'waktuMasuk': '08:15',
+      'waktuPulang': '17:05',
+      'lokasiMasuk': '114.56789012\n-8.1234567',
+      'lokasiPulang': '114.56789012\n-8.1234567',
     },
   ];
+
+  List<RxBool> _isExpandedList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _isExpandedList = List.generate(_presensiData.length, (index) => false.obs);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +70,7 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
                 itemCount: _presensiData.length,
                 itemBuilder: (context, index) {
                   final presensi = _presensiData[index];
-                  return _buildPresensiCard(presensi);
+                  return _buildPresensiCard(presensi, index);
                 },
               ),
             ),
@@ -92,38 +98,104 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
     );
   }
 
-  Widget _buildPresensiCard(Map<String, String> presensi) {
+  Widget _buildPresensiCard(Map<String, String> presensi, int index) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10),
-      child: InkWell(
+      child: GestureDetector(
         onTap: () {
-          // _showPresensiDetail(presensi);
+          _isExpandedList[index].value = !_isExpandedList[index].value;
         },
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+        child: Obx(
+          () => Column(
             children: [
-              Column(
-                children: [
-                  Text('${presensi['day']}'),
-                  Text('${presensi['date']}'),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        Text(DateFormat('EEEE')
+                            .format(DateTime.parse(presensi['tanggal']!))),
+                        Text(
+                          DateFormat('dd MMMM yyyy')
+                              .format(DateTime.parse(presensi['tanggal']!)),
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(Dictionary.hadirMasuk),
+                        Text(
+                          '${presensi['waktuMasuk']}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(Dictionary.hadirPulang),
+                        Text(
+                          '${presensi['waktuPulang']}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Icon(
+                      _isExpandedList[index].value
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                    ),
+                  ],
+                ),
               ),
-              Column(
-                children: [
-                  Text(Dictionary.hadirMasuk),
-                  Text('${presensi['timeIn']}'),
-                ],
-              ),
-              Column(
-                children: [
-                  Text(Dictionary.hadirPulang),
-                  Text('${presensi['timeOut']}'),
-                ],
-              ),
-              const Icon(Icons.keyboard_arrow_down),
+              if (_isExpandedList[index].value)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          Text(Dictionary.lokasiMasuk),
+                          const SizedBox(height: 5),
+                          Text(
+                            '${presensi['lokasiMasuk']}',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 5),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(Dictionary.lokasiPulang),
+                          const SizedBox(height: 5),
+                          Text(
+                            '${presensi['lokasiPulang']}',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 5),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
             ],
           ),
         ),

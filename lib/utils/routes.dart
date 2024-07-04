@@ -1,4 +1,5 @@
 import 'package:flutter_epresence_app/app/modules/views/karyawan/beranda_view.dart';
+import 'package:flutter_epresence_app/app/modules/views/karyawan/detail_cuti_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/notifikasi_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/pengajuan_cuti_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/profil_view.dart';
@@ -16,6 +17,7 @@ class RouteNames {
   static const lokasiPresensi = '/lokasi-presensi';
   static const kameraCuti = '/kamera-cuti';
   static const pengajuanCuti = '/pengajuan-cuti';
+  static const detailCutiStaff = '/detail-cuti-staff';
   static const riwayatPresensiStaff = '/riwayat-presensi-staff';
   static const riwayatCutiStaff = '/riwayat-cuti-staff';
   static const profilStaff = '/profile-staff';
@@ -46,6 +48,10 @@ class Routes {
     GetPage(
       name: RouteNames.pengajuanCuti,
       page: () => PengajuanCutiView(),
+    ),
+    GetPage(
+      name: RouteNames.detailCutiStaff,
+      page: () => DetailCutiView(),
     ),
     GetPage(
       name: RouteNames.profilStaff,

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class RiwayatCutiView extends StatefulWidget {
@@ -156,7 +158,7 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                       inputLabel: Dictionary.jenisPengajuan,
                       isDropdown: true,
                       dropdownItems: [
-                        'Semua',
+                        _selectedPermitType,
                         Dictionary.sakit,
                         Dictionary.cuti,
                         Dictionary.wfh,
@@ -180,7 +182,7 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                       inputLabel: Dictionary.statusAjuan,
                       isDropdown: true,
                       dropdownItems: [
-                        'Semua',
+                        _selectedStatus,
                         Dictionary.diajukan,
                         Dictionary.disetujui,
                         Dictionary.ditolak,
@@ -222,8 +224,10 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
   Widget _buildCutiCard(Map<String, String> ajuanCuti) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10),
-      child: GestureDetector(
-        onTap: () {},
+      child: InkWell(
+        onTap: () {
+          Get.toNamed(RouteNames.detailCutiStaff);
+        },
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
