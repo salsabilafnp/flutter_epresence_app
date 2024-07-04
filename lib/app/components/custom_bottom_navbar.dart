@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
-class BottomNavComponent extends StatelessWidget {
+class CustomBottomNavbar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTabTapped;
 
-  const BottomNavComponent({
+  const CustomBottomNavbar({
     super.key,
     required this.currentIndex,
     required this.onTabTapped,

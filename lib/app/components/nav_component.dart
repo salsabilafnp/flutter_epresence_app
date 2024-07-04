@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_epresence_app/app/components/bottom_nav_component.dart';
+import 'package:flutter_epresence_app/app/components/custom_bottom_navbar.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/beranda_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/profil_view.dart';
+import 'package:flutter_epresence_app/utils/routes.dart';
+import 'package:get/get.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class NavComponent extends StatefulWidget {
@@ -20,12 +22,6 @@ class _NavComponentState extends State<NavComponent> {
     });
   }
 
-  void onFabTapped() {
-    setState(() {
-      _tabIndex = 1; // Pindah ke tab "Catat Presensi" saat FAB ditekan
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,12 +32,14 @@ class _NavComponentState extends State<NavComponent> {
           ProfilView(),
         ],
       ),
-      bottomNavigationBar: BottomNavComponent(
+      bottomNavigationBar: CustomBottomNavbar(
         currentIndex: _tabIndex,
         onTabTapped: changeTabIndex,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Get.toNamed(RouteNames.kameraPresensi);
+        },
         shape: const CircleBorder(),
         child: const Icon(Symbols.familiar_face_and_zone),
       ),

@@ -6,12 +6,14 @@ class Dictionary {
   static const beranda = "Beranda";
   static const notifikasi = "Notifikasi";
   static const riwayatPresensi = "Riwayat Presensi";
+  static const catatPresensiMasuk = "Presensi Masuk";
   static const riwayatAjuanCuti = "Riwayat Ajuan Cuti";
   static const pengajuanCuti = "Pengajuan Cuti";
   static const detailAjuanCuti = "Detail Ajuan Cuti";
   static const profil = "Profil";
 
   // Optional Menu
+  static const lihatLokasi = "Lihat Lokasi";
   static const filter = "Filter";
   static const terapkanFilter = "Terapkan";
   static const filterTanggal = "Berdasarkan Tanggal";
@@ -22,6 +24,8 @@ class Dictionary {
 
   // Presensi
   static const presensiHariIni = 'Presensi Hari ini';
+  static const presensiMasuk = 'Presensi Masuk';
+  static const presensiPulang = 'Presensi Pulang';
   static const hadirMasuk = 'Masuk';
   static const hadirPulang = 'Pulang';
   static const lokasiMasuk = "Lokasi Masuk";

@@ -17,6 +17,9 @@ dependencies:
   flutter:
     sdk: flutter
   file_picker: ^4.2.5
+  camera: ^0.9.4+5
+  geolocator: ^7.7.0
+  flutter_map: ^7.0.2
   get: ^4.6.5
   get_cli: ^1.8.1
   get_storage: ^2.0.3
