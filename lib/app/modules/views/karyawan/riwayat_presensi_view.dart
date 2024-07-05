@@ -85,7 +85,7 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
 
   Widget _buildPresensiCard(Presensi presensi, int index) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.only(bottom: 10),
       child: GestureDetector(
         onTap: () {
           _isExpandedList[index].value = !_isExpandedList[index].value;

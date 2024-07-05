@@ -5,16 +5,19 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 class CustomBottomNavbar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTabTapped;
+  final String role;
 
   const CustomBottomNavbar({
     super.key,
     required this.currentIndex,
     required this.onTabTapped,
+    required this.role,
   });
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       onTap: onTabTapped,
       currentIndex: currentIndex,
@@ -24,17 +27,48 @@ class CustomBottomNavbar extends StatelessWidget {
       selectedItemColor: Theme.of(context).colorScheme.primary,
       selectedLabelStyle: const TextStyle(fontSize: 14),
       unselectedLabelStyle: const TextStyle(fontSize: 12),
-      items: [
-        _bottomNavigationBarItem(
-          icon: const Icon(Symbols.home_rounded),
-          label: Dictionary.beranda,
-        ),
-        _bottomNavigationBarItem(
-          icon: const Icon(Icons.person_outline),
-          label: Dictionary.profil,
-        ),
-      ],
+      items: role == Dictionary.admin
+          ? _buildAdminMenuItems()
+          : _buildStaffMenuItems(),
     );
+  }
+
+  List<BottomNavigationBarItem> _buildAdminMenuItems() {
+    List<BottomNavigationBarItem> items = [
+      _bottomNavigationBarItem(
+        icon: const Icon(Symbols.home_rounded),
+        label: Dictionary.beranda,
+      ),
+      _bottomNavigationBarItem(
+        icon: const Icon(Icons.work_history_outlined),
+        label: Dictionary.presensi,
+      ),
+      _bottomNavigationBarItem(
+        icon: const Icon(Icons.edit_calendar_outlined),
+        label: Dictionary.cuti,
+      ),
+      _bottomNavigationBarItem(
+        icon: const Icon(Icons.person_outline),
+        label: Dictionary.profil,
+      ),
+    ];
+
+    return items;
+  }
+
+  List<BottomNavigationBarItem> _buildStaffMenuItems() {
+    List<BottomNavigationBarItem> items = [
+      _bottomNavigationBarItem(
+        icon: const Icon(Symbols.home_rounded),
+        label: Dictionary.beranda,
+      ),
+      _bottomNavigationBarItem(
+        icon: const Icon(Icons.person_outline),
+        label: Dictionary.profil,
+      ),
+    ];
+
+    return items;
   }
 
   BottomNavigationBarItem _bottomNavigationBarItem({

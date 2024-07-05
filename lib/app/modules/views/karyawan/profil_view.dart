@@ -58,6 +58,7 @@ class ProfilView extends StatelessWidget {
             const SizedBox(height: 15),
             Text(
               userData.nama,
+              textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 15),
@@ -82,7 +83,7 @@ class ProfilView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Rekapitulasi Presensi',
+              Dictionary.rekapPresensi,
               style: Theme.of(context)
                   .textTheme
                   .bodyLarge!

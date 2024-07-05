@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
-import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
+import 'package:flutter_epresence_app/app/modules/models/presensi.dart';
+import 'package:flutter_epresence_app/app/modules/models/user.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class RiwayatCutiView extends StatefulWidget {
-  const RiwayatCutiView({super.key});
+class PresensiView extends StatefulWidget {
+  const PresensiView({super.key});
 
   @override
-  _RiwayatCutiViewState createState() => _RiwayatCutiViewState();
+  _PresensiViewState createState() => _PresensiViewState();
 }
 
-class _RiwayatCutiViewState extends State<RiwayatCutiView> {
-  final List<Cuti> _cutiData =
-      cutiData.where((cutiData) => cutiData.userId == 'stf01').toList();
+class _PresensiViewState extends State<PresensiView> {
+  final List<Presensi> _presensiData = presensiData.toList();
 
   DateTime? _fromDate;
   DateTime? _toDate;
@@ -38,11 +38,13 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(
-        pageTitle: Dictionary.riwayatAjuanCuti,
+        pageTitle: Dictionary.riwayatPresensi,
+        role: Dictionary.admin,
       ),
       body: Container(
         margin: const EdgeInsets.all(20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FilledButton.icon(
               onPressed: () {
@@ -54,10 +56,10 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
             const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
-                itemCount: _cutiData.length,
+                itemCount: _presensiData.length,
                 itemBuilder: (context, index) {
-                  final ajuanCuti = _cutiData[index];
-                  return _buildCutiCard(ajuanCuti);
+                  final presensi = _presensiData[index];
+                  return _buildPresensiCard(presensi, index);
                 },
               ),
             ),
@@ -67,7 +69,6 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
     );
   }
 
-  // filter dialog
   void _showFilterDialog() {
     showDialog(
       context: context,
@@ -206,100 +207,98 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
     );
   }
 
-  Widget _buildCutiCard(Cuti ajuanCuti) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 10),
-      child: InkWell(
-        onTap: () {
-          Get.toNamed(
-            RouteNames.editCuti,
-            arguments: ajuanCuti.id,
-          );
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Text(Dictionary.tanggalCuti),
-                      Text(
-                        DateFormat('dd MMMM yyyy').format(DateTime.parse(
-                          ajuanCuti.tanggalMulai,
-                        )),
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  const Icon(Icons.info_outline),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Text(Dictionary.durasi),
-                      Text(
-                        ajuanCuti.durasi.toString(),
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Text(Dictionary.jenisPengajuan),
-                      Text(
-                        ajuanCuti.jenisCuti.capitalize!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  _buildStatusChip(ajuanCuti.status),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  // Fungsi untuk mendapatkan nama pengguna berdasarkan userId
+  String _getUserName(String? userId) {
+    final user = users.firstWhere((u) => u.userId == userId,
+        orElse: () => User(
+            userId: '',
+            nama: 'Unknown',
+            email: '',
+            phoneNumber: '',
+            role: '',
+            employeeType: '',
+            department: '',
+            position: '',
+            imageUrl: ''));
+    return user.nama;
   }
 
-  Widget _buildStatusChip(String statusAjuan) {
-    Color badgeColor;
-    switch (statusAjuan) {
-      case Dictionary.diajukan:
-        badgeColor = Theme.of(context).colorScheme.secondary;
-        break;
-      case Dictionary.ditolak:
-        badgeColor = Theme.of(context).colorScheme.error;
-        break;
-      case Dictionary.disetujui:
-        badgeColor = Theme.of(context).colorScheme.onErrorContainer;
-        break;
-      default:
-        badgeColor = Colors.grey;
-    }
+  Widget _buildPresensiCard(Presensi presensi, int index) {
+    final userName = _getUserName(presensi.userId);
 
-    return Chip(
-      label: Text(statusAjuan),
-      side: BorderSide(color: badgeColor),
-      backgroundColor: badgeColor,
-      labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+    return Card(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      userName,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    Text(
+                      DateFormat('EEEE, dd MMMM yyyy')
+                          .format(DateTime.parse(presensi.tanggal)),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        Text(Dictionary.hadirMasuk),
+                        Text(
+                          presensi.waktuMasuk,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(Dictionary.hadirPulang),
+                        Text(
+                          presensi.waktuPulang,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    TextButton.icon(
+                      label: const Text(Dictionary.lihatDetail),
+                      icon: const Icon(
+                        Icons.check_circle_outline,
+                        size: 15,
+                      ),
+                      iconAlignment: IconAlignment.end,
+                      onPressed: () {
+                        Get.toNamed(
+                          RouteNames.detailPresensi,
+                          arguments: presensi.id,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

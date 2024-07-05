@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
+import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
+import 'package:get/get.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -16,15 +19,14 @@ class LoginView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                margin: const EdgeInsets.only(top: 50),
+                margin: const EdgeInsets.only(top: 75),
                 child: Column(
                   children: [
                     Text(
                       'ePresence',
-                      style:
-                          Theme.of(context).textTheme.headlineLarge!.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+                      style: Theme.of(context).textTheme.displayLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                     ),
                     Text(
                       'Presensi Digital',
@@ -44,26 +46,28 @@ class LoginView extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   CustomTextField(
-                    inputLabel: 'Email',
+                    inputLabel: Dictionary.email,
                   ),
                   CustomTextField(
-                    inputLabel: 'Kata Sandi',
+                    inputLabel: Dictionary.password,
                     obscureText: true,
                   ),
                   const SizedBox(height: 30),
                   FilledButton(
                     style: AppTheme.primaryButtonStyle,
-                    onPressed: () {},
-                    child: const Text('Masuk'),
+                    onPressed: () {
+                      Get.toNamed(RouteNames.aksesAdmin);
+                    },
+                    child: Text(Dictionary.logIn),
                   ),
                 ],
               ),
               Text(
                 'Jika Anda belum memiliki akun, silakan hubungi admin di kantor Anda.',
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               ),
             ],
           ),

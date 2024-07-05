@@ -6,6 +6,8 @@ class Dictionary {
   static const beranda = "Beranda";
   static const notifikasi = "Notifikasi";
   static const riwayatPresensi = "Riwayat Presensi";
+  static const presensi = 'Presensi';
+  static const detailPresensi = 'Detail Presensi';
   static const catatPresensiMasuk = "Presensi Masuk";
   static const catatPresensiKeluar = "Presensi Keluar";
   static const lokasiPresensiMasuk = "Lokasi Presensi Masuk";
@@ -17,6 +19,8 @@ class Dictionary {
 
   // Optional Menu
   static const lihatLokasi = "Lihat Lokasi";
+  static const lihatDetail = "Lihat Detail";
+  static const konfirmasi = "Konfirmasi";
   static const filter = "Filter";
   static const terapkanFilter = "Terapkan";
   static const filterTanggal = "Berdasarkan Tanggal";
@@ -53,13 +57,30 @@ class Dictionary {
   static const disetujui = 'Disetujui';
   static const ditolak = 'Ditolak';
 
+  // Rekapitulasi
+  static const hadir = 'Hadir';
+  static const rekapPresensi = 'Rekapitulasi Presensi';
+  static const absen = 'Absen';
+  static const rekapCuti = 'Rekapitulasi Ajuan Cuti';
+
   // Auth
   static const logIn = 'Masuk';
   static const logOut = 'Keluar';
   static const email = 'Email';
   static const password = 'Kata Sandi';
+  static const gantiAkses = 'Ganti Hak Akses';
+
+  // Profil
+  static const nama = 'Nama';
+  static const departemen = 'Departemen';
+  static const posisi = 'Posisi';
+  static const noHP = 'No. Handphone';
 
   // Employee Type
   static const fullTime = 'Full Time';
   static const intern = 'Internship';
+
+  // Role
+  static const admin = 'Admin';
+  static const staff = 'Karyawan';
 }

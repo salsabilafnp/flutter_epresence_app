@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
 import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
+import 'package:flutter_epresence_app/app/modules/models/user.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class RiwayatCutiView extends StatefulWidget {
-  const RiwayatCutiView({super.key});
+class CutiView extends StatefulWidget {
+  const CutiView({super.key});
 
   @override
-  _RiwayatCutiViewState createState() => _RiwayatCutiViewState();
+  _CutiViewState createState() => _CutiViewState();
 }
 
-class _RiwayatCutiViewState extends State<RiwayatCutiView> {
-  final List<Cuti> _cutiData =
-      cutiData.where((cutiData) => cutiData.userId == 'stf01').toList();
+class _CutiViewState extends State<CutiView> {
+  final List<Cuti> _cutiData = cutiData.toList();
 
   DateTime? _fromDate;
   DateTime? _toDate;
@@ -56,8 +56,8 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
               child: ListView.builder(
                 itemCount: _cutiData.length,
                 itemBuilder: (context, index) {
-                  final ajuanCuti = _cutiData[index];
-                  return _buildCutiCard(ajuanCuti);
+                  final cuti = _cutiData[index];
+                  return _buildCutiCard(cuti);
                 },
               ),
             ),
@@ -148,7 +148,6 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                         Dictionary.cuti,
                         Dictionary.wfh,
                       ],
-                      icon: Icons.assignment,
                       onChanged: (String? newValue) {
                         setState(() {
                           _selectedPermitType = newValue!;
@@ -172,7 +171,6 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                         Dictionary.disetujui,
                         Dictionary.ditolak,
                       ],
-                      icon: Icons.assignment,
                       onChanged: (String? newValue) {
                         setState(() {
                           _selectedStatus = newValue!;
@@ -206,100 +204,130 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
     );
   }
 
-  Widget _buildCutiCard(Cuti ajuanCuti) {
+  // Fungsi untuk mendapatkan nama pengguna berdasarkan userId
+  String _getUserName(String? userId) {
+    final user = users.firstWhere(
+      (u) => u.userId == userId,
+      orElse: () => User(
+        userId: '',
+        nama: 'Unknown',
+        email: '',
+        phoneNumber: '',
+        role: '',
+        employeeType: '',
+        department: '',
+        position: '',
+        imageUrl: '',
+      ),
+    );
+    return user.nama;
+  }
+
+  // Cuti Card
+  Widget _buildCutiCard(Cuti cuti) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
-      child: InkWell(
-        onTap: () {
-          Get.toNamed(
-            RouteNames.editCuti,
-            arguments: ajuanCuti.id,
-          );
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Text(Dictionary.tanggalCuti),
-                      Text(
-                        DateFormat('dd MMMM yyyy').format(DateTime.parse(
-                          ajuanCuti.tanggalMulai,
-                        )),
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ],
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _getUserName(cuti.userId),
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                _buildStatusColor(cuti.status),
+                TextButton.icon(
+                  label: const Text(Dictionary.konfirmasi),
+                  icon: const Icon(
+                    Icons.check_circle_outline,
+                    size: 15,
                   ),
-                  const Icon(Icons.info_outline),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Text(Dictionary.durasi),
-                      Text(
-                        ajuanCuti.durasi.toString(),
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Text(Dictionary.jenisPengajuan),
-                      Text(
-                        ajuanCuti.jenisCuti.capitalize!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  _buildStatusChip(ajuanCuti.status),
-                ],
-              ),
-            ],
-          ),
+                  iconAlignment: IconAlignment.end,
+                  onPressed: () {
+                    Get.toNamed(
+                      RouteNames.detailCuti,
+                      arguments: cuti.id,
+                    );
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Text(Dictionary.tanggalCuti),
+                    Text(
+                      DateFormat('dd MMMM yyyy').format(DateTime.parse(
+                        cuti.tanggalMulai,
+                      )),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(Dictionary.durasi),
+                    Text(
+                      cuti.durasi.toString(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(Dictionary.jenisPengajuan),
+                    Text(
+                      cuti.jenisCuti.capitalize!,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildStatusChip(String statusAjuan) {
-    Color badgeColor;
+  Widget _buildStatusColor(String statusAjuan) {
+    Color textColor;
     switch (statusAjuan) {
       case Dictionary.diajukan:
-        badgeColor = Theme.of(context).colorScheme.secondary;
+        textColor = Theme.of(context).colorScheme.secondary;
         break;
       case Dictionary.ditolak:
-        badgeColor = Theme.of(context).colorScheme.error;
+        textColor = Theme.of(context).colorScheme.error;
         break;
       case Dictionary.disetujui:
-        badgeColor = Theme.of(context).colorScheme.onErrorContainer;
+        textColor = Theme.of(context).colorScheme.onErrorContainer;
         break;
       default:
-        badgeColor = Colors.grey;
+        textColor = Colors.grey;
     }
 
-    return Chip(
-      label: Text(statusAjuan),
-      side: BorderSide(color: badgeColor),
-      backgroundColor: badgeColor,
-      labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+    return Text(
+      statusAjuan,
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: textColor,
+      ),
     );
   }
 }

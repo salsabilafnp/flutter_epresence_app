@@ -5,13 +5,14 @@ import 'package:get/get.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String pageTitle;
-
+  final String role;
   final VoidCallback? onNotificationPressed;
   static bool centerTitle = true;
 
   const CustomAppBar({
     super.key,
     required this.pageTitle,
+    this.role = Dictionary.staff,
     this.onNotificationPressed,
   });
 
@@ -35,7 +36,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     if (pageName == Dictionary.beranda) {
       return Padding(
-        padding: EdgeInsets.all(5),
+        padding: const EdgeInsets.all(5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +57,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     } else {
       return Text(
         pageTitle,
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
       );
@@ -71,7 +72,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: const Icon(Icons.notifications),
           onPressed: () {
-            Get.toNamed(RouteNames.notifStaff);
+            if (role == Dictionary.admin) {
+              Get.toNamed(RouteNames.notifAdmin);
+            } else if (role == Dictionary.staff) {
+              Get.toNamed(RouteNames.notifStaff);
+            }
           },
         ),
       );

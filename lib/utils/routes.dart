@@ -1,5 +1,8 @@
+import 'package:flutter_epresence_app/app/components/nav_component.dart';
+import 'package:flutter_epresence_app/app/modules/views/admin/akses_view.dart';
+import 'package:flutter_epresence_app/app/modules/views/admin/notifikasi_admin_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/beranda_view.dart';
-import 'package:flutter_epresence_app/app/modules/views/karyawan/detail_cuti_view.dart';
+import 'package:flutter_epresence_app/app/modules/views/karyawan/edit_cuti_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/kamera_cuti_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/kamera_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/notifikasi_view.dart';
@@ -13,16 +16,28 @@ import 'package:get/get.dart';
 class RouteNames {
   static const logIn = '/login';
   static const bottomNavBar = '/bottom-navbar';
+  // staff routes
   static const berandaStaff = '/beranda-staff';
   static const notifStaff = '/notif-staff';
   static const kameraPresensi = '/kamera-presensi';
   static const lokasiPresensi = '/lokasi-presensi';
   static const kameraCuti = '/kamera-cuti';
   static const pengajuanCuti = '/pengajuan-cuti';
-  static const detailCutiStaff = '/detail-cuti-staff';
+  static const editCuti = '/edit-cuti';
   static const riwayatPresensiStaff = '/riwayat-presensi-staff';
   static const riwayatCutiStaff = '/riwayat-cuti-staff';
   static const profilStaff = '/profile-staff';
+
+  // admin routes
+  static const aksesAdmin = '/akses-admin';
+  static const berandaAdmin = '/beranda-admin';
+  static const notifAdmin = '/notif-admin';
+  static const riwayatPresensiAdmin = '/riwayat-presensi-admin';
+  static const detailPresensi = '/detail-presensi';
+  static const riwayatCutiAdmin = '/riwayat-cuti-admin';
+  static const detailCuti = '/detail-cuti';
+  static const profilAdmin = '/profile-admin';
+  static const settingAdmin = '/setting-admin';
 }
 
 class Routes {
@@ -32,12 +47,23 @@ class Routes {
       page: () => LoginView(),
     ),
     GetPage(
+      name: RouteNames.bottomNavBar,
+      page: () {
+        final role = Get.parameters['role'];
+        return NavComponent(role: role!);
+      },
+    ),
+    GetPage(
       name: RouteNames.berandaStaff,
       page: () => BerandaView(),
     ),
     GetPage(
       name: RouteNames.notifStaff,
       page: () => NotifikasiView(),
+    ),
+    GetPage(
+      name: RouteNames.notifAdmin,
+      page: () => NotifikasiAdminView(),
     ),
     GetPage(
       name: RouteNames.riwayatPresensiStaff,
@@ -60,12 +86,16 @@ class Routes {
       page: () => PengajuanCutiView(),
     ),
     GetPage(
-      name: RouteNames.detailCutiStaff,
-      page: () => DetailCutiView(),
+      name: RouteNames.editCuti,
+      page: () => EditCutiView(),
     ),
     GetPage(
       name: RouteNames.profilStaff,
       page: () => ProfilView(),
+    ),
+    GetPage(
+      name: RouteNames.aksesAdmin,
+      page: () => AksesView(),
     ),
   ];
 }

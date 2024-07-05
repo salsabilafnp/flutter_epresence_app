@@ -6,14 +6,14 @@ import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class DetailCutiView extends StatefulWidget {
-  const DetailCutiView({super.key});
+class EditCutiView extends StatefulWidget {
+  const EditCutiView({super.key});
 
   @override
-  _DetailCutiViewState createState() => _DetailCutiViewState();
+  _EditCutiViewState createState() => _EditCutiViewState();
 }
 
-class _DetailCutiViewState extends State<DetailCutiView> {
+class _EditCutiViewState extends State<EditCutiView> {
   late TextEditingController jenisPengajuanController;
   late TextEditingController tanggalCutiController;
   late TextEditingController durasiController;
@@ -29,29 +29,8 @@ class _DetailCutiViewState extends State<DetailCutiView> {
     // Get the cuti ID from the arguments
     final int cutiId = Get.arguments as int;
 
-    // Fetch the cuti data based on the ID (for simplicity, using a hardcoded list)
-    final List<Cuti> cutiData = [
-      Cuti(
-        id: 1,
-        tanggalMulai: '2024-06-27',
-        durasi: 2,
-        jenisCuti: 'sakit',
-        alasan: 'Sedang dalam perawatan medis',
-        fileUrl: 'foto_rs.png',
-        status: 'Disetujui',
-      ),
-      Cuti(
-        id: 2,
-        tanggalMulai: '2024-07-08',
-        durasi: 2,
-        jenisCuti: 'wfh',
-        alasan: 'Mengurus perpindahan rumah',
-        fileUrl: 'bukti_foto.png',
-        status: 'Diajukan',
-      ),
-    ];
-
-    final Cuti selectedCuti = cutiData.firstWhere((cuti) => cuti.id == cutiId);
+    final List<Cuti> _cutiData = cutiData.toList();
+    final Cuti selectedCuti = _cutiData.firstWhere((cuti) => cuti.id == cutiId);
 
     jenisPengajuanController =
         TextEditingController(text: selectedCuti.jenisCuti);
@@ -102,7 +81,6 @@ class _DetailCutiViewState extends State<DetailCutiView> {
                   Dictionary.cuti,
                   Dictionary.wfh,
                 ],
-                icon: Icons.assignment,
                 onChanged: (value) {
                   setState(() {
                     jenisPengajuanController.text = value;
