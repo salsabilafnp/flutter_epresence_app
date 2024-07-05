@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
+import 'package:flutter_epresence_app/app/modules/models/user.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
+import 'package:get/get.dart';
 
 class ProfilView extends StatelessWidget {
-  const ProfilView({super.key});
+  final User _staffUser = users[0];
+
+  ProfilView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +23,14 @@ class ProfilView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildIdentityCard(context),
+              _buildIdentityCard(context, _staffUser),
               const SizedBox(height: 30),
               _buildAttendanceSummaryCard(context),
               const SizedBox(height: 30),
               FilledButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.offAndToNamed(RouteNames.logIn);
+                },
                 style: AppTheme.secondaryButtonStyle,
                 child: Text(Dictionary.logOut),
               ),
@@ -34,30 +41,33 @@ class ProfilView extends StatelessWidget {
     );
   }
 
-  Widget _buildIdentityCard(BuildContext context) {
+  Widget _buildIdentityCard(BuildContext context, User userData) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 50,
+          vertical: 25,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const CircleAvatar(
+            CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage('assets/images/ava.jpg'),
+              backgroundImage: AssetImage('assets/images/${userData.imageUrl}'),
             ),
             const SizedBox(height: 15),
             Text(
-              'Nama Lengkap dari Karyawan',
+              userData.nama,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 15),
-            Text('Tipe Pekerja'),
+            Text(userData.employeeType.toUpperCase()),
             const SizedBox(height: 5),
-            Text('Departemen - Posisi'),
+            Text('${userData.department} - ${userData.position}'),
             const SizedBox(height: 5),
-            Text('Email'),
+            Text(userData.email),
             const SizedBox(height: 5),
-            Text('No. Handphone'),
+            Text(userData.phoneNumber),
           ],
         ),
       ),

@@ -27,7 +27,7 @@ class _NavComponentState extends State<NavComponent> {
     return Scaffold(
       body: IndexedStack(
         index: _tabIndex,
-        children: const [
+        children: [
           BerandaView(),
           ProfilView(),
         ],

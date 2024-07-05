@@ -29,31 +29,13 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
     'December'
   ];
 
-  final List<Presensi> _presensiData = [
-    Presensi(
-      id: 1,
-      tanggal: '2024-07-01',
-      waktuMasuk: '08:00',
-      waktuPulang: '17:00',
-      lokasiMasuk: '114.56789012\n-8.1234567',
-      lokasiPulang: '114.56789012\n-8.1234567',
-    ),
-    Presensi(
-      id: 2,
-      tanggal: '2024-07-02',
-      waktuMasuk: '08:15',
-      waktuPulang: '17:05',
-      lokasiMasuk: '114.56789012\n-8.1234567',
-      lokasiPulang: '114.56789012\n-8.1234567',
-    ),
-  ];
-
   List<RxBool> _isExpandedList = [];
 
   @override
   void initState() {
     super.initState();
-    _isExpandedList = List.generate(_presensiData.length, (index) => false.obs);
+    _isExpandedList =
+        List.generate(_presensiDataFiltered.length, (index) => false.obs);
   }
 
   @override
@@ -70,9 +52,9 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
             _buildMonthFilter(),
             Expanded(
               child: ListView.builder(
-                itemCount: _presensiData.length,
+                itemCount: _presensiDataFiltered.length,
                 itemBuilder: (context, index) {
-                  final presensi = _presensiData[index];
+                  final presensi = _presensiDataFiltered[index];
                   return _buildPresensiCard(presensi, index);
                 },
               ),
@@ -124,7 +106,7 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
                         Text(
                           DateFormat('dd MMMM yyyy')
                               .format(DateTime.parse(presensi.tanggal)),
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -204,5 +186,11 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
         ),
       ),
     );
+  }
+
+  List<Presensi> get _presensiDataFiltered {
+    return presensiData
+        .where((presensi) => presensi.userId == 'stf01')
+        .toList();
   }
 }

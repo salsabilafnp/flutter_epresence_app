@@ -5,20 +5,8 @@ import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:intl/intl.dart';
 
 class NotifikasiView extends StatelessWidget {
-  final List<Notifikasi> notifications = [
-    Notifikasi(
-      title: 'Pengingat Presensi',
-      message: 'Jangan lupa untuk presensi masuk!',
-      date: DateTime.now().subtract(Duration(hours: 1)),
-      isReminder: true,
-    ),
-    Notifikasi(
-      title: 'Pengajuan Cuti Ditindaklanjuti',
-      message: 'Pengajuan cuti Anda telah disetujui.',
-      date: DateTime.now().subtract(Duration(days: 1)),
-      isReminder: false,
-    ),
-  ];
+  final List<Notifikasi> _staffNotifications =
+      notifications.where((notifikasi) => notifikasi.isForStaff).toList();
 
   NotifikasiView({super.key});
 
@@ -31,16 +19,16 @@ class NotifikasiView extends StatelessWidget {
       body: Container(
         margin: EdgeInsets.all(20),
         child: ListView.builder(
-          itemCount: notifications.length,
+          itemCount: _staffNotifications.length,
           itemBuilder: (context, index) {
-            return _buildNotificationCard(notifications[index]);
+            return _buildNotificationCard(context, _staffNotifications[index]);
           },
         ),
       ),
     );
   }
 
-  Widget _buildNotificationCard(Notifikasi notification) {
+  Widget _buildNotificationCard(BuildContext context, Notifikasi notification) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: Padding(
@@ -56,13 +44,15 @@ class NotifikasiView extends StatelessWidget {
                     notification.title,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
                 ),
                 Text(
                   DateFormat('dd MMM yyyy, HH:mm').format(notification.date),
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
                 ),
               ],
             ),

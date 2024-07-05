@@ -7,7 +7,9 @@ class Dictionary {
   static const notifikasi = "Notifikasi";
   static const riwayatPresensi = "Riwayat Presensi";
   static const catatPresensiMasuk = "Presensi Masuk";
+  static const catatPresensiKeluar = "Presensi Keluar";
   static const lokasiPresensiMasuk = "Lokasi Presensi Masuk";
+  static const lokasiPresensKeluar = "Lokasi Presensi Keluar";
   static const riwayatAjuanCuti = "Riwayat Ajuan Cuti";
   static const pengajuanCuti = "Pengajuan Cuti";
   static const detailAjuanCuti = "Detail Ajuan Cuti";

@@ -78,7 +78,7 @@ class BerandaView extends StatelessWidget {
             FilledButton.icon(
               style: AppTheme.primaryButtonStyle,
               onPressed: () {
-                Get.toNamed(RouteNames.pengajuanCuti);
+                Get.toNamed(RouteNames.kameraCuti);
               },
               icon: Icon(Symbols.note_alt),
               label: Text(Dictionary.pengajuanCuti),
