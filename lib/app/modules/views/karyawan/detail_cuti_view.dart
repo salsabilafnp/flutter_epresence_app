@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
+import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class DetailCutiView extends StatefulWidget {
@@ -12,21 +14,72 @@ class DetailCutiView extends StatefulWidget {
 }
 
 class _DetailCutiViewState extends State<DetailCutiView> {
-  final TextEditingController jenisPengajuanController =
-      TextEditingController(text: Dictionary.cuti);
-  final TextEditingController tanggalCutiController =
-      TextEditingController(text: '15 Juli 2024');
-  final TextEditingController durasiController =
-      TextEditingController(text: '3');
-  final TextEditingController alasanController =
-      TextEditingController(text: 'Liburan keluarga');
-  final TextEditingController buktiFileController =
-      TextEditingController(text: 'bukti_liburan.png');
-  final TextEditingController statusAjuanController =
-      TextEditingController(text: Dictionary.disetujui);
-  final TextEditingController waktuPengajuanController = TextEditingController(
-      text:
-          DateFormat('EEEE, d MMMM y HH:mm').format(DateTime.now()).toString());
+  late TextEditingController jenisPengajuanController;
+  late TextEditingController tanggalCutiController;
+  late TextEditingController durasiController;
+  late TextEditingController alasanController;
+  late TextEditingController buktiFileController;
+  late TextEditingController statusAjuanController;
+  late TextEditingController waktuPengajuanController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Get the cuti ID from the arguments
+    final int cutiId = Get.arguments as int;
+
+    // Fetch the cuti data based on the ID (for simplicity, using a hardcoded list)
+    final List<Cuti> cutiData = [
+      Cuti(
+        id: 1,
+        tanggalMulai: '2024-06-27',
+        durasi: 2,
+        jenisCuti: 'sakit',
+        alasan: 'Sedang dalam perawatan medis',
+        fileUrl: 'foto_rs.png',
+        status: 'Disetujui',
+      ),
+      Cuti(
+        id: 2,
+        tanggalMulai: '2024-07-08',
+        durasi: 2,
+        jenisCuti: 'wfh',
+        alasan: 'Mengurus perpindahan rumah',
+        fileUrl: 'bukti_foto.png',
+        status: 'Diajukan',
+      ),
+    ];
+
+    final Cuti selectedCuti = cutiData.firstWhere((cuti) => cuti.id == cutiId);
+
+    jenisPengajuanController =
+        TextEditingController(text: selectedCuti.jenisCuti);
+    tanggalCutiController = TextEditingController(
+        text: DateFormat('dd MMMM yyyy')
+            .format(DateTime.parse(selectedCuti.tanggalMulai)));
+    durasiController =
+        TextEditingController(text: selectedCuti.durasi.toString());
+    alasanController = TextEditingController(text: selectedCuti.alasan);
+    buktiFileController = TextEditingController(text: selectedCuti.fileUrl);
+    statusAjuanController = TextEditingController(text: selectedCuti.status);
+    waktuPengajuanController = TextEditingController(
+        text: DateFormat('EEEE, d MMMM y HH:mm')
+            .format(DateTime.now())
+            .toString());
+  }
+
+  @override
+  void dispose() {
+    jenisPengajuanController.dispose();
+    tanggalCutiController.dispose();
+    durasiController.dispose();
+    alasanController.dispose();
+    buktiFileController.dispose();
+    statusAjuanController.dispose();
+    waktuPengajuanController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

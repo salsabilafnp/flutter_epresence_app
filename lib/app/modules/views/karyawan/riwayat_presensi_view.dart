@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
+import 'package:flutter_epresence_app/app/modules/models/presensi.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -28,21 +29,23 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
     'December'
   ];
 
-  final List<Map<String, String>> _presensiData = [
-    {
-      'tanggal': '2024-07-01',
-      'waktuMasuk': '08:00',
-      'waktuPulang': '17:00',
-      'lokasiMasuk': '114.56789012\n-8.1234567',
-      'lokasiPulang': '114.56789012\n-8.1234567',
-    },
-    {
-      'tanggal': '2024-07-02',
-      'waktuMasuk': '08:15',
-      'waktuPulang': '17:05',
-      'lokasiMasuk': '114.56789012\n-8.1234567',
-      'lokasiPulang': '114.56789012\n-8.1234567',
-    },
+  final List<Presensi> _presensiData = [
+    Presensi(
+      id: 1,
+      tanggal: '2024-07-01',
+      waktuMasuk: '08:00',
+      waktuPulang: '17:00',
+      lokasiMasuk: '114.56789012\n-8.1234567',
+      lokasiPulang: '114.56789012\n-8.1234567',
+    ),
+    Presensi(
+      id: 2,
+      tanggal: '2024-07-02',
+      waktuMasuk: '08:15',
+      waktuPulang: '17:05',
+      lokasiMasuk: '114.56789012\n-8.1234567',
+      lokasiPulang: '114.56789012\n-8.1234567',
+    ),
   ];
 
   List<RxBool> _isExpandedList = [];
@@ -98,7 +101,7 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
     );
   }
 
-  Widget _buildPresensiCard(Map<String, String> presensi, int index) {
+  Widget _buildPresensiCard(Presensi presensi, int index) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: GestureDetector(
@@ -117,10 +120,10 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
                     Column(
                       children: [
                         Text(DateFormat('EEEE')
-                            .format(DateTime.parse(presensi['tanggal']!))),
+                            .format(DateTime.parse(presensi.tanggal))),
                         Text(
                           DateFormat('dd MMMM yyyy')
-                              .format(DateTime.parse(presensi['tanggal']!)),
+                              .format(DateTime.parse(presensi.tanggal)),
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -129,7 +132,7 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
                       children: [
                         Text(Dictionary.hadirMasuk),
                         Text(
-                          '${presensi['waktuMasuk']}',
+                          presensi.waktuMasuk,
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge!
@@ -141,7 +144,7 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
                       children: [
                         Text(Dictionary.hadirPulang),
                         Text(
-                          '${presensi['waktuPulang']}',
+                          presensi.waktuPulang,
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge!
@@ -168,7 +171,7 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
                           Text(Dictionary.lokasiMasuk),
                           const SizedBox(height: 5),
                           Text(
-                            '${presensi['lokasiMasuk']}',
+                            presensi.lokasiMasuk,
                             textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme
@@ -183,7 +186,7 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
                           Text(Dictionary.lokasiPulang),
                           const SizedBox(height: 5),
                           Text(
-                            '${presensi['lokasiPulang']}',
+                            presensi.lokasiPulang,
                             textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme

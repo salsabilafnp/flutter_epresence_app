@@ -51,15 +51,18 @@ class CustomTextField extends StatelessWidget {
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               isDense: true,
-              value: controller?.text.isEmpty ?? true ? null : controller?.text,
+              value: (controller?.text.isEmpty ?? true) 
+                  ? null 
+                  : dropdownItems!.contains(controller?.text) 
+                      ? controller?.text 
+                      : dropdownItems!.first,
               onChanged: (String? newValue) {
                 if (newValue != null) {
                   controller?.text = newValue;
                   if (onChanged != null) onChanged!(newValue);
                 }
               },
-              items:
-                  dropdownItems!.map<DropdownMenuItem<String>>((String value) {
+              items: dropdownItems!.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -83,8 +86,7 @@ class CustomTextField extends StatelessWidget {
               lastDate: DateTime(2101),
             );
             if (pickedDate != null) {
-              String formattedDate =
-                  DateFormat('EEEE, d MMMM y').format(pickedDate);
+              String formattedDate = DateFormat('EEEE, d MMMM y').format(pickedDate);
               controller?.text = formattedDate;
               if (onChanged != null) onChanged!(formattedDate);
             }

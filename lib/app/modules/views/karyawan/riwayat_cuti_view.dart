@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
+import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
@@ -15,23 +16,25 @@ class RiwayatCutiView extends StatefulWidget {
 }
 
 class _RiwayatCutiViewState extends State<RiwayatCutiView> {
-  final List<Map<String, String>> _cutiData = [
-    {
-      'permitType': 'WFH',
-      'date': '5 Juli 2024',
-      'duration': '2',
-      'reason': 'Persiapan untuk pindah rumah',
-      'fileUrl': 'foto.png',
-      'status': 'Diajukan',
-    },
-    {
-      'permitType': 'Sakit',
-      'date': '27 Juni 2024',
-      'duration': '2',
-      'reason': 'Dalam masa pemulihan',
-      'fileUrl': 'foto.png',
-      'status': 'Disetujui',
-    },
+  final List<Cuti> _cutiData = [
+    Cuti(
+      id: 1,
+      tanggalMulai: '2024-06-27',
+      durasi: 2,
+      jenisCuti: 'sakit',
+      alasan: 'Sedang dalam perawatan medis',
+      fileUrl: 'foto_rs.png',
+      status: 'Disetujui',
+    ),
+    Cuti(
+      id: 2,
+      tanggalMulai: '2024-07-08',
+      durasi: 2,
+      jenisCuti: 'wfh',
+      alasan: 'Mengurus perpindahan rumah',
+      fileUrl: 'bukti_foto.png',
+      status: 'Diajukan',
+    ),
   ];
 
   DateTime? _fromDate;
@@ -221,12 +224,15 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
     );
   }
 
-  Widget _buildCutiCard(Map<String, String> ajuanCuti) {
+  Widget _buildCutiCard(Cuti ajuanCuti) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: InkWell(
         onTap: () {
-          Get.toNamed(RouteNames.detailCutiStaff);
+          Get.toNamed(
+            RouteNames.detailCutiStaff,
+            arguments: ajuanCuti.id,
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -240,7 +246,9 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                     children: [
                       Text(Dictionary.tanggalCuti),
                       Text(
-                        '${ajuanCuti['date']}',
+                        DateFormat('dd MMMM yyyy').format(DateTime.parse(
+                          ajuanCuti.tanggalMulai,
+                        )),
                         style: Theme.of(context)
                             .textTheme
                             .bodyLarge!
@@ -259,7 +267,7 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                     children: [
                       Text(Dictionary.durasi),
                       Text(
-                        '${ajuanCuti['duration']}',
+                        ajuanCuti.durasi.toString(),
                         style: Theme.of(context)
                             .textTheme
                             .bodyLarge!
@@ -271,7 +279,7 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                     children: [
                       Text(Dictionary.jenisPengajuan),
                       Text(
-                        '${ajuanCuti['permitType']}'.toUpperCase(),
+                        ajuanCuti.jenisCuti.toUpperCase(),
                         style: Theme.of(context)
                             .textTheme
                             .bodyLarge!
@@ -279,7 +287,7 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                       ),
                     ],
                   ),
-                  _buildStatusChip(ajuanCuti['status']),
+                  _buildStatusChip(ajuanCuti.status),
                 ],
               ),
             ],
@@ -289,7 +297,7 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
     );
   }
 
-  Widget _buildStatusChip(String? statusAjuan) {
+  Widget _buildStatusChip(String statusAjuan) {
     Color badgeColor;
     switch (statusAjuan) {
       case Dictionary.diajukan:
@@ -306,7 +314,7 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
     }
 
     return Chip(
-      label: Text(statusAjuan!),
+      label: Text(statusAjuan),
       side: BorderSide(color: badgeColor),
       backgroundColor: badgeColor,
       labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),

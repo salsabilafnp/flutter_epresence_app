@@ -45,7 +45,7 @@ class Dictionary {
   // jenis ajuan cuti
   static const sakit = 'Sakit';
   static const cuti = 'Cuti';
-  static const wfh = 'Work From Home (WFH)';
+  static const wfh = 'WFH';
   // status
   static const diajukan = 'Diajukan';
   static const disetujui = 'Disetujui';
