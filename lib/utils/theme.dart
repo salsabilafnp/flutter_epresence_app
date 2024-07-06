@@ -110,7 +110,7 @@ class AppTheme {
   static ButtonStyle primaryButtonStyle = ElevatedButton.styleFrom(
     backgroundColor: primaryColor,
     foregroundColor: lightColor,
-    minimumSize: Size(double.infinity, 48),
+    minimumSize: Size(double.infinity, 45),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(5)),
     ),
@@ -119,7 +119,25 @@ class AppTheme {
   static ButtonStyle secondaryButtonStyle = ElevatedButton.styleFrom(
     backgroundColor: secondaryColor,
     foregroundColor: lightColor,
-    minimumSize: Size(double.infinity, 48),
+    minimumSize: Size(double.infinity, 45),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(5)),
+    ),
+  );
+
+  static ButtonStyle rejectButtonStyle = ElevatedButton.styleFrom(
+    backgroundColor: dangerColor,
+    foregroundColor: lightColor,
+    minimumSize: Size(double.infinity, 45),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(5)),
+    ),
+  );
+
+  static ButtonStyle approveButonStyle = ElevatedButton.styleFrom(
+    backgroundColor: successColor,
+    foregroundColor: lightColor,
+    minimumSize: Size(double.infinity, 45),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(5)),
     ),
@@ -129,7 +147,7 @@ class AppTheme {
   static ButtonStyle primaryOutlinedButtonStyle = OutlinedButton.styleFrom(
     foregroundColor: primaryColor,
     side: BorderSide(color: primaryColor),
-    minimumSize: Size(double.infinity, 48),
+    minimumSize: Size(double.infinity, 45),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(5)),
     ),
@@ -138,7 +156,7 @@ class AppTheme {
   static ButtonStyle secondaryOutlinedButtonStyle = OutlinedButton.styleFrom(
     foregroundColor: secondaryColor,
     side: BorderSide(color: secondaryColor),
-    minimumSize: Size(double.infinity, 48),
+    minimumSize: Size(double.infinity, 45),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(5)),
     ),

@@ -228,7 +228,7 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                     children: [
                       Text(Dictionary.tanggalCuti),
                       Text(
-                        DateFormat('dd MMMM yyyy').format(DateTime.parse(
+                        DateFormat('d MMMM yyyy').format(DateTime.parse(
                           ajuanCuti.tanggalMulai,
                         )),
                         style: Theme.of(context)

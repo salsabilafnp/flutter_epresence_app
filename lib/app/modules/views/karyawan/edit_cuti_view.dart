@@ -35,7 +35,7 @@ class _EditCutiViewState extends State<EditCutiView> {
     jenisPengajuanController =
         TextEditingController(text: selectedCuti.jenisCuti);
     tanggalCutiController = TextEditingController(
-        text: DateFormat('dd MMMM yyyy')
+        text: DateFormat('d MMMM yyyy')
             .format(DateTime.parse(selectedCuti.tanggalMulai)));
     durasiController =
         TextEditingController(text: selectedCuti.durasi.toString());

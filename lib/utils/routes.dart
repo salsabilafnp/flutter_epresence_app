@@ -1,6 +1,10 @@
 import 'package:flutter_epresence_app/app/components/nav_component.dart';
 import 'package:flutter_epresence_app/app/modules/views/admin/akses_view.dart';
+import 'package:flutter_epresence_app/app/modules/views/admin/cuti_view.dart';
+import 'package:flutter_epresence_app/app/modules/views/admin/detail_cuti_view.dart';
+import 'package:flutter_epresence_app/app/modules/views/admin/detail_presensi_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/admin/notifikasi_admin_view.dart';
+import 'package:flutter_epresence_app/app/modules/views/admin/presensi_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/beranda_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/edit_cuti_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/kamera_cuti_view.dart';
@@ -42,6 +46,7 @@ class RouteNames {
 
 class Routes {
   static final pages = [
+    // General
     GetPage(
       name: RouteNames.logIn,
       page: () => LoginView(),
@@ -53,6 +58,7 @@ class Routes {
         return NavComponent(role: role!);
       },
     ),
+    // For Staff
     GetPage(
       name: RouteNames.berandaStaff,
       page: () => BerandaView(),
@@ -60,10 +66,6 @@ class Routes {
     GetPage(
       name: RouteNames.notifStaff,
       page: () => NotifikasiView(),
-    ),
-    GetPage(
-      name: RouteNames.notifAdmin,
-      page: () => NotifikasiAdminView(),
     ),
     GetPage(
       name: RouteNames.riwayatPresensiStaff,
@@ -93,9 +95,30 @@ class Routes {
       name: RouteNames.profilStaff,
       page: () => ProfilView(),
     ),
+    // For Admin
     GetPage(
       name: RouteNames.aksesAdmin,
       page: () => AksesView(),
+    ),
+    GetPage(
+      name: RouteNames.notifAdmin,
+      page: () => NotifikasiAdminView(),
+    ),
+    GetPage(
+      name: RouteNames.riwayatPresensiAdmin,
+      page: () => PresensiView(),
+    ),
+    GetPage(
+      name: RouteNames.detailPresensi,
+      page: () => DetailPresensiView(),
+    ),
+    GetPage(
+      name: RouteNames.riwayatCutiAdmin,
+      page: () => CutiView(),
+    ),
+    GetPage(
+      name: RouteNames.detailCuti,
+      page: () => DetailCutiView(),
     ),
   ];
 }

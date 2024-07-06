@@ -49,7 +49,7 @@ class NotifikasiView extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  DateFormat('dd MMM yyyy, HH:mm').format(notification.date),
+                  DateFormat('d MMM yyyy, HH:mm').format(notification.date),
                   style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: Theme.of(context).colorScheme.tertiary,
                       ),

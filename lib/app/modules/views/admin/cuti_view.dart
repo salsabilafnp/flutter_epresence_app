@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_epresence_app/app/components/color_status_cuti.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
 import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
@@ -228,7 +229,7 @@ class _CutiViewState extends State<CutiView> {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -239,7 +240,7 @@ class _CutiViewState extends State<CutiView> {
                   _getUserName(cuti.userId),
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
-                _buildStatusColor(cuti.status),
+                ColorStatusCuti(statusAjuan: cuti.status),
                 TextButton.icon(
                   label: const Text(Dictionary.konfirmasi),
                   icon: const Icon(
@@ -264,7 +265,7 @@ class _CutiViewState extends State<CutiView> {
                   children: [
                     Text(Dictionary.tanggalCuti),
                     Text(
-                      DateFormat('dd MMMM yyyy').format(DateTime.parse(
+                      DateFormat('d MMMM yyyy').format(DateTime.parse(
                         cuti.tanggalMulai,
                       )),
                       style: Theme.of(context)
@@ -302,31 +303,6 @@ class _CutiViewState extends State<CutiView> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildStatusColor(String statusAjuan) {
-    Color textColor;
-    switch (statusAjuan) {
-      case Dictionary.diajukan:
-        textColor = Theme.of(context).colorScheme.secondary;
-        break;
-      case Dictionary.ditolak:
-        textColor = Theme.of(context).colorScheme.error;
-        break;
-      case Dictionary.disetujui:
-        textColor = Theme.of(context).colorScheme.onErrorContainer;
-        break;
-      default:
-        textColor = Colors.grey;
-    }
-
-    return Text(
-      statusAjuan,
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        color: textColor,
       ),
     );
   }

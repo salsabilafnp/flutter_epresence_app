@@ -21,8 +21,6 @@ class _PresensiViewState extends State<PresensiView> {
 
   DateTime? _fromDate;
   DateTime? _toDate;
-  String _selectedPermitType = 'Semua';
-  String _selectedStatus = 'Semua';
 
   final TextEditingController _fromDateController = TextEditingController();
   final TextEditingController _toDateController = TextEditingController();
@@ -131,55 +129,6 @@ class _PresensiViewState extends State<PresensiView> {
                         }
                       },
                     ),
-                    const SizedBox(height: 10),
-                    // Berdasarkan Jenis Ajuan
-                    Text(
-                      Dictionary.filterJenisAjuan,
-                      style: Theme.of(context).textTheme.headlineSmall!,
-                    ),
-                    const SizedBox(height: 5),
-                    CustomTextField(
-                      controller:
-                          TextEditingController(text: _selectedPermitType),
-                      inputLabel: Dictionary.jenisPengajuan,
-                      isDropdown: true,
-                      dropdownItems: [
-                        _selectedPermitType,
-                        Dictionary.sakit,
-                        Dictionary.cuti,
-                        Dictionary.wfh,
-                      ],
-                      icon: Icons.assignment,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedPermitType = newValue!;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    // Berdasarkan Status Ajuan
-                    Text(
-                      Dictionary.filterStatusAjuan,
-                      style: Theme.of(context).textTheme.headlineSmall!,
-                    ),
-                    const SizedBox(height: 5),
-                    CustomTextField(
-                      controller: TextEditingController(text: _selectedStatus),
-                      inputLabel: Dictionary.statusAjuan,
-                      isDropdown: true,
-                      dropdownItems: [
-                        _selectedStatus,
-                        Dictionary.diajukan,
-                        Dictionary.disetujui,
-                        Dictionary.ditolak,
-                      ],
-                      icon: Icons.assignment,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedStatus = newValue!;
-                        });
-                      },
-                    ),
                     const SizedBox(height: 20),
                     FilledButton(
                       onPressed: () {
@@ -231,7 +180,7 @@ class _PresensiViewState extends State<PresensiView> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.fromLTRB(15, 15, 15, 10),
             child: Column(
               children: [
                 Row(
@@ -242,7 +191,7 @@ class _PresensiViewState extends State<PresensiView> {
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     Text(
-                      DateFormat('EEEE, dd MMMM yyyy')
+                      DateFormat('EEEE, d MMMM yyyy')
                           .format(DateTime.parse(presensi.tanggal)),
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary),
@@ -281,7 +230,7 @@ class _PresensiViewState extends State<PresensiView> {
                     TextButton.icon(
                       label: const Text(Dictionary.lihatDetail),
                       icon: const Icon(
-                        Icons.check_circle_outline,
+                        Icons.info_outline,
                         size: 15,
                       ),
                       iconAlignment: IconAlignment.end,

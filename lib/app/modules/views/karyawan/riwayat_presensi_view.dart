@@ -104,7 +104,7 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
                         Text(DateFormat('EEEE')
                             .format(DateTime.parse(presensi.tanggal))),
                         Text(
-                          DateFormat('dd MMMM yyyy')
+                          DateFormat('d MMMM yyyy')
                               .format(DateTime.parse(presensi.tanggal)),
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
