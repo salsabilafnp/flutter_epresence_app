@@ -14,36 +14,32 @@ environment:
 
 # Dependencies specify other packages that your package needs in order to work.
 dependencies:
+  camera: ^0.9.4+5
+  file_picker: ^4.2.5
+  fl_chart: ^0.68.0
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  cupertino_icons: ^1.0.6
+  flutter_map: ^7.0.2
+  geolocator: ^7.7.0
+  get: ^4.6.5
+  get_cli: ^1.8.1
+  get_storage: ^2.0.3
+  intl: ^0.18.1
+  latlong2: ^0.9.1
+  material_symbols_icons: ^4.2762.0
+  shared_preferences: ^2.2.1
 
 dev_dependencies:
+  change_app_package_name: ^1.1.0
+  flutter_lints: ^3.0.0
   flutter_test:
     sdk: flutter
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
-  flutter_lints: ^3.0.0
 
 # The following section is specific to Flutter packages.
 flutter:
   uses-material-design: true
-
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
+  assets:
+    - assets/images/
   # fonts:
   #   - family: Schyler
   #     fonts:
