@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_epresence_app/app/modules/controller/auth/auth_controller.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:get/get.dart';
@@ -32,7 +33,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   _checkPageName(BuildContext context, String pageName) {
-    String userName = "John Doe";
+    String userName = "Pengguna";
+
+    AuthController authController = Get.find();
+    final currentUser = authController.user.value;
+
+    if (currentUser != null) {
+      userName = currentUser.name ?? "Pengguna";
+    }
 
     if (pageName == Dictionary.beranda) {
       return Padding(
