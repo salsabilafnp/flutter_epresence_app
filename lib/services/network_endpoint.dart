@@ -8,19 +8,15 @@ class NetworkEndpoint {
   static const updateProfile = '$baseUrl/update-profile';
 
   // presensi
-  static const presensi = '$baseUrl/presensi';
-  static const presensiDetail = '$baseUrl/presensi/detail';
-  static const presensiCheckIn = '$baseUrl/presensi/check-in';
-  static const presensiCheckOut = '$baseUrl/presensi/check-out';
-  static const presensiHistory = '$baseUrl/presensi/history';
-  static const presensiHistoryDetail = '$baseUrl/presensi/history/detail';
+  static const presensi = '$baseUrl/attendance';
+  static const presensiHariIni = '$baseUrl/attendance/today';
+  static const presensiCheckIn = '$baseUrl/attendance/check-in';
+  static const presensiCheckOut = '$baseUrl/attendance/check-out';
+  static const presensiSemuaRiwayat = '$baseUrl/attendance/all-history';
+  static const presensiRiwayat = '$baseUrl/attendance/history';
 
   // cuti
-  static const cuti = '$baseUrl/cuti';
-  static const cutiDetail = '$baseUrl/cuti/detail';
-  static const cutiRequest = '$baseUrl/cuti/request';
-  static const cutiHistory = '$baseUrl/cuti/history';
-  static const cutiHistoryDetail = '$baseUrl/cuti/history/detail';
-  static const cutiHistoryApprove = '$baseUrl/cuti/history/approve';
-  static const cutiHistoryReject = '$baseUrl/cuti/history/reject';
+  static const cuti = '$baseUrl/permission';
+  static const cutiSemuaRiwayat = '$baseUrl/permission/all-history';
+  static const cutiKonfirmasi = '$baseUrl/permission/history/confirm';
 }

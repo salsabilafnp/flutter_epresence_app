@@ -15,7 +15,7 @@ environment:
 # Dependencies specify other packages that your package needs in order to work.
 dependencies:
   camera: ^0.9.4+5
-  file_picker: ^4.2.5
+  file_picker: ^8.0.6
   fl_chart: ^0.68.0
   flutter:
     sdk: flutter
