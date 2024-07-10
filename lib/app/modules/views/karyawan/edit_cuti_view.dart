@@ -19,6 +19,7 @@ class EditCutiView extends StatelessWidget {
       (element) => element!.id == cutiId,
       orElse: () => null,
     );
+    bool isDiajukan = selectedCuti?.status == 'pending';
 
     return Scaffold(
       appBar: const CustomAppBar(
@@ -107,9 +108,11 @@ class EditCutiView extends StatelessWidget {
           right: 20,
         ),
         child: FilledButton(
-          onPressed: () {
-            _cutiController.perbaruiCuti(selectedCuti!.id!);
-          },
+          onPressed: isDiajukan
+              ? () {
+                  _cutiController.perbaruiCuti(selectedCuti!.id!);
+                }
+              : null,
           child: const Text(Dictionary.ubahAjuan),
         ),
       ),

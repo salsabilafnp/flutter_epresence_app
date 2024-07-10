@@ -60,21 +60,23 @@ class CutiController extends GetxController {
     if (dariTanggal.value != null && sampaiTanggal.value != null) {
       tempList = tempList.where((permit) {
         final permitDate = DateTime.parse(permit!.leaveDate!);
-        return permitDate
-                .isAfter(dariTanggal.value!.subtract(Duration(days: 1))) &&
-            permitDate.isBefore(sampaiTanggal.value!.add(Duration(days: 1)));
+        return permitDate.isAfter(
+                dariTanggal.value!.subtract(const Duration(days: 1))) &&
+            permitDate
+                .isBefore(sampaiTanggal.value!.add(const Duration(days: 1)));
       }).toList();
     }
 
     if (selectedPermitType!.value != 'Semua') {
       tempList = tempList.where((permit) {
-        return permit!.permitType == selectedPermitType!.value;
+        return Dictionary.mapTipe(permit!.permitType!) ==
+            selectedPermitType!.value;
       }).toList();
     }
 
     if (selectedStatus!.value != 'Semua') {
       tempList = tempList.where((permit) {
-        return permit!.status == selectedStatus!.value;
+        return Dictionary.mapStatus(permit!.status!) == selectedStatus!.value;
       }).toList();
     }
 
