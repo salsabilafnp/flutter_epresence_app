@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
+import 'package:flutter_epresence_app/app/modules/controller/auth/auth_controller.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
-import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
 import 'package:get/get.dart';
 
 class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+  final AuthController _authController = Get.find();
+
+  LoginView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +48,11 @@ class LoginView extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   CustomTextField(
+                    controller: _authController.email,
                     inputLabel: Dictionary.email,
                   ),
                   CustomTextField(
+                    controller: _authController.password,
                     inputLabel: Dictionary.password,
                     obscureText: true,
                   ),
@@ -56,7 +60,7 @@ class LoginView extends StatelessWidget {
                   FilledButton(
                     style: AppTheme.primaryButtonStyle,
                     onPressed: () {
-                      Get.toNamed(RouteNames.aksesAdmin);
+                      _authController.login();
                     },
                     child: Text(Dictionary.logIn),
                   ),

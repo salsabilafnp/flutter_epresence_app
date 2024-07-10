@@ -83,4 +83,11 @@ class Dictionary {
   // Role
   static const admin = 'Admin';
   static const staff = 'Karyawan';
+
+  // Message
+  static const defaultError = 'Terjadi Kesalahan';
+  static const defaultSuccess = 'Berhasil';
+  static const suksesLogin = 'Login berhasil';
+  static const gagalLogin = 'Email atau kata sandi salah';
+  static const gagalPresensi = 'Presensi gagal tercatat';
 }
