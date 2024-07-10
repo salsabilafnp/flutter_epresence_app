@@ -27,7 +27,8 @@ class AuthRepository extends GetConnect {
         box.write('token', accessToken);
         box.write('user', user);
 
-        inspect(response.body);
+        log(accessToken);
+        log(response.body.toString());
 
         return AuthResponse.fromJson(response.body);
       } else {

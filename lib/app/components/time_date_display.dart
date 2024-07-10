@@ -16,7 +16,7 @@ class TimeDateDisplay extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final currentTime = snapshot.data!;
-          final timeFormat = DateFormat('HH:MM:ss');
+          final timeFormat = DateFormat('HH:mm:ss');
           final dateFormat = DateFormat.yMMMMEEEEd();
 
           final formattedTime = timeFormat.format(currentTime);

@@ -16,7 +16,7 @@ class BerandaView extends StatelessWidget {
     final String presensiPulang = "17:00";
 
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         pageTitle: Dictionary.beranda,
       ),
       body: Container(
@@ -37,8 +37,8 @@ class BerandaView extends StatelessWidget {
                       Get.toNamed(RouteNames.riwayatPresensiStaff);
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 15),
-                      child: Column(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: const Column(
                         children: [
                           Icon(Icons.work_history_outlined),
                           SizedBox(height: 5),
@@ -59,8 +59,8 @@ class BerandaView extends StatelessWidget {
                       Get.toNamed(RouteNames.riwayatCutiStaff);
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 15),
-                      child: Column(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: const Column(
                         children: [
                           Icon(Icons.edit_calendar_outlined),
                           SizedBox(height: 5),
@@ -78,7 +78,8 @@ class BerandaView extends StatelessWidget {
             FilledButton.icon(
               style: AppTheme.primaryButtonStyle,
               onPressed: () {
-                Get.toNamed(RouteNames.kameraCuti);
+                // Get.toNamed(RouteNames.kameraCuti);
+                Get.toNamed(RouteNames.pengajuanCuti);
               },
               icon: Icon(Symbols.note_alt),
               label: Text(Dictionary.pengajuanCuti),

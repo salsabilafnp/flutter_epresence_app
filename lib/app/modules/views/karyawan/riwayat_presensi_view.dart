@@ -34,12 +34,11 @@ class RiwayatPresensiView extends StatelessWidget {
             const SizedBox(height: 20),
             Expanded(
               child: Obx(() {
-                final filteredAttendances =
-                    _presensiController.filteredAttendances;
+                final presensiByFilter = _presensiController.presensiFilter;
                 return ListView.builder(
-                  itemCount: filteredAttendances.length,
+                  itemCount: presensiByFilter.length,
                   itemBuilder: (context, index) {
-                    final presensi = filteredAttendances[index];
+                    final presensi = presensiByFilter[index];
                     return _buildPresensiCard(context, presensi!, index);
                   },
                 );
@@ -114,7 +113,7 @@ class RiwayatPresensiView extends StatelessWidget {
                     const SizedBox(height: 20),
                     FilledButton(
                       onPressed: () {
-                        _presensiController.setFilterDates(
+                        _presensiController.aturFilter(
                           _presensiController.dariTanggal.value,
                           _presensiController.sampaiTanggal.value,
                         );
@@ -178,7 +177,10 @@ class RiwayatPresensiView extends StatelessWidget {
                       children: [
                         Text(Dictionary.hadirMasuk),
                         Text(
-                          presensi.checkInTime ?? '-',
+                          presensi.checkInTime != null
+                              ? DateFormat('HH:mm').format(DateTime.parse(
+                                  '${presensi.date!} ${presensi.checkInTime!}'))
+                              : '-',
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge!
@@ -190,7 +192,10 @@ class RiwayatPresensiView extends StatelessWidget {
                       children: [
                         Text(Dictionary.hadirPulang),
                         Text(
-                          presensi.checkOutTime ?? '-',
+                          presensi.checkOutTime != null
+                              ? DateFormat('HH:mm').format(DateTime.parse(
+                                  '${presensi.date!} ${presensi.checkOutTime!}'))
+                              : '-',
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge!
@@ -217,7 +222,7 @@ class RiwayatPresensiView extends StatelessWidget {
                           Text(Dictionary.lokasiMasuk),
                           const SizedBox(height: 5),
                           Text(
-                            presensi.latlonIn ?? '-',
+                            _formatLocation(presensi.latlonIn) ?? '-',
                             textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme
@@ -232,7 +237,7 @@ class RiwayatPresensiView extends StatelessWidget {
                           Text(Dictionary.lokasiPulang),
                           const SizedBox(height: 5),
                           Text(
-                            presensi.latlonOut ?? '-',
+                            _formatLocation(presensi.latlonOut) ?? '-',
                             textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme
@@ -250,5 +255,12 @@ class RiwayatPresensiView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String? _formatLocation(String? location) {
+    if (location == null) {
+      return null;
+    }
+    return location.split(',').join('\n');
   }
 }

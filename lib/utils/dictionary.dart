@@ -48,14 +48,40 @@ class Dictionary {
   static const waktuPengajuan = 'Diajukan Pada';
   static const ajukan = 'Ajukan';
   static const ubahAjuan = 'Simpan Perubahan';
+
   // jenis ajuan cuti
   static const sakit = 'Sakit';
   static const cuti = 'Cuti';
   static const wfh = 'WFH';
+  static String mapTipe(String tipe) {
+    switch (tipe.toLowerCase()) {
+      case 'sick':
+        return sakit;
+      case 'annual':
+        return cuti;
+      case 'wfh':
+        return wfh;
+      default:
+        return tipe;
+    }
+  }
+
   // status
   static const diajukan = 'Diajukan';
   static const disetujui = 'Disetujui';
   static const ditolak = 'Ditolak';
+  static String mapStatus(String status) {
+    switch (status.toLowerCase()) {
+      case 'rejected':
+        return ditolak;
+      case 'pending':
+        return diajukan;
+      case 'approved':
+        return disetujui;
+      default:
+        return status;
+    }
+  }
 
   // Rekapitulasi
   static const hadir = 'Hadir';
@@ -87,7 +113,18 @@ class Dictionary {
   // Message
   static const defaultError = 'Terjadi Kesalahan';
   static const defaultSuccess = 'Berhasil';
+
+  // MSG Auth
   static const suksesLogin = 'Login berhasil';
   static const gagalLogin = 'Email atau kata sandi salah';
+
+  // MSG Presensi
   static const gagalPresensi = 'Presensi gagal tercatat';
+  static const suksesPresensi = 'Presensi berhasil tercatat';
+
+  // MSG Cuti
+  static const gagalAjuanCuti = 'Ajuan cuti gagal terkirim';
+  static const suksesAjuanCuti = 'Ajuan cuti berhasil terkirim';
+  static const gagalUbahCuti = 'Perubahan ajuan cuti gagal disimpan';
+  static const suksesUbahCuti = 'Perubahan ajuan cuti berhasil disimpan';
 }

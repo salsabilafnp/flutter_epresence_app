@@ -15,21 +15,23 @@ class PresensiController extends GetxController {
   RxList<RxBool> isExpandedList = RxList<RxBool>();
   Rx<DateTime?> dariTanggal = Rx<DateTime?>(null);
   Rx<DateTime?> sampaiTanggal = Rx<DateTime?>(null);
+  RxList<PresensiNetwork?> presensiFilter = RxList<PresensiNetwork?>([]);
 
   @override
   void onInit() {
     super.onInit();
-    fetchAttendanceHistory();
+    fetchRiwayatPresensi();
   }
 
-  Future<void> fetchAttendanceHistory() async {
+  Future<void> fetchRiwayatPresensi() async {
     try {
       final AttendancesResponse? attendanceResponse =
-          await _presensiRepository.getAttendanceUserHistory();
+          await _presensiRepository.getRiwayatPresensi();
       if (attendanceResponse != null && attendanceResponse.presensi != null) {
         presensi.value = attendanceResponse.presensi!;
         isExpandedList.value =
             List.generate(presensi.length, (index) => false.obs);
+        _terapkanFilter();
       }
     } catch (e) {
       Get.snackbar(
@@ -40,22 +42,23 @@ class PresensiController extends GetxController {
     }
   }
 
-  List<PresensiNetwork?> get filteredAttendances {
-    if (dariTanggal.value == null || sampaiTanggal.value == null) {
-      return presensi;
-    } else {
-      return presensi.where((attendance) {
+  void _terapkanFilter() {
+    if (dariTanggal.value != null && sampaiTanggal.value != null) {
+      presensiFilter.value = presensi.where((attendance) {
         final attendanceDate = DateTime.parse(attendance!.date!);
-        return attendanceDate.isAfter(dariTanggal.value!) &&
+        return attendanceDate
+                .isAfter(dariTanggal.value!.subtract(Duration(days: 1))) &&
             attendanceDate
                 .isBefore(sampaiTanggal.value!.add(Duration(days: 1)));
       }).toList();
+    } else {
+      presensiFilter.value = List.from(presensi);
     }
   }
 
-  void setFilterDates(DateTime? start, DateTime? end) {
+  void aturFilter(DateTime? start, DateTime? end) {
     dariTanggal.value = start;
     sampaiTanggal.value = end;
-    fetchAttendanceHistory();
+    _terapkanFilter();
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_epresence_app/app/components/color_status_cuti.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
+import 'package:flutter_epresence_app/app/modules/controller/karyawan/cuti_controller.dart';
 import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/routes.dart';
@@ -8,31 +10,10 @@ import 'package:flutter_epresence_app/utils/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class RiwayatCutiView extends StatefulWidget {
-  const RiwayatCutiView({super.key});
+class RiwayatCutiView extends StatelessWidget {
+  final CutiController _cutiController = Get.put(CutiController());
 
-  @override
-  _RiwayatCutiViewState createState() => _RiwayatCutiViewState();
-}
-
-class _RiwayatCutiViewState extends State<RiwayatCutiView> {
-  final List<Cuti> _cutiData =
-      cutiData.where((cutiData) => cutiData.userId == 'stf01').toList();
-
-  DateTime? _fromDate;
-  DateTime? _toDate;
-  String _selectedPermitType = 'Semua';
-  String _selectedStatus = 'Semua';
-
-  final TextEditingController _fromDateController = TextEditingController();
-  final TextEditingController _toDateController = TextEditingController();
-
-  @override
-  void dispose() {
-    _fromDateController.dispose();
-    _toDateController.dispose();
-    super.dispose();
-  }
+  RiwayatCutiView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,20 +27,23 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
           children: [
             FilledButton.icon(
               onPressed: () {
-                _showFilterDialog();
+                _showFilterDialog(context);
               },
               label: const Text(Dictionary.filter),
               icon: const Icon(Icons.filter_alt_outlined),
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: ListView.builder(
-                itemCount: _cutiData.length,
-                itemBuilder: (context, index) {
-                  final ajuanCuti = _cutiData[index];
-                  return _buildCutiCard(ajuanCuti);
-                },
-              ),
+              child: Obx(() {
+                final cutiFilter = _cutiController.cutiFilter;
+                return ListView.builder(
+                  itemCount: cutiFilter.length,
+                  itemBuilder: (context, index) {
+                    final ajuanCuti = cutiFilter[index];
+                    return _buildCutiCard(context, ajuanCuti!);
+                  },
+                );
+              }),
             ),
           ],
         ),
@@ -67,8 +51,8 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
     );
   }
 
-  // filter dialog
-  void _showFilterDialog() {
+  // Filter dialog
+  void _showFilterDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -87,7 +71,7 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                     ),
                     const SizedBox(height: 5),
                     CustomTextField(
-                      controller: _fromDateController,
+                      controller: _cutiController.tanggalAwal,
                       inputLabel: Dictionary.tanggalMulai,
                       isDate: true,
                       icon: Icons.calendar_today_outlined,
@@ -95,21 +79,22 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
                           context: context,
-                          initialDate: _fromDate ?? DateTime.now(),
+                          initialDate: _cutiController.dariTanggal.value ??
+                              DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                         );
                         if (pickedDate != null) {
                           setState(() {
-                            _fromDate = pickedDate;
-                            _fromDateController.text =
+                            _cutiController.dariTanggal.value = pickedDate;
+                            _cutiController.tanggalAwal.text =
                                 DateFormat.yMMMMd().format(pickedDate);
                           });
                         }
                       },
                     ),
                     CustomTextField(
-                      controller: _toDateController,
+                      controller: _cutiController.tanggalAkhir,
                       inputLabel: Dictionary.tanggalAkhir,
                       isDate: true,
                       icon: Icons.calendar_today_outlined,
@@ -117,14 +102,15 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
                           context: context,
-                          initialDate: _toDate ?? DateTime.now(),
+                          initialDate: _cutiController.sampaiTanggal.value ??
+                              DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                         );
                         if (pickedDate != null) {
                           setState(() {
-                            _toDate = pickedDate;
-                            _toDateController.text =
+                            _cutiController.sampaiTanggal.value = pickedDate;
+                            _cutiController.tanggalAkhir.text =
                                 DateFormat.yMMMMd().format(pickedDate);
                           });
                         }
@@ -137,23 +123,27 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                       style: Theme.of(context).textTheme.headlineSmall!,
                     ),
                     const SizedBox(height: 5),
-                    CustomTextField(
-                      controller:
-                          TextEditingController(text: _selectedPermitType),
-                      inputLabel: Dictionary.jenisPengajuan,
-                      isDropdown: true,
-                      dropdownItems: [
-                        _selectedPermitType,
-                        Dictionary.sakit,
-                        Dictionary.cuti,
-                        Dictionary.wfh,
-                      ],
-                      icon: Icons.assignment,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedPermitType = newValue!;
-                        });
-                      },
+                    Obx(
+                      () => DropdownButton<String>(
+                        value: _cutiController.selectedPermitType!.value,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _cutiController.selectedPermitType!.value =
+                                newValue!;
+                          });
+                        },
+                        items: <String>[
+                          'Semua',
+                          Dictionary.sakit,
+                          Dictionary.cuti,
+                          Dictionary.wfh,
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
                     ),
                     const SizedBox(height: 10),
                     // Berdasarkan Status Ajuan
@@ -162,31 +152,39 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                       style: Theme.of(context).textTheme.headlineSmall!,
                     ),
                     const SizedBox(height: 5),
-                    CustomTextField(
-                      controller: TextEditingController(text: _selectedStatus),
-                      inputLabel: Dictionary.statusAjuan,
-                      isDropdown: true,
-                      dropdownItems: [
-                        _selectedStatus,
-                        Dictionary.diajukan,
-                        Dictionary.disetujui,
-                        Dictionary.ditolak,
-                      ],
-                      icon: Icons.assignment,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedStatus = newValue!;
-                        });
-                      },
+                    Obx(
+                      () => DropdownButton<String>(
+                        value: _cutiController.selectedStatus!.value,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _cutiController.selectedStatus!.value = newValue!;
+                          });
+                        },
+                        items: <String>[
+                          'Semua',
+                          Dictionary.diajukan,
+                          Dictionary.disetujui,
+                          Dictionary.ditolak,
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
                     ),
                     const SizedBox(height: 20),
                     FilledButton(
                       onPressed: () {
+                        _cutiController.aturFilter(
+                          _cutiController.dariTanggal.value,
+                          _cutiController.sampaiTanggal.value,
+                          _cutiController.selectedPermitType!.value,
+                          _cutiController.selectedStatus!.value,
+                        );
                         Navigator.pop(context);
                       },
-                      child: const Text(
-                        Dictionary.terapkanFilter,
-                      ),
+                      child: const Text(Dictionary.terapkanFilter),
                     ),
                     const SizedBox(height: 10),
                     OutlinedButton(
@@ -206,7 +204,7 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
     );
   }
 
-  Widget _buildCutiCard(Cuti ajuanCuti) {
+  Widget _buildCutiCard(BuildContext context, CutiNetwork ajuanCuti) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: InkWell(
@@ -226,11 +224,10 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                 children: [
                   Column(
                     children: [
-                      Text(Dictionary.tanggalCuti),
+                      const Text(Dictionary.tanggalCuti),
                       Text(
-                        DateFormat('d MMMM yyyy').format(DateTime.parse(
-                          ajuanCuti.tanggalMulai,
-                        )),
+                        DateFormat('d MMMM yyyy')
+                            .format(DateTime.parse(ajuanCuti.leaveDate!)),
                         style: Theme.of(context)
                             .textTheme
                             .bodyLarge!
@@ -247,9 +244,9 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                 children: [
                   Column(
                     children: [
-                      Text(Dictionary.durasi),
+                      const Text(Dictionary.durasi),
                       Text(
-                        ajuanCuti.durasi.toString(),
+                        ajuanCuti.duration.toString(),
                         style: Theme.of(context)
                             .textTheme
                             .bodyLarge!
@@ -261,7 +258,7 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                     children: [
                       Text(Dictionary.jenisPengajuan),
                       Text(
-                        ajuanCuti.jenisCuti.capitalize!,
+                        Dictionary.mapTipe(ajuanCuti.permitType!),
                         style: Theme.of(context)
                             .textTheme
                             .bodyLarge!
@@ -269,37 +266,15 @@ class _RiwayatCutiViewState extends State<RiwayatCutiView> {
                       ),
                     ],
                   ),
-                  _buildStatusChip(ajuanCuti.status),
+                  ColorStatusCuti(
+                    statusAjuan: Dictionary.mapStatus(ajuanCuti.status!),
+                  ),
                 ],
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildStatusChip(String statusAjuan) {
-    Color badgeColor;
-    switch (statusAjuan) {
-      case Dictionary.diajukan:
-        badgeColor = Theme.of(context).colorScheme.secondary;
-        break;
-      case Dictionary.ditolak:
-        badgeColor = Theme.of(context).colorScheme.error;
-        break;
-      case Dictionary.disetujui:
-        badgeColor = Theme.of(context).colorScheme.onErrorContainer;
-        break;
-      default:
-        badgeColor = Colors.grey;
-    }
-
-    return Chip(
-      label: Text(statusAjuan),
-      side: BorderSide(color: badgeColor),
-      backgroundColor: badgeColor,
-      labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
     );
   }
 }

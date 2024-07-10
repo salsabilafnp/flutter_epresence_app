@@ -1,10 +1,12 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:intl/intl.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String inputLabel;
+  final String? initialValue;
   final Function(String)? onChanged;
   final Function()? onTap;
   final bool autoFocus;
@@ -19,10 +21,11 @@ class CustomTextField extends StatelessWidget {
   final bool isTextarea;
   final bool isFile;
 
-  const CustomTextField({
+  CustomTextField({
     super.key,
     this.controller,
     required this.inputLabel,
+    this.initialValue,
     this.onChanged,
     this.onTap,
     this.autoFocus = false,
@@ -41,6 +44,15 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isDropdown && dropdownItems != null) {
+      String? currentValue = controller?.text.isNotEmpty == true &&
+              dropdownItems!.contains(controller?.text)
+          ? controller?.text
+          : initialValue != null && dropdownItems!.contains(initialValue!)
+              ? Dictionary.mapTipe(initialValue!)
+              : Dictionary.mapTipe(dropdownItems![0]);
+
+      controller?.text = currentValue ?? '';
+
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
         child: InputDecorator(
@@ -51,18 +63,17 @@ class CustomTextField extends StatelessWidget {
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               isDense: true,
-              value: (controller?.text.isEmpty ?? true) 
-                  ? null 
-                  : dropdownItems!.contains(controller?.text) 
-                      ? controller?.text 
-                      : dropdownItems!.first,
+              value: currentValue,
               onChanged: (String? newValue) {
                 if (newValue != null) {
                   controller?.text = newValue;
-                  if (onChanged != null) onChanged!(newValue);
+                  if (onChanged != null) {
+                    onChanged!(newValue);
+                  }
                 }
               },
-              items: dropdownItems!.map<DropdownMenuItem<String>>((String value) {
+              items:
+                  dropdownItems!.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -73,20 +84,29 @@ class CustomTextField extends StatelessWidget {
         ),
       );
     } else if (isDate) {
+      DateTime? initialDate;
+      if (initialValue != null && initialValue!.isNotEmpty) {
+        initialDate = DateFormat('yyyy-MM-d').parse(initialValue!);
+      }
+
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
         child: TextField(
-          controller: controller,
+          controller: controller
+            ?..text = initialDate != null
+                ? DateFormat('EEEE, d MMMM y').format(initialDate)
+                : '',
           readOnly: true,
           onTap: () async {
             DateTime? pickedDate = await showDatePicker(
               context: context,
-              initialDate: DateTime.now(),
+              initialDate: initialDate ?? DateTime.now(),
               firstDate: DateTime(2000),
               lastDate: DateTime(2101),
             );
             if (pickedDate != null) {
-              String formattedDate = DateFormat('EEEE, d MMMM y').format(pickedDate);
+              String formattedDate =
+                  DateFormat('EEEE, d MMMM y').format(pickedDate);
               controller?.text = formattedDate;
               if (onChanged != null) onChanged!(formattedDate);
             }
@@ -102,7 +122,7 @@ class CustomTextField extends StatelessWidget {
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
         child: TextField(
-          controller: controller,
+          controller: controller?..text = initialValue ?? '',
           keyboardType: TextInputType.number,
           onChanged: onChanged,
           decoration: InputDecoration(
@@ -116,7 +136,7 @@ class CustomTextField extends StatelessWidget {
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
         child: TextField(
-          controller: controller,
+          controller: controller?..text = initialValue ?? '',
           maxLines: 5,
           onChanged: onChanged,
           decoration: InputDecoration(
@@ -129,7 +149,7 @@ class CustomTextField extends StatelessWidget {
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
         child: TextField(
-          controller: controller,
+          controller: controller?..text = initialValue ?? '',
           readOnly: true,
           onTap: () async {
             FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -150,7 +170,7 @@ class CustomTextField extends StatelessWidget {
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 10),
         child: TextField(
-          controller: controller,
+          controller: controller?..text = initialValue ?? '',
           autofocus: autoFocus,
           readOnly: readOnly,
           onChanged: onChanged,
