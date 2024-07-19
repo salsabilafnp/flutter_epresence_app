@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
-import 'package:flutter_epresence_app/app/modules/controller/karyawan/cuti_controller.dart';
+import 'package:flutter_epresence_app/app/modules/controller/cuti_controller.dart';
 import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:get/get.dart';
@@ -38,7 +38,7 @@ class EditCutiView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomTextField(
-                    controller: cutiController.jenisPengajuanController,
+                    controller: cutiController.jenisAjuanController,
                     inputLabel: Dictionary.jenisPengajuan,
                     initialValue: selectedCuti.permitType,
                     isDropdown: true,
@@ -48,7 +48,7 @@ class EditCutiView extends StatelessWidget {
                       Dictionary.wfh,
                     ],
                     onChanged: (value) {
-                      cutiController.jenisPengajuanController.text = value;
+                      cutiController.jenisAjuanController.text = value;
                     },
                   ),
                   CustomTextField(

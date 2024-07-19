@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/color_status_cuti.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
-import 'package:flutter_epresence_app/app/modules/controller/karyawan/cuti_controller.dart';
+import 'package:flutter_epresence_app/app/modules/controller/cuti_controller.dart';
 import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/routes.dart';

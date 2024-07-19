@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
-import 'package:flutter_epresence_app/app/modules/models/request/permissions_request.dart';
-import 'package:flutter_epresence_app/app/modules/models/response/permissions_response.dart';
-import 'package:flutter_epresence_app/app/modules/repository/karyawan/cuti_repository.dart';
+import 'package:flutter_epresence_app/app/modules/models/request/cuti_request.dart';
+import 'package:flutter_epresence_app/app/modules/models/response/cuti_response.dart';
+import 'package:flutter_epresence_app/app/modules/repository/cuti_repository.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:get/get.dart';
 
@@ -12,8 +12,7 @@ class CutiController extends GetxController {
   final TextEditingController tanggalAwal = TextEditingController();
   final TextEditingController tanggalAkhir = TextEditingController();
 
-  final TextEditingController jenisPengajuanController =
-      TextEditingController();
+  final TextEditingController jenisAjuanController = TextEditingController();
   final TextEditingController tanggalCutiController = TextEditingController();
   final TextEditingController durasiController = TextEditingController();
   final TextEditingController alasanController = TextEditingController();
@@ -33,16 +32,15 @@ class CutiController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchRiwayatCuti();
+    getRiwayatCuti();
   }
 
-  Future<void> fetchRiwayatCuti() async {
+  // getRiwayatCuti()
+  Future<void> getRiwayatCuti() async {
     try {
-      final PermissionsResponse? permissionsResponse =
-          await _cutiRepository.getRiwayatCuti();
-      if (permissionsResponse != null &&
-          permissionsResponse.permissions != null) {
-        cuti.value = permissionsResponse.permissions!;
+      final CutiResponse? cutiResponse = await _cutiRepository.getRiwayatCuti();
+      if (cutiResponse != null && cutiResponse.cuti != null) {
+        cuti.value = cutiResponse.cuti!;
         _terapkanFilter();
       }
     } catch (e) {
@@ -54,6 +52,7 @@ class CutiController extends GetxController {
     }
   }
 
+  // filterCuti
   void _terapkanFilter() {
     List<CutiNetwork?> tempList = cuti;
 
@@ -83,6 +82,7 @@ class CutiController extends GetxController {
     cutiFilter.value = tempList;
   }
 
+  // aturFilterCuti
   void aturFilter(
       DateTime? start, DateTime? end, String? permitType, String? status) {
     dariTanggal.value = start;
@@ -92,13 +92,13 @@ class CutiController extends GetxController {
     _terapkanFilter();
   }
 
+  // ajukanCuti
   Future<void> ajukanCuti() async {
     try {
-      final PermissionsResponse? permissionsResponse =
-          await _cutiRepository.ajukanCuti(
+      final CutiResponse? cutiResponse = await _cutiRepository.ajukanCuti(
         PermissionsRequest(
           leaveDate: tanggalCutiController.text,
-          permitType: jenisPengajuanController.text,
+          permitType: jenisAjuanController.text,
           duration: int.parse(durasiController.text),
           fileUrl: buktiFileController.text,
           reason: alasanController.text,
@@ -106,8 +106,8 @@ class CutiController extends GetxController {
         ),
       );
 
-      if (permissionsResponse != null) {
-        fetchRiwayatCuti();
+      if (cutiResponse != null) {
+        getRiwayatCuti();
         Get.back();
         Get.snackbar(
           Dictionary.defaultSuccess,
@@ -130,14 +130,14 @@ class CutiController extends GetxController {
     }
   }
 
+  // perbaruiCuti(cuti)
   Future<void> perbaruiCuti(int idCuti) async {
     try {
-      final PermissionsResponse? permissionsResponse =
-          await _cutiRepository.perbaruiCuti(
+      final CutiResponse? cutiResponse = await _cutiRepository.perbaruiCuti(
         idCuti,
         PermissionsRequest(
           leaveDate: tanggalCutiController.text,
-          permitType: jenisPengajuanController.text,
+          permitType: jenisAjuanController.text,
           duration: int.parse(durasiController.text),
           fileUrl: buktiFileController.text,
           reason: alasanController.text,
@@ -145,8 +145,8 @@ class CutiController extends GetxController {
         ),
       );
 
-      if (permissionsResponse != null) {
-        fetchRiwayatCuti();
+      if (cutiResponse != null) {
+        getRiwayatCuti();
         Get.back();
         Get.snackbar(
           Dictionary.defaultSuccess,
@@ -168,4 +168,14 @@ class CutiController extends GetxController {
       );
     }
   }
+
+  // getSemuaCuti()
+
+  // getDetailAjuan(id)
+
+  // konfirmasiAjuan(id, status)
+
+  // notifAjuanBaru()
+
+  // notifAjuanDitindaklanjuti()
 }

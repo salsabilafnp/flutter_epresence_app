@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_epresence_app/app/modules/controller/auth/auth_controller.dart';
+import 'package:flutter_epresence_app/app/modules/controller/auth_controller.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:get/get.dart';

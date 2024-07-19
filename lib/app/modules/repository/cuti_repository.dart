@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:flutter_epresence_app/app/modules/models/request/permissions_request.dart';
-import 'package:flutter_epresence_app/app/modules/models/response/permissions_response.dart';
+import 'package:flutter_epresence_app/app/modules/models/request/cuti_request.dart';
+import 'package:flutter_epresence_app/app/modules/models/response/cuti_response.dart';
 import 'package:flutter_epresence_app/services/network_endpoint.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:get/get.dart';
@@ -10,7 +10,8 @@ import 'package:get_storage/get_storage.dart';
 class CutiRepository extends GetConnect {
   final box = GetStorage();
 
-  Future<PermissionsResponse?> getRiwayatCuti() async {
+  // getRiwayatCuti()
+  Future<CutiResponse?> getRiwayatCuti() async {
     final String? accessToken = box.read('token');
     if (accessToken != null) {
       try {
@@ -20,7 +21,7 @@ class CutiRepository extends GetConnect {
         );
 
         if (response.statusCode == 200) {
-          return PermissionsResponse.fromJson(response.body);
+          return CutiResponse.fromJson(response.body);
         } else {
           throw Dictionary.defaultError;
         }
@@ -32,7 +33,8 @@ class CutiRepository extends GetConnect {
     return null;
   }
 
-  Future<PermissionsResponse?> ajukanCuti(PermissionsRequest cuti) async {
+  // ajukanCuti(cuti)
+  Future<CutiResponse?> ajukanCuti(PermissionsRequest cuti) async {
     final String? accessToken = box.read('token');
 
     if (accessToken != null) {
@@ -44,7 +46,7 @@ class CutiRepository extends GetConnect {
         );
 
         if (response.statusCode == 200 || response.statusCode == 201) {
-          return PermissionsResponse.fromJson(response.body);
+          return CutiResponse.fromJson(response.body);
         } else {
           throw Dictionary.defaultError;
         }
@@ -56,7 +58,8 @@ class CutiRepository extends GetConnect {
     return null;
   }
 
-  Future<PermissionsResponse?> perbaruiCuti(
+  // perbaruiCuti(cuti)
+  Future<CutiResponse?> perbaruiCuti(
       int idCuti, PermissionsRequest cuti) async {
     final String? accessToken = box.read('token');
 
@@ -69,7 +72,7 @@ class CutiRepository extends GetConnect {
         );
 
         if (response.statusCode == 200) {
-          return PermissionsResponse.fromJson(response.body);
+          return CutiResponse.fromJson(response.body);
         } else {
           throw Dictionary.defaultError;
         }
@@ -80,4 +83,14 @@ class CutiRepository extends GetConnect {
     }
     return null;
   }
+
+  // getSemuaCuti()
+
+  // getDetailAjuan(id)
+
+  // konfirmasiAjuan(id, status)
+
+  // notifAjuanBaru()
+
+  // notifAjuanDitindaklanjuti()
 }

@@ -1,12 +1,12 @@
 import 'package:flutter_epresence_app/app/modules/models/presensi.dart';
 
-class AttendancesResponse {
+class PresensiResponse {
   List<PresensiNetwork?>? presensi;
 
-  AttendancesResponse({
+  PresensiResponse({
     this.presensi,
   });
-  AttendancesResponse.fromJson(Map<String, dynamic> json) {
+  PresensiResponse.fromJson(Map<String, dynamic> json) {
     if (json['attendances'] != null) {
       final v = json['attendances'];
       final arr0 = <PresensiNetwork>[];

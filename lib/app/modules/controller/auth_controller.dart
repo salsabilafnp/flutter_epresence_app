@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/modules/models/response/auth_response.dart';
 import 'package:flutter_epresence_app/app/modules/models/user.dart';
-import 'package:flutter_epresence_app/app/modules/repository/auth/auth_repository.dart';
+import 'package:flutter_epresence_app/app/modules/repository/auth_repository.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:get/get.dart';
@@ -11,9 +11,9 @@ class AuthController extends GetxController {
   final AuthRepository authRepository = Get.put(AuthRepository());
 
   final TextEditingController email = TextEditingController();
-  final TextEditingController password = TextEditingController();
+  final TextEditingController kataSandi = TextEditingController();
 
-  Rx<UserNetwork?> user = Rx<UserNetwork?>(null); // Default null
+  Rx<UserNetwork?> user = Rx<UserNetwork?>(null);
   final box = GetStorage();
 
   @override
@@ -22,10 +22,11 @@ class AuthController extends GetxController {
     loadUser();
   }
 
+  // login
   Future<void> login() async {
     try {
       final AuthResponse? authResponse =
-          await authRepository.login(email.text, password.text);
+          await authRepository.login(email.text, kataSandi.text);
 
       if (authResponse != null && authResponse.token != null) {
         // cek role
@@ -74,6 +75,7 @@ class AuthController extends GetxController {
     }
   }
 
+  // checkUserLogged
   Future<void> checkUserLogged() async {
     final String? token = box.read('token');
     final user = box.read('user');
@@ -103,6 +105,7 @@ class AuthController extends GetxController {
     }
   }
 
+  // loadUser
   Future<void> loadUser() async {
     final userData = box.read('user');
     if (userData != null) {
@@ -110,6 +113,15 @@ class AuthController extends GetxController {
     }
   }
 
+  // updateProfil
+
+  // verifikasiWajah
+
+  // getRekapPresensiKaryawan
+
+  // getRekapPresensiAdmin
+
+  // logout
   Future<void> logout() async {
     try {
       await authRepository.logout();

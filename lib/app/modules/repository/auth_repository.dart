@@ -10,13 +10,14 @@ import 'package:get_storage/get_storage.dart';
 class AuthRepository extends GetConnect {
   final box = GetStorage();
 
-  Future<AuthResponse?> login(String email, String password) async {
+  // login(email, kataSandi)
+  Future<AuthResponse?> login(String email, String kataSandi) async {
     try {
       final response = await post(
         NetworkEndpoint.login,
         {
           'email': email,
-          'password': password,
+          'password': kataSandi,
         },
       );
 
@@ -45,7 +46,8 @@ class AuthRepository extends GetConnect {
     }
   }
 
-  Future<UserNetwork?> userProfile() async {
+  // userProfil()
+  Future<UserNetwork?> userProfil() async {
     final String? accessToken = box.read('token');
 
     if (accessToken != null) {
@@ -68,6 +70,7 @@ class AuthRepository extends GetConnect {
     return null;
   }
 
+  // logout()
   Future<void> logout() async {
     final String? accessToken = box.read('token');
 

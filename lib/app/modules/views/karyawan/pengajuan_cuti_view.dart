@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
-import 'package:flutter_epresence_app/app/modules/controller/karyawan/cuti_controller.dart';
+import 'package:flutter_epresence_app/app/modules/controller/cuti_controller.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +23,7 @@ class PengajuanCutiView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomTextField(
-                controller: _cutiController.jenisPengajuanController,
+                controller: _cutiController.jenisAjuanController,
                 inputLabel: Dictionary.jenisPengajuan,
                 isDropdown: true,
                 dropdownItems: const [
@@ -33,7 +33,7 @@ class PengajuanCutiView extends StatelessWidget {
                 ],
                 icon: Icons.assignment,
                 onChanged: (value) {
-                  _cutiController.jenisPengajuanController.text =
+                  _cutiController.jenisAjuanController.text =
                       Dictionary.mapTipe(value);
                 },
               ),

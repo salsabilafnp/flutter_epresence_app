@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/modules/models/presensi.dart';
-import 'package:flutter_epresence_app/app/modules/models/response/attendances_response.dart';
-import 'package:flutter_epresence_app/app/modules/repository/karyawan/presensi_repository.dart';
+import 'package:flutter_epresence_app/app/modules/models/response/presensi_response.dart';
+import 'package:flutter_epresence_app/app/modules/repository/presensi_repository.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:get/get.dart';
 
@@ -20,12 +20,13 @@ class PresensiController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchRiwayatPresensi();
+    getRiwayatPresensi();
   }
 
-  Future<void> fetchRiwayatPresensi() async {
+  // getRiwayatPresensi()
+  Future<void> getRiwayatPresensi() async {
     try {
-      final AttendancesResponse? attendanceResponse =
+      final PresensiResponse? attendanceResponse =
           await _presensiRepository.getRiwayatPresensi();
       if (attendanceResponse != null && attendanceResponse.presensi != null) {
         presensi.value = attendanceResponse.presensi!;
@@ -42,6 +43,14 @@ class PresensiController extends GetxController {
     }
   }
 
+  // aturFilterPresensi
+  void aturFilter(DateTime? start, DateTime? end) {
+    dariTanggal.value = start;
+    sampaiTanggal.value = end;
+    _terapkanFilter();
+  }
+
+  // filtePresensi
   void _terapkanFilter() {
     if (dariTanggal.value != null && sampaiTanggal.value != null) {
       presensiFilter.value = presensi.where((attendance) {
@@ -56,9 +65,20 @@ class PresensiController extends GetxController {
     }
   }
 
-  void aturFilter(DateTime? start, DateTime? end) {
-    dariTanggal.value = start;
-    sampaiTanggal.value = end;
+  // resetFilterPresensi
+  void resetFilter() {
+    dariTanggal.value = null;
+    sampaiTanggal.value = null;
     _terapkanFilter();
   }
+
+  // catatPresensiMasuk(presensi)
+
+  // catatPresensiKeluar(presensi)
+
+  // validasiLokasi()
+
+  // getSemuaPresensi()
+
+  // pengingatPresensi()
 }
