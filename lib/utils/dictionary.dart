@@ -8,6 +8,7 @@ class Dictionary {
   static const riwayatPresensi = "Riwayat Presensi";
   static const presensi = 'Presensi';
   static const detailPresensi = 'Detail Presensi';
+  static const verifikasiWajah = 'Verifikasi Identitas';
   static const catatPresensiMasuk = "Presensi Masuk";
   static const catatPresensiKeluar = "Presensi Keluar";
   static const lokasiPresensiMasuk = "Lokasi Presensi Masuk";
@@ -119,8 +120,10 @@ class Dictionary {
   static const gagalLogin = 'Email atau kata sandi salah';
 
   // MSG Presensi
-  static const gagalPresensi = 'Presensi gagal tercatat';
-  static const suksesPresensi = 'Presensi berhasil tercatat';
+  static const gagalPresensiMasuk = 'Presensi masuk gagal tercatat';
+  static const gagalPresensiPulang = 'Presensi pulang gagal tercatat';
+  static const suksesPresensiMasuk = 'Presensi masuk berhasil tercatat';
+  static const suksesPresensiPulang = 'Presensi pulang berhasil tercatat';
 
   // MSG Cuti
   static const gagalAjuanCuti = 'Ajuan cuti gagal terkirim';

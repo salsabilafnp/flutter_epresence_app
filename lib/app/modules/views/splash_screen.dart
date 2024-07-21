@@ -15,10 +15,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    navigateToNextScreen();
+    splashCheck();
   }
 
-  void navigateToNextScreen() async {
+  void splashCheck() async {
     await Future.delayed(
       const Duration(seconds: 3),
       () => _authController.checkUserLogged(),

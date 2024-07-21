@@ -7,7 +7,6 @@ import 'package:flutter_epresence_app/app/modules/views/admin/notifikasi_admin_v
 import 'package:flutter_epresence_app/app/modules/views/admin/presensi_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/beranda_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/edit_cuti_view.dart';
-import 'package:flutter_epresence_app/app/modules/views/karyawan/kamera_cuti_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/kamera_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/notifikasi_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/pengajuan_cuti_view.dart';
@@ -79,7 +78,9 @@ class Routes {
     ),
     GetPage(
       name: RouteNames.kameraPresensi,
-      page: () => KameraView(),
+      page: () => KameraView(
+        showLocationCard: true,
+      ),
     ),
     GetPage(
       name: RouteNames.riwayatCutiStaff,
@@ -87,7 +88,9 @@ class Routes {
     ),
     GetPage(
       name: RouteNames.kameraCuti,
-      page: () => KameraCutiView(),
+      page: () => KameraView(
+        showLocationCard: false,
+      ),
     ),
     GetPage(
       name: RouteNames.pengajuanCuti,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/time_date_display.dart';
+import 'package:flutter_epresence_app/app/modules/controller/presensi_controller.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
@@ -8,13 +9,12 @@ import 'package:get/get.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class BerandaView extends StatelessWidget {
-  const BerandaView({super.key});
+  final PresensiController _presensiController = Get.put(PresensiController());
+
+  BerandaView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String presensiMasuk = "08:00";
-    final String presensiPulang = "17:00";
-
     return Scaffold(
       appBar: const CustomAppBar(
         pageTitle: Dictionary.beranda,
@@ -25,7 +25,22 @@ class BerandaView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildPresensiHariIni(context, presensiMasuk, presensiPulang),
+            Obx(() {
+              if (_presensiController.presensiHariIni.value == null) {
+                return _buildPresensiHariIni(
+                  context,
+                  "--:--",
+                  "--:--",
+                );
+              } else {
+                return _buildPresensiHariIni(
+                  context,
+                  _presensiController.presensiHariIni.value!.checkInTime!,
+                  _presensiController.presensiHariIni.value!.checkOutTime ??
+                      "--:--",
+                );
+              }
+            }),
             const SizedBox(height: 30),
             Row(
               children: [

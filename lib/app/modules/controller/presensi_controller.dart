@@ -12,24 +12,29 @@ class PresensiController extends GetxController {
   final TextEditingController tanggalAkhir = TextEditingController();
 
   RxList<PresensiNetwork?> presensi = RxList<PresensiNetwork?>([]);
+  Rx<PresensiNetwork?> presensiHariIni = Rx<PresensiNetwork?>(null);
   RxList<RxBool> isExpandedList = RxList<RxBool>();
   Rx<DateTime?> dariTanggal = Rx<DateTime?>(null);
   Rx<DateTime?> sampaiTanggal = Rx<DateTime?>(null);
   RxList<PresensiNetwork?> presensiFilter = RxList<PresensiNetwork?>([]);
 
+  RxBool isPresensiToday = false.obs;
+
   @override
   void onInit() {
-    super.onInit();
+    cekPresensiHariIni();
     getRiwayatPresensi();
+    super.onInit();
   }
 
   // getRiwayatPresensi()
   Future<void> getRiwayatPresensi() async {
     try {
-      final PresensiResponse? attendanceResponse =
+      final RiwayatPresensiResponse? riwayatPresensiResponse =
           await _presensiRepository.getRiwayatPresensi();
-      if (attendanceResponse != null && attendanceResponse.presensi != null) {
-        presensi.value = attendanceResponse.presensi!;
+      if (riwayatPresensiResponse != null &&
+          riwayatPresensiResponse.presensi != null) {
+        presensi.value = riwayatPresensiResponse.presensi!;
         isExpandedList.value =
             List.generate(presensi.length, (index) => false.obs);
         _terapkanFilter();
@@ -72,13 +77,96 @@ class PresensiController extends GetxController {
     _terapkanFilter();
   }
 
+  // cek presensi hari ini
+  Future<void> cekPresensiHariIni() async {
+    try {
+      final PresensiResponse? response =
+          await _presensiRepository.cekPresensiHariIni();
+      if (response != null) {
+        if (response.presensi != null) {
+          isPresensiToday.value = true;
+          presensiHariIni.value = response.presensi!;
+        } else {
+          isPresensiToday.value = false;
+        }
+      }
+    } catch (e) {
+      Get.snackbar(
+        Dictionary.defaultError,
+        e.toString(),
+        margin: const EdgeInsets.all(20),
+      );
+    }
+  }
+
   // catatPresensiMasuk(presensi)
+  Future<void> catatPresensiMasuk(double latitude, double longitude) async {
+    try {
+      final response =
+          await _presensiRepository.catatPresensiMasuk(latitude, longitude);
+
+      if (response!.presensi != null) {
+        onInit();
+        Get.back();
+        Get.snackbar(
+          Dictionary.defaultSuccess,
+          Dictionary.suksesPresensiMasuk,
+          margin: const EdgeInsets.all(20),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        Dictionary.gagalPresensiMasuk,
+        e.toString(),
+        margin: const EdgeInsets.all(20),
+      );
+    }
+  }
 
   // catatPresensiKeluar(presensi)
+  Future<void> catatPresensiKeluar(double latitude, double longitude) async {
+    try {
+      final response =
+          await _presensiRepository.catatPresensiPulang(latitude, longitude);
+
+      if (response != null) {
+        onInit();
+        Get.back();
+        Get.snackbar(
+          Dictionary.defaultSuccess,
+          Dictionary.suksesPresensiPulang,
+          margin: const EdgeInsets.all(20),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        Dictionary.defaultError,
+        Dictionary.gagalPresensiPulang,
+        margin: const EdgeInsets.all(20),
+      );
+    }
+  }
 
   // validasiLokasi()
 
   // getSemuaPresensi()
+  Future<void> getSemuaPresensi() async {
+    try {
+      final RiwayatPresensiResponse? semuaPresensiResponse =
+          await _presensiRepository.getSemuaPresensi();
+      if (semuaPresensiResponse != null &&
+          semuaPresensiResponse.presensi != null) {
+        presensi.value = semuaPresensiResponse.presensi!;
+        _terapkanFilter();
+      }
+    } catch (e) {
+      Get.snackbar(
+        Dictionary.defaultError,
+        e.toString(),
+        margin: const EdgeInsets.all(20),
+      );
+    }
+  }
 
   // pengingatPresensi()
 }
