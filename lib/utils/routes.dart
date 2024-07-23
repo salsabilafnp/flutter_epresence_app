@@ -14,12 +14,14 @@ import 'package:flutter_epresence_app/app/modules/views/karyawan/profil_view.dar
 import 'package:flutter_epresence_app/app/modules/views/karyawan/riwayat_cuti_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/riwayat_presensi_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/login_view.dart';
+import 'package:flutter_epresence_app/app/modules/views/registrasi_wajah.dart';
 import 'package:flutter_epresence_app/app/modules/views/splash_screen.dart';
 import 'package:get/get.dart';
 
 class RouteNames {
   static const splashScreen = '/splash-screen';
   static const logIn = '/login';
+  static const registrasiWajah = '/registrasi-wajah';
   static const bottomNavBar = '/bottom-navbar';
   // staff routes
   static const berandaStaff = '/beranda-staff';
@@ -57,6 +59,10 @@ class Routes {
       page: () => LoginView(),
     ),
     GetPage(
+      name: RouteNames.registrasiWajah,
+      page: () => RegistrasiWajah(),
+    ),
+    GetPage(
       name: RouteNames.bottomNavBar,
       page: () {
         final role = Get.parameters['role'];
@@ -78,9 +84,7 @@ class Routes {
     ),
     GetPage(
       name: RouteNames.kameraPresensi,
-      page: () => KameraView(
-        showLocationCard: true,
-      ),
+      page: () => KameraView(),
     ),
     GetPage(
       name: RouteNames.riwayatCutiStaff,
@@ -89,7 +93,7 @@ class Routes {
     GetPage(
       name: RouteNames.kameraCuti,
       page: () => KameraView(
-        showLocationCard: false,
+        kameraCuti: true,
       ),
     ),
     GetPage(

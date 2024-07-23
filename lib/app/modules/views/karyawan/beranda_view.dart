@@ -26,6 +26,7 @@ class BerandaView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Obx(() {
+              // jam masuk dan pulang hari ini
               if (_presensiController.presensiHariIni.value == null) {
                 return _buildPresensiHariIni(
                   context,
@@ -93,8 +94,8 @@ class BerandaView extends StatelessWidget {
             FilledButton.icon(
               style: AppTheme.primaryButtonStyle,
               onPressed: () {
-                // Get.toNamed(RouteNames.kameraCuti);
-                Get.toNamed(RouteNames.pengajuanCuti);
+                Get.toNamed(RouteNames.kameraCuti);
+                // Get.toNamed(RouteNames.pengajuanCuti);
               },
               icon: Icon(Symbols.note_alt),
               label: Text(Dictionary.pengajuanCuti),

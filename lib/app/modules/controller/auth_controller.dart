@@ -34,31 +34,39 @@ class AuthController extends GetxController {
 
         // Simpan informasi user di GetStorage
         box.write('user', authResponse.user?.toJson());
-        loadUser(); // Muat ulang data user setelah login berhasil
+        loadUser();
 
-        if (role == 'admin') {
-          Get.offAllNamed(
-            RouteNames.bottomNavBar,
-            parameters: {'role': Dictionary.admin},
-          );
-        } else if (role == 'staff') {
-          Get.offAllNamed(
-            RouteNames.bottomNavBar,
-            parameters: {'role': Dictionary.staff},
-          );
+        final user = box.read('user');
+
+        if (user['face_embedding'] == null) {
+          // Redirect to face registration page
+          Get.offAllNamed(RouteNames.registrasiWajah);
         } else {
+          // Redirect ke halaman sesuai role
+          if (role == 'admin') {
+            Get.offAllNamed(
+              RouteNames.bottomNavBar,
+              parameters: {'role': Dictionary.admin},
+            );
+          } else if (role == 'staff') {
+            Get.offAllNamed(
+              RouteNames.bottomNavBar,
+              parameters: {'role': Dictionary.staff},
+            );
+          } else {
+            Get.snackbar(
+              Dictionary.defaultError,
+              'Role tidak dikenal',
+              margin: const EdgeInsets.all(20),
+            );
+          }
+
           Get.snackbar(
-            Dictionary.defaultError,
-            'Role tidak dikenal',
+            Dictionary.defaultSuccess,
+            Dictionary.suksesLogin,
             margin: const EdgeInsets.all(20),
           );
         }
-
-        Get.snackbar(
-          Dictionary.defaultSuccess,
-          Dictionary.suksesLogin,
-          margin: const EdgeInsets.all(20),
-        );
       } else {
         Get.snackbar(
           Dictionary.defaultError,
@@ -114,6 +122,16 @@ class AuthController extends GetxController {
   }
 
   // updateProfil
+  Future<void> updateProfil(String faceEmbedding, String imageUrl) async {
+    try {
+      await authRepository.updateProfil(faceEmbedding, imageUrl);
+      loadUser();
+      Get.snackbar(Dictionary.defaultSuccess, "Profil berhasil diperbarui.");
+    } catch (e) {
+      Get.snackbar(Dictionary.defaultError, "Gagal memperbarui profil.");
+      print(e);
+    }
+  }
 
   // verifikasiWajah
 

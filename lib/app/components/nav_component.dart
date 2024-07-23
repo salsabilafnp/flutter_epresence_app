@@ -58,14 +58,14 @@ class _NavComponentState extends State<NavComponent> {
         onTabTapped: changeTabIndex,
       ),
       floatingActionButton: widget.role == Dictionary.staff &&
-              _presensiController.presensiHariIni.value == null
+              _presensiController.isPulangHariIni.value == false
           ? Obx(() {
               return FloatingActionButton(
                 onPressed: () {
                   Get.toNamed(RouteNames.kameraPresensi);
                 },
                 shape: const CircleBorder(),
-                backgroundColor: _presensiController.isPresensiToday.value
+                backgroundColor: _presensiController.isPresensiHariIni.value
                     ? Theme.of(context).colorScheme.secondary
                     : Theme.of(context).colorScheme.primary,
                 child: const Icon(Symbols.familiar_face_and_zone),
@@ -75,6 +75,4 @@ class _NavComponentState extends State<NavComponent> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
-
-  void cekPresensi() {}
 }

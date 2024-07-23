@@ -93,4 +93,32 @@ class AuthRepository extends GetConnect {
       }
     }
   }
+
+  // updateProfil(faceEmbedding, imageUrl)
+  Future<void> updateProfil(String faceEmbedding, String imageUrl) async {
+    final String? accessToken = box.read('token');
+
+    if (accessToken != null) {
+      try {
+        final response = await put(
+          NetworkEndpoint.updateProfile,
+          {
+            'face_embedding': faceEmbedding,
+            'image_url': imageUrl,
+          },
+          headers: {'Authorization': 'Bearer $accessToken'},
+        );
+
+        if (response.statusCode == 200) {
+          final user = response.body['user'];
+          box.write('user', user);
+        } else {
+          throw Dictionary.defaultError;
+        }
+      } catch (e) {
+        inspect('Terjadi kesalahan saat mengupdate profil: $e');
+        rethrow;
+      }
+    }
+  }
 }

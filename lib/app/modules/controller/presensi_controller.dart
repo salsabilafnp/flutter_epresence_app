@@ -18,7 +18,8 @@ class PresensiController extends GetxController {
   Rx<DateTime?> sampaiTanggal = Rx<DateTime?>(null);
   RxList<PresensiNetwork?> presensiFilter = RxList<PresensiNetwork?>([]);
 
-  RxBool isPresensiToday = false.obs;
+  RxBool isPresensiHariIni = false.obs;
+  RxBool isPulangHariIni = false.obs;
 
   @override
   void onInit() {
@@ -84,10 +85,13 @@ class PresensiController extends GetxController {
           await _presensiRepository.cekPresensiHariIni();
       if (response != null) {
         if (response.presensi != null) {
-          isPresensiToday.value = true;
+          isPresensiHariIni.value = true;
           presensiHariIni.value = response.presensi!;
+          if (response.presensi!.checkOutTime == null) {
+            isPulangHariIni.value = false;
+          }
         } else {
-          isPresensiToday.value = false;
+          isPresensiHariIni.value = false;
         }
       }
     } catch (e) {
@@ -167,6 +171,8 @@ class PresensiController extends GetxController {
       );
     }
   }
+
+  // detailPresensi()
 
   // pengingatPresensi()
 }

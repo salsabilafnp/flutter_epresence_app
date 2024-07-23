@@ -2,12 +2,16 @@ class Dictionary {
   static const kembali = "Kembali";
   static const batal = "Batal";
 
+  static const ya = "Ya";
+  static const tidak = "Tidak";
+
   // Menu
   static const beranda = "Beranda";
   static const notifikasi = "Notifikasi";
   static const riwayatPresensi = "Riwayat Presensi";
   static const presensi = 'Presensi';
   static const detailPresensi = 'Detail Presensi';
+  static const registrasiWajah = 'Registrasi Identitas';
   static const verifikasiWajah = 'Verifikasi Identitas';
   static const catatPresensiMasuk = "Presensi Masuk";
   static const catatPresensiKeluar = "Presensi Keluar";

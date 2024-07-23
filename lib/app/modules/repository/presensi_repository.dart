@@ -143,5 +143,7 @@ class PresensiRepository extends GetConnect {
     }
   }
 
+  // detailPresensi()
+
   // pengingatPresensi()
 }

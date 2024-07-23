@@ -6,16 +6,20 @@ import 'package:flutter_epresence_app/app/modules/controller/presensi_controller
 import 'package:flutter_epresence_app/app/modules/views/karyawan/lokasi_view.dart';
 import 'package:flutter_epresence_app/services/geolocation_service.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:get/get.dart';
 
 class KameraView extends StatelessWidget {
-  final bool showLocationCard;
+  final bool kameraCuti;
   final KameraController kameraController = Get.put(KameraController());
   final GeolocationService geolocationController =
       Get.put(GeolocationService());
   final PresensiController presensiController = Get.put(PresensiController());
 
-  KameraView({super.key, this.showLocationCard = true});
+  KameraView({
+    super.key,
+    this.kameraCuti = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,52 +31,83 @@ class KameraView extends StatelessWidget {
       appBar: const CustomAppBar(
         pageTitle: Dictionary.verifikasiWajah,
       ),
-      body: Obx(() {
-        if (!kameraController.isCameraInitialized.value) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return Stack(
-            children: [
-              // Kamera
-              Positioned(
-                height: screenHeight,
-                child: CameraPreview(kameraController.cameraController.value!),
-              ),
-              // Tombol Verifikasi Wajah
-              Positioned(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: IconButton(
-                    icon: const Icon(Icons.circle),
-                    iconSize: 75,
-                    color: Theme.of(context).colorScheme.error,
-                    onPressed: () async {
-                      // Verifikasi Wajah
-                      // dialog konfirmasi catat presensi
-                      final currentPosition =
-                          geolocationController.currentPosition.value;
-                      if (currentPosition != null) {
-                        presensiController.isPresensiToday.value
-                            ? await presensiController.catatPresensiKeluar(
-                                currentPosition.latitude,
-                                currentPosition.longitude,
-                              )
-                            : await presensiController.catatPresensiMasuk(
-                                currentPosition.latitude,
-                                currentPosition.longitude,
-                              );
-                      }
-                    },
-                  ),
+      body: Obx(
+        () {
+          if (!kameraController.isCameraInitialized.value) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return Stack(
+              children: [
+                // Kamera
+                Positioned(
+                  height: screenHeight,
+                  child:
+                      CameraPreview(kameraController.cameraController.value!),
                 ),
-              ),
-              // Card Informasi Lokasi
-              if (showLocationCard)
-                cardInfoLocation(context, posCardBottom, screenWidth)
-            ],
-          );
-        }
-      }),
+                // Card Informasi Lokasi
+                if (!kameraCuti)
+                  cardInfoLocation(context, posCardBottom, screenWidth)
+              ],
+            );
+          }
+        },
+      ),
+      // Tombol Verifikasi Wajah
+      floatingActionButton: IconButton(
+        icon: const Icon(Icons.circle),
+        iconSize: 75,
+        color: Theme.of(context).colorScheme.error,
+        onPressed: () async {
+          // Verifikasi Wajah
+          // kamera cuti
+          if (kameraCuti) {
+            Get.toNamed(RouteNames.pengajuanCuti);
+          } else {
+            // dialog konfirmasi catat presensi
+            dialogCatatPresensi();
+          }
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  void dialogCatatPresensi() {
+    final currentPosition = geolocationController.currentPosition.value;
+    Get.defaultDialog(
+      title: presensiController.isPresensiHariIni.value
+          ? "${Dictionary.konfirmasi} ${Dictionary.catatPresensiKeluar}"
+          : "${Dictionary.konfirmasi} ${Dictionary.catatPresensiMasuk}",
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            'Lokasi saat ini:',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Latitude: ${currentPosition!.latitude}',
+          ),
+          Text(
+            'Longitude: ${currentPosition.longitude}',
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
+      textConfirm: Dictionary.ya,
+      textCancel: Dictionary.tidak,
+      onConfirm: () {
+        presensiController.isPresensiHariIni.value
+            ? presensiController.catatPresensiKeluar(
+                currentPosition.latitude,
+                currentPosition.longitude,
+              )
+            : presensiController.catatPresensiMasuk(
+                currentPosition.latitude,
+                currentPosition.longitude,
+              );
+      },
     );
   }
 
@@ -96,7 +131,7 @@ class KameraView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    presensiController.isPresensiToday.value
+                    presensiController.isPresensiHariIni.value
                         ? Dictionary.presensiPulang
                         : Dictionary.presensiMasuk,
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
