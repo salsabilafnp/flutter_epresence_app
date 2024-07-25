@@ -28,6 +28,7 @@ class CutiController extends GetxController {
 
   RxString? selectedPermitType = 'Semua'.obs;
   RxString? selectedStatus = 'Semua'.obs;
+  RxBool isLoading = false.obs;
 
   @override
   void onInit() {
@@ -36,7 +37,10 @@ class CutiController extends GetxController {
   }
 
   // getRiwayatCuti()
-  Future<void> getRiwayatCuti() async {
+  Future<void> getRiwayatCuti({bool isLoadMore = false}) async {
+    if (isLoading.value) return;
+    isLoading.value = true;
+
     try {
       final CutiResponse? cutiResponse = await _cutiRepository.getRiwayatCuti();
       if (cutiResponse != null && cutiResponse.cuti != null) {
@@ -49,7 +53,15 @@ class CutiController extends GetxController {
         e.toString(),
         margin: const EdgeInsets.all(20),
       );
+    } finally {
+      isLoading.value = false;
     }
+  }
+
+  // reloadData
+  Future<void> reloadData() async {
+    cuti.clear();
+    await getRiwayatCuti();
   }
 
   // filterCuti

@@ -23,29 +23,47 @@ class RiwayatCutiView extends StatelessWidget {
       ),
       body: Container(
         margin: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            FilledButton.icon(
-              onPressed: () {
-                _showFilterDialog(context);
-              },
-              label: const Text(Dictionary.filter),
-              icon: const Icon(Icons.filter_alt_outlined),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: Obx(() {
-                final cutiFilter = _cutiController.cutiFilter;
-                return ListView.builder(
-                  itemCount: cutiFilter.length,
-                  itemBuilder: (context, index) {
-                    final ajuanCuti = cutiFilter[index];
-                    return _buildCutiCard(context, ajuanCuti!);
+        child: RefreshIndicator(
+          onRefresh: _cutiController.reloadData,
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollInfo) {
+              if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent &&
+                  !_cutiController.isLoading.value) {
+                _cutiController.getRiwayatCuti(isLoadMore: true);
+              }
+              return false;
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FilledButton.icon(
+                  onPressed: () {
+                    _showFilterDialog(context);
                   },
-                );
-              }),
+                  label: const Text(Dictionary.filter),
+                  icon: const Icon(Icons.filter_alt_outlined),
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: Obx(
+                    () => ListView.builder(
+                      itemCount: _cutiController.cuti.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == _cutiController.cuti.length) {
+                          return _cutiController.isLoading.value
+                              ? const Center(child: CircularProgressIndicator())
+                              : const SizedBox.shrink();
+                        }
+                        final cuti = _cutiController.cuti[index];
+                        return _buildCutiCard(context, cuti!);
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

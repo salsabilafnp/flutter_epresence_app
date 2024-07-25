@@ -76,7 +76,7 @@ class KameraView extends StatelessWidget {
     final currentPosition = geolocationController.currentPosition.value;
     Get.defaultDialog(
       title: presensiController.isPresensiHariIni.value
-          ? "${Dictionary.konfirmasi} ${Dictionary.catatPresensiKeluar}"
+          ? "${Dictionary.konfirmasi} ${Dictionary.catatPresensiPulang}"
           : "${Dictionary.konfirmasi} ${Dictionary.catatPresensiMasuk}",
       content: Column(
         mainAxisSize: MainAxisSize.min,

@@ -54,10 +54,10 @@ class KameraController extends GetxController {
       previewSize.value = cameraController.value!.value.previewSize;
       isCameraInitialized.value = true;
 
-      cameraController.value?.startImageStream((CameraImage image) {
-        frame = image;
-        doFaceDetectionOnFrame();
-      });
+      // cameraController.value?.startImageStream((CameraImage image) {
+      // frame = image;
+      doFaceDetectionOnFrame();
+      // });
     } catch (e) {
       print('Error initializing camera: $e');
     }

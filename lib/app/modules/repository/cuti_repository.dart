@@ -87,6 +87,27 @@ class CutiRepository extends GetConnect {
   // getSemuaCuti()
 
   // getDetailAjuan(id)
+  Future<CutiResponse?> getDetailCuti(int id) async {
+    final String? accessToken = box.read('token');
+    if (accessToken != null) {
+      try {
+        final response = await get(
+          '${NetworkEndpoint.cuti}/$id',
+          headers: {'Authorization': 'Bearer $accessToken'},
+        );
+
+        if (response.statusCode == 200) {
+          return CutiResponse.fromJson(response.body);
+        } else {
+          throw Dictionary.defaultError;
+        }
+      } catch (e) {
+        log('Error fetching cuti detail: $e');
+        rethrow;
+      }
+    }
+    return null;
+  }
 
   // konfirmasiAjuan(id, status)
 

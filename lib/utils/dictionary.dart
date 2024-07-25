@@ -14,9 +14,9 @@ class Dictionary {
   static const registrasiWajah = 'Registrasi Identitas';
   static const verifikasiWajah = 'Verifikasi Identitas';
   static const catatPresensiMasuk = "Presensi Masuk";
-  static const catatPresensiKeluar = "Presensi Keluar";
+  static const catatPresensiPulang = "Presensi Pulang";
   static const lokasiPresensiMasuk = "Lokasi Presensi Masuk";
-  static const lokasiPresensKeluar = "Lokasi Presensi Keluar";
+  static const lokasiPresensPulang = "Lokasi Presensi Pulang";
   static const riwayatAjuanCuti = "Riwayat Ajuan Cuti";
   static const pengajuanCuti = "Pengajuan Cuti";
   static const detailAjuanCuti = "Detail Ajuan Cuti";
@@ -28,6 +28,7 @@ class Dictionary {
   static const konfirmasi = "Konfirmasi";
   static const filter = "Filter";
   static const terapkanFilter = "Terapkan";
+  static const resetFilter = "Atur Ulang";
   static const filterTanggal = "Berdasarkan Tanggal";
   static const tanggalMulai = "Dari Tanggal";
   static const tanggalAkhir = "Sampai Tanggal";
@@ -96,7 +97,7 @@ class Dictionary {
 
   // Auth
   static const logIn = 'Masuk';
-  static const logOut = 'Keluar';
+  static const logOut = 'Pulang';
   static const email = 'Email';
   static const password = 'Kata Sandi';
   static const gantiAkses = 'Ganti Hak Akses';

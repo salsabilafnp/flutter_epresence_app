@@ -9,7 +9,7 @@ import 'package:get_storage/get_storage.dart';
 class PresensiRepository extends GetConnect {
   final box = GetStorage();
 
-  // getRiwayatPresensi()
+  // getRiwayatPresensi
   Future<RiwayatPresensiResponse?> getRiwayatPresensi() async {
     final String? accessToken = box.read('token');
     if (accessToken != null) {

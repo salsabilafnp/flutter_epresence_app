@@ -49,11 +49,13 @@ class RegistrasiWajah extends StatelessWidget {
         },
       ),
       // Tombol Verifikasi Wajah
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: IconButton(
+        icon: const Icon(Icons.circle),
+        iconSize: 75,
+        color: Theme.of(context).colorScheme.error,
         onPressed: () async {
           await kameraController.verifikasiWajah();
         },
-        child: const Icon(Icons.circle),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

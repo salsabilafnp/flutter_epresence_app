@@ -36,37 +36,37 @@ class AuthController extends GetxController {
         box.write('user', authResponse.user?.toJson());
         loadUser();
 
-        final user = box.read('user');
+        // final user = box.read('user');
 
-        if (user['face_embedding'] == null) {
-          // Redirect to face registration page
-          Get.offAllNamed(RouteNames.registrasiWajah);
+        // if (user['face_embedding'] == null) {
+        //   // Redirect to face registration page
+        //   Get.offAllNamed(RouteNames.registrasiWajah);
+        // } else {
+        // Redirect ke halaman sesuai role
+        if (role == 'admin') {
+          Get.offAllNamed(
+            RouteNames.bottomNavBar,
+            parameters: {'role': Dictionary.admin},
+          );
+        } else if (role == 'staff') {
+          Get.offAllNamed(
+            RouteNames.bottomNavBar,
+            parameters: {'role': Dictionary.staff},
+          );
         } else {
-          // Redirect ke halaman sesuai role
-          if (role == 'admin') {
-            Get.offAllNamed(
-              RouteNames.bottomNavBar,
-              parameters: {'role': Dictionary.admin},
-            );
-          } else if (role == 'staff') {
-            Get.offAllNamed(
-              RouteNames.bottomNavBar,
-              parameters: {'role': Dictionary.staff},
-            );
-          } else {
-            Get.snackbar(
-              Dictionary.defaultError,
-              'Role tidak dikenal',
-              margin: const EdgeInsets.all(20),
-            );
-          }
-
           Get.snackbar(
-            Dictionary.defaultSuccess,
-            Dictionary.suksesLogin,
+            Dictionary.defaultError,
+            'Role tidak dikenal',
             margin: const EdgeInsets.all(20),
           );
         }
+
+        Get.snackbar(
+          Dictionary.defaultSuccess,
+          Dictionary.suksesLogin,
+          margin: const EdgeInsets.all(20),
+        );
+        // }
       } else {
         Get.snackbar(
           Dictionary.defaultError,
@@ -89,25 +89,7 @@ class AuthController extends GetxController {
     final user = box.read('user');
 
     if (token != null && user != null) {
-      final role = user['role'];
-      if (role == 'admin') {
-        Get.offAllNamed(
-          RouteNames.bottomNavBar,
-          parameters: {'role': Dictionary.admin},
-        );
-      } else if (role == 'staff') {
-        Get.offAllNamed(
-          RouteNames.bottomNavBar,
-          parameters: {'role': Dictionary.staff},
-        );
-      } else {
-        Get.snackbar(
-          Dictionary.defaultError,
-          'Role tidak dikenal',
-          margin: const EdgeInsets.all(20),
-        );
-        Get.offAllNamed(RouteNames.logIn);
-      }
+      cekRole();
     } else {
       Get.offAllNamed(RouteNames.logIn);
     }
@@ -125,7 +107,6 @@ class AuthController extends GetxController {
   Future<void> updateProfil(String faceEmbedding, String imageUrl) async {
     try {
       await authRepository.updateProfil(faceEmbedding, imageUrl);
-      loadUser();
       Get.snackbar(Dictionary.defaultSuccess, "Profil berhasil diperbarui.");
     } catch (e) {
       Get.snackbar(Dictionary.defaultError, "Gagal memperbarui profil.");
@@ -149,6 +130,23 @@ class AuthController extends GetxController {
         Dictionary.defaultError,
         'Gagal logout: $e',
         margin: const EdgeInsets.all(20),
+      );
+    }
+  }
+
+  void cekRole() {
+    final userData = box.read('user');
+    final role = userData['role'];
+
+    if (role == 'admin') {
+      Get.offAllNamed(
+        RouteNames.bottomNavBar,
+        parameters: {'role': Dictionary.admin},
+      );
+    } else if (role == 'staff') {
+      Get.offAllNamed(
+        RouteNames.bottomNavBar,
+        parameters: {'role': Dictionary.staff},
       );
     }
   }

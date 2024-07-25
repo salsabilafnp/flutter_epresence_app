@@ -21,30 +21,47 @@ class RiwayatPresensiView extends StatelessWidget {
       ),
       body: Container(
         margin: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FilledButton.icon(
-              onPressed: () {
-                _showFilterDialog(context);
-              },
-              label: const Text(Dictionary.filter),
-              icon: const Icon(Icons.filter_alt_outlined),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: Obx(() {
-                final presensiByFilter = _presensiController.presensiFilter;
-                return ListView.builder(
-                  itemCount: presensiByFilter.length,
-                  itemBuilder: (context, index) {
-                    final presensi = presensiByFilter[index];
-                    return _buildPresensiCard(context, presensi!, index);
+        child: RefreshIndicator(
+          onRefresh: _presensiController.reloadData,
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollInfo) {
+              if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent &&
+                  !_presensiController.isLoading.value) {
+                _presensiController.getRiwayatPresensi(isLoadMore: true);
+              }
+              return false;
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FilledButton.icon(
+                  onPressed: () {
+                    _showFilterDialog(context);
                   },
-                );
-              }),
+                  label: const Text(Dictionary.filter),
+                  icon: const Icon(Icons.filter_alt_outlined),
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: Obx(
+                    () => ListView.builder(
+                      itemCount: _presensiController.presensi.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == _presensiController.presensi.length) {
+                          return _presensiController.isLoading.value
+                              ? const Center(child: CircularProgressIndicator())
+                              : const SizedBox.shrink();
+                        }
+                        final presensi = _presensiController.presensi[index];
+                        return _buildPresensiCard(context, presensi!, index);
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
