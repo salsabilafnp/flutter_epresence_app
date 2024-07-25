@@ -1,28 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
+import 'package:flutter_epresence_app/app/modules/controller/cuti_controller.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class PengajuanCutiView extends StatefulWidget {
-  const PengajuanCutiView({super.key});
-
-  @override
-  _PengajuanCutiViewState createState() => _PengajuanCutiViewState();
-}
-
-class _PengajuanCutiViewState extends State<PengajuanCutiView> {
-  final TextEditingController jenisPengajuanController =
-      TextEditingController();
-  final TextEditingController tanggalCutiController = TextEditingController();
-  final TextEditingController durasiController = TextEditingController();
-  final TextEditingController alasanController = TextEditingController();
-  final TextEditingController buktiFileController = TextEditingController();
-  final TextEditingController statusController =
-      TextEditingController(text: Dictionary.diajukan);
-  final TextEditingController waktuPengajuanController = TextEditingController(
-      text:
-          DateFormat('EEEE, d MMMM y HH:mm').format(DateTime.now()).toString());
+class PengajuanCutiView extends StatelessWidget {
+  final CutiController _cutiController = Get.put(CutiController());
+  PengajuanCutiView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +23,7 @@ class _PengajuanCutiViewState extends State<PengajuanCutiView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomTextField(
-                controller: jenisPengajuanController,
+                controller: _cutiController.jenisAjuanController,
                 inputLabel: Dictionary.jenisPengajuan,
                 isDropdown: true,
                 dropdownItems: const [
@@ -47,45 +33,46 @@ class _PengajuanCutiViewState extends State<PengajuanCutiView> {
                 ],
                 icon: Icons.assignment,
                 onChanged: (value) {
-                  setState(() {
-                    jenisPengajuanController.text = value;
-                  });
+                  _cutiController.jenisAjuanController.text =
+                      Dictionary.mapTipe(value);
                 },
               ),
               CustomTextField(
-                controller: tanggalCutiController,
+                controller: _cutiController.tanggalCutiController,
                 inputLabel: Dictionary.tanggalCuti,
                 isDate: true,
                 icon: Icons.calendar_today_outlined,
                 onChanged: (value) {
-                  setState(() {
-                    tanggalCutiController.text = value;
-                  });
+                  _cutiController.tanggalCutiController.text = value;
                 },
               ),
               CustomTextField(
-                controller: durasiController,
+                controller: _cutiController.durasiController,
                 inputLabel: Dictionary.durasi,
                 isNumber: true,
               ),
               CustomTextField(
-                controller: alasanController,
+                controller: _cutiController.alasanController,
                 inputLabel: Dictionary.alasan,
                 isTextarea: true,
               ),
               CustomTextField(
-                controller: buktiFileController,
+                controller: _cutiController.buktiFileController,
                 inputLabel: Dictionary.buktiFile,
                 isFile: true,
                 icon: Icons.attach_file,
               ),
               CustomTextField(
-                controller: statusController,
+                controller: _cutiController.statusAjuanController,
                 inputLabel: Dictionary.statusAjuan,
+                initialValue: Dictionary.diajukan,
                 readOnly: true,
               ),
               CustomTextField(
-                controller: waktuPengajuanController,
+                controller: _cutiController.waktuPengajuanController,
+                initialValue: DateFormat('EEEE, d MMMM y HH:mm')
+                    .format(DateTime.now())
+                    .toString(),
                 inputLabel: Dictionary.waktuPengajuan,
                 readOnly: true,
               ),
@@ -94,14 +81,16 @@ class _PengajuanCutiViewState extends State<PengajuanCutiView> {
         ),
       ),
       bottomNavigationBar: Container(
-        margin: EdgeInsets.only(
+        margin: const EdgeInsets.only(
           bottom: 20,
           left: 20,
           right: 20,
         ),
         child: FilledButton(
-          child: Text(Dictionary.ajukan),
-          onPressed: () {},
+          child: const Text(Dictionary.ajukan),
+          onPressed: () {
+            _cutiController.ajukanCuti();
+          },
         ),
       ),
     );

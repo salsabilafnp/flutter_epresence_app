@@ -1,5 +1,5 @@
 name: flutter_epresence_app
-description: "A new Flutter project."
+description: "Aplikasi presensi karyawan berbasis mobile dengan face recognition dan geolocation menggunakan framework flutter"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -14,8 +14,8 @@ environment:
 
 # Dependencies specify other packages that your package needs in order to work.
 dependencies:
-  camera: ^0.9.4+5
-  file_picker: ^4.2.5
+  camera: ^0.10.5+9
+  file_picker: ^8.0.6
   fl_chart: ^0.68.0
   flutter:
     sdk: flutter
@@ -24,14 +24,17 @@ dependencies:
   get: ^4.6.5
   get_cli: ^1.8.1
   get_storage: ^2.0.3
+  google_mlkit_commons: ^0.7.1
+  google_mlkit_face_detection: ^0.10.1
   intl: ^0.18.1
+  image: ^4.1.7
   latlong2: ^0.9.1
-  material_symbols_icons: ^4.2762.0
-  shared_preferences: ^2.2.1
+  material_symbols_icons: ^4.2771.0
+  tflite_flutter: ^0.10.4
 
 dev_dependencies:
-  change_app_package_name: ^1.1.0
-  flutter_lints: ^3.0.0
+  change_app_package_name: ^1.3.0
+  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
 
@@ -39,6 +42,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/
     - assets/images/
   # fonts:
   #   - family: Schyler

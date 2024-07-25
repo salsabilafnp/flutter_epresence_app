@@ -1,42 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
+import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
+import 'package:flutter_epresence_app/app/modules/controller/presensi_controller.dart';
 import 'package:flutter_epresence_app/app/modules/models/presensi.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:flutter_epresence_app/utils/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class RiwayatPresensiView extends StatefulWidget {
-  const RiwayatPresensiView({super.key});
+class RiwayatPresensiView extends StatelessWidget {
+  final PresensiController _presensiController = Get.put(PresensiController());
 
-  @override
-  _RiwayatPresensiViewState createState() => _RiwayatPresensiViewState();
-}
-
-class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
-  String _selectedMonth = 'January';
-  final List<String> _months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ];
-
-  List<RxBool> _isExpandedList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _isExpandedList =
-        List.generate(_presensiDataFiltered.length, (index) => false.obs);
-  }
+  RiwayatPresensiView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,49 +21,154 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
       ),
       body: Container(
         margin: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildMonthFilter(),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _presensiDataFiltered.length,
-                itemBuilder: (context, index) {
-                  final presensi = _presensiDataFiltered[index];
-                  return _buildPresensiCard(presensi, index);
-                },
-              ),
+        child: RefreshIndicator(
+          onRefresh: _presensiController.reloadData,
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollInfo) {
+              if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent &&
+                  !_presensiController.isLoading.value) {
+                _presensiController.getRiwayatPresensi(isLoadMore: true);
+              }
+              return false;
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FilledButton.icon(
+                  onPressed: () {
+                    _showFilterDialog(context);
+                  },
+                  label: const Text(Dictionary.filter),
+                  icon: const Icon(Icons.filter_alt_outlined),
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: Obx(
+                    () => ListView.builder(
+                      itemCount: _presensiController.presensi.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == _presensiController.presensi.length) {
+                          return _presensiController.isLoading.value
+                              ? const Center(child: CircularProgressIndicator())
+                              : const SizedBox.shrink();
+                        }
+                        final presensi = _presensiController.presensi[index];
+                        return _buildPresensiCard(context, presensi!, index);
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildMonthFilter() {
-    return DropdownButton<String>(
-      value: _selectedMonth,
-      icon: const Icon(Icons.keyboard_arrow_down),
-      onChanged: (String? newValue) {
-        setState(() {
-          _selectedMonth = newValue!;
-        });
-      },
-      items: _months.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
+  void _showFilterDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text(Dictionary.filter),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomTextField(
+                      controller: _presensiController.tanggalAwal,
+                      inputLabel: Dictionary.tanggalMulai,
+                      isDate: true,
+                      icon: Icons.calendar_today_outlined,
+                      readOnly: true,
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: _presensiController.dariTanggal.value ??
+                              DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (pickedDate != null) {
+                          setState(() {
+                            _presensiController.dariTanggal.value = pickedDate;
+                            _presensiController.tanggalAwal.text =
+                                DateFormat.yMMMMd().format(pickedDate);
+                          });
+                        }
+                      },
+                    ),
+                    CustomTextField(
+                      controller: _presensiController.tanggalAkhir,
+                      inputLabel: Dictionary.tanggalAkhir,
+                      isDate: true,
+                      icon: Icons.calendar_today_outlined,
+                      readOnly: true,
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate:
+                              _presensiController.sampaiTanggal.value ??
+                                  DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (pickedDate != null) {
+                          setState(() {
+                            _presensiController.sampaiTanggal.value =
+                                pickedDate;
+                            _presensiController.tanggalAkhir.text =
+                                DateFormat.yMMMMd().format(pickedDate);
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    FilledButton(
+                      onPressed: () {
+                        _presensiController.aturFilter(
+                          _presensiController.dariTanggal.value,
+                          _presensiController.sampaiTanggal.value,
+                        );
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        Dictionary.terapkanFilter,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    OutlinedButton(
+                      style: AppTheme.secondaryOutlinedButtonStyle,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(Dictionary.kembali),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
-      }).toList(),
+      },
     );
   }
 
-  Widget _buildPresensiCard(Presensi presensi, int index) {
+  Widget _buildPresensiCard(
+    BuildContext context,
+    PresensiNetwork presensi,
+    int index,
+  ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: GestureDetector(
         onTap: () {
-          _isExpandedList[index].value = !_isExpandedList[index].value;
+          _presensiController.isExpandedList[index].value =
+              !_presensiController.isExpandedList[index].value;
         },
         child: Obx(
           () => Column(
@@ -102,10 +182,10 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
                     Column(
                       children: [
                         Text(DateFormat('EEEE')
-                            .format(DateTime.parse(presensi.tanggal))),
+                            .format(DateTime.parse(presensi.date!))),
                         Text(
                           DateFormat('d MMMM yyyy')
-                              .format(DateTime.parse(presensi.tanggal)),
+                              .format(DateTime.parse(presensi.date!)),
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -114,7 +194,10 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
                       children: [
                         Text(Dictionary.hadirMasuk),
                         Text(
-                          presensi.waktuMasuk,
+                          presensi.checkInTime != null
+                              ? DateFormat('HH:mm').format(DateTime.parse(
+                                  '${presensi.date!} ${presensi.checkInTime!}'))
+                              : '-',
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge!
@@ -126,7 +209,10 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
                       children: [
                         Text(Dictionary.hadirPulang),
                         Text(
-                          presensi.waktuPulang,
+                          presensi.checkOutTime != null
+                              ? DateFormat('HH:mm').format(DateTime.parse(
+                                  '${presensi.date!} ${presensi.checkOutTime!}'))
+                              : '-',
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge!
@@ -135,14 +221,14 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
                       ],
                     ),
                     Icon(
-                      _isExpandedList[index].value
+                      _presensiController.isExpandedList[index].value
                           ? Icons.keyboard_arrow_up
                           : Icons.keyboard_arrow_down,
                     ),
                   ],
                 ),
               ),
-              if (_isExpandedList[index].value)
+              if (_presensiController.isExpandedList[index].value)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                   child: Row(
@@ -153,7 +239,7 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
                           Text(Dictionary.lokasiMasuk),
                           const SizedBox(height: 5),
                           Text(
-                            presensi.lokasiMasuk,
+                            _formatLocation(presensi.latlonIn) ?? '-',
                             textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme
@@ -168,7 +254,7 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
                           Text(Dictionary.lokasiPulang),
                           const SizedBox(height: 5),
                           Text(
-                            presensi.lokasiPulang,
+                            _formatLocation(presensi.latlonOut) ?? '-',
                             textAlign: TextAlign.center,
                             style: Theme.of(context)
                                 .textTheme
@@ -188,9 +274,10 @@ class _RiwayatPresensiViewState extends State<RiwayatPresensiView> {
     );
   }
 
-  List<Presensi> get _presensiDataFiltered {
-    return presensiData
-        .where((presensi) => presensi.userId == 'stf01')
-        .toList();
+  String? _formatLocation(String? location) {
+    if (location == null) {
+      return null;
+    }
+    return location.split(',').join('\n');
   }
 }

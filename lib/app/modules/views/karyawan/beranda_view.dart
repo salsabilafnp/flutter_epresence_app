@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/time_date_display.dart';
+import 'package:flutter_epresence_app/app/modules/controller/presensi_controller.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
@@ -8,15 +9,14 @@ import 'package:get/get.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class BerandaView extends StatelessWidget {
-  const BerandaView({super.key});
+  final PresensiController _presensiController = Get.put(PresensiController());
+
+  BerandaView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String presensiMasuk = "08:00";
-    final String presensiPulang = "17:00";
-
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         pageTitle: Dictionary.beranda,
       ),
       body: Container(
@@ -25,7 +25,23 @@ class BerandaView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildPresensiHariIni(context, presensiMasuk, presensiPulang),
+            Obx(() {
+              // jam masuk dan pulang hari ini
+              if (_presensiController.presensiHariIni.value == null) {
+                return _buildPresensiHariIni(
+                  context,
+                  "--:--",
+                  "--:--",
+                );
+              } else {
+                return _buildPresensiHariIni(
+                  context,
+                  _presensiController.presensiHariIni.value!.checkInTime!,
+                  _presensiController.presensiHariIni.value!.checkOutTime ??
+                      "--:--",
+                );
+              }
+            }),
             const SizedBox(height: 30),
             Row(
               children: [
@@ -37,8 +53,8 @@ class BerandaView extends StatelessWidget {
                       Get.toNamed(RouteNames.riwayatPresensiStaff);
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 15),
-                      child: Column(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: const Column(
                         children: [
                           Icon(Icons.work_history_outlined),
                           SizedBox(height: 5),
@@ -59,8 +75,8 @@ class BerandaView extends StatelessWidget {
                       Get.toNamed(RouteNames.riwayatCutiStaff);
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 15),
-                      child: Column(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: const Column(
                         children: [
                           Icon(Icons.edit_calendar_outlined),
                           SizedBox(height: 5),
@@ -79,10 +95,20 @@ class BerandaView extends StatelessWidget {
               style: AppTheme.primaryButtonStyle,
               onPressed: () {
                 Get.toNamed(RouteNames.kameraCuti);
+                // Get.toNamed(RouteNames.pengajuanCuti);
               },
               icon: Icon(Symbols.note_alt),
               label: Text(Dictionary.pengajuanCuti),
-            )
+            ),
+            const SizedBox(height: 15),
+            FilledButton.icon(
+              style: AppTheme.secondaryButtonStyle,
+              onPressed: () {
+                Get.toNamed(RouteNames.registrasiWajah);
+              },
+              icon: Icon(Symbols.familiar_face_and_zone),
+              label: Text(Dictionary.registrasiWajah),
+            ),
           ],
         ),
       ),

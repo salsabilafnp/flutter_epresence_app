@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
-import 'package:flutter_epresence_app/app/modules/controller/auth/auth_controller.dart';
+import 'package:flutter_epresence_app/app/modules/controller/auth_controller.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
 import 'package:get/get.dart';
@@ -52,7 +52,7 @@ class LoginView extends StatelessWidget {
                     inputLabel: Dictionary.email,
                   ),
                   CustomTextField(
-                    controller: _authController.password,
+                    controller: _authController.kataSandi,
                     inputLabel: Dictionary.password,
                     obscureText: true,
                   ),

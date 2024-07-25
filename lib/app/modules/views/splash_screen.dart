@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_epresence_app/app/modules/controller/auth/auth_controller.dart';
+import 'package:flutter_epresence_app/app/modules/controller/auth_controller.dart';
 import 'package:get/get.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -15,10 +15,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    navigateToNextScreen();
+    splashCheck();
   }
 
-  void navigateToNextScreen() async {
+  void splashCheck() async {
     await Future.delayed(
       const Duration(seconds: 3),
       () => _authController.checkUserLogged(),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
-import 'package:flutter_epresence_app/app/modules/controller/auth/auth_controller.dart';
+import 'package:flutter_epresence_app/app/modules/controller/auth_controller.dart';
 import 'package:flutter_epresence_app/app/modules/models/user.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
 import 'package:get/get.dart';
 
@@ -36,12 +37,22 @@ class ProfilView extends StatelessWidget {
                       _authController.logout();
                     },
                     style: AppTheme.secondaryButtonStyle,
-                    child: Text(Dictionary.logOut),
+                    child: const Text(Dictionary.logOut),
                   ),
+                  if (userData.employeeType == 'staff') ...[
+                    // Tombol untuk admin
+                    const SizedBox(height: 20),
+                    OutlinedButton(
+                      onPressed: () {
+                        Get.offAndToNamed(RouteNames.aksesAdmin);
+                      },
+                      child: const Text(Dictionary.gantiAkses),
+                    ),
+                  ],
                 ],
               );
             } else {
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             }
           }),
         ),

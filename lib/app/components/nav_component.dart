@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_bottom_navbar.dart';
+import 'package:flutter_epresence_app/app/modules/controller/presensi_controller.dart';
 import 'package:flutter_epresence_app/app/modules/views/admin/beranda_admin_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/admin/cuti_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/admin/presensi_view.dart';
@@ -14,13 +15,15 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 class NavComponent extends StatefulWidget {
   final String role;
 
-  const NavComponent({super.key, required this.role});
+  NavComponent({super.key, required this.role});
 
   @override
   State<NavComponent> createState() => _NavComponentState();
 }
 
 class _NavComponentState extends State<NavComponent> {
+  final PresensiController _presensiController = Get.put(PresensiController());
+
   int _tabIndex = 0;
 
   void changeTabIndex(int index) {
@@ -54,14 +57,20 @@ class _NavComponentState extends State<NavComponent> {
         currentIndex: _tabIndex,
         onTabTapped: changeTabIndex,
       ),
-      floatingActionButton: widget.role == Dictionary.staff
-          ? FloatingActionButton(
-              onPressed: () {
-                Get.toNamed(RouteNames.kameraPresensi);
-              },
-              shape: const CircleBorder(),
-              child: const Icon(Symbols.familiar_face_and_zone),
-            )
+      floatingActionButton: widget.role == Dictionary.staff &&
+              _presensiController.isPulangHariIni.value == false
+          ? Obx(() {
+              return FloatingActionButton(
+                onPressed: () {
+                  Get.toNamed(RouteNames.kameraPresensi);
+                },
+                shape: const CircleBorder(),
+                backgroundColor: _presensiController.isPresensiHariIni.value
+                    ? Theme.of(context).colorScheme.secondary
+                    : Theme.of(context).colorScheme.primary,
+                child: const Icon(Symbols.familiar_face_and_zone),
+              );
+            })
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
