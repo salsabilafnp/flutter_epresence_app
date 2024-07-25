@@ -99,7 +99,16 @@ class BerandaView extends StatelessWidget {
               },
               icon: Icon(Symbols.note_alt),
               label: Text(Dictionary.pengajuanCuti),
-            )
+            ),
+            const SizedBox(height: 15),
+            FilledButton.icon(
+              style: AppTheme.secondaryButtonStyle,
+              onPressed: () {
+                Get.toNamed(RouteNames.registrasiWajah);
+              },
+              icon: Icon(Symbols.familiar_face_and_zone),
+              label: Text(Dictionary.registrasiWajah),
+            ),
           ],
         ),
       ),
