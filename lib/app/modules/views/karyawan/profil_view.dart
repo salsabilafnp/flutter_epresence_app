@@ -23,8 +23,14 @@ class ProfilView extends StatelessWidget {
         child: Center(
           child: Obx(() {
             UserNetwork? userData = _authController.user.value;
-
             if (userData != null) {
+              // Memanggil metode untuk mendapatkan rekapitulasi
+              if (userData.employeeType == 'staff') {
+                _authController.rekapitulasiKaryawan();
+              } else {
+                _authController.rekapitulasiAdmin();
+              }
+
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -40,7 +46,6 @@ class ProfilView extends StatelessWidget {
                     child: const Text(Dictionary.logOut),
                   ),
                   if (userData.employeeType == 'staff') ...[
-                    // Tombol untuk admin
                     const SizedBox(height: 20),
                     OutlinedButton(
                       onPressed: () {
@@ -110,51 +115,58 @@ class ProfilView extends StatelessWidget {
                   .copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
+            Obx(() {
+              final rekapitulasi = _authController.rekapitulasiKaryawan.value;
+              if (rekapitulasi != null) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(
-                      'Hadir',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Column(
+                      children: [
+                        const Text(
+                          Dictionary.hadir,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 5),
+                        Text('${rekapitulasi.totalPresensi} hari'),
+                      ],
                     ),
-                    const SizedBox(height: 5),
-                    Text('20 hari'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      'Sakit',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Column(
+                      children: [
+                        const Text(
+                          Dictionary.sakit,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 5),
+                        Text('${rekapitulasi.totalSakit} hari'),
+                      ],
                     ),
-                    const SizedBox(height: 5),
-                    Text('20 hari'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      'Cuti',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Column(
+                      children: [
+                        const Text(
+                          Dictionary.cuti,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 5),
+                        Text('${rekapitulasi.totalCuti} hari'),
+                      ],
                     ),
-                    const SizedBox(height: 5),
-                    Text('20 hari'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      'WFH',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Column(
+                      children: [
+                        const Text(
+                          Dictionary.wfh,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 5),
+                        Text('${rekapitulasi.totalWFH} hari'),
+                      ],
                     ),
-                    const SizedBox(height: 5),
-                    Text('20 hari'),
                   ],
-                ),
-              ],
-            ),
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
+            }),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_epresence_app/app/modules/models/rekapitulasi.dart';
 import 'package:flutter_epresence_app/app/modules/models/response/auth_response.dart';
 import 'package:flutter_epresence_app/app/modules/models/user.dart';
 import 'package:flutter_epresence_app/app/modules/repository/auth_repository.dart';
@@ -13,13 +14,19 @@ class AuthController extends GetxController {
   final TextEditingController email = TextEditingController();
   final TextEditingController kataSandi = TextEditingController();
 
+  Rx<RekapitulasiKaryawan?> rekapitulasiKaryawan =
+      Rx<RekapitulasiKaryawan?>(null);
+  Rx<RekapitulasiAdmin?> rekapitulasiAdmin = Rx<RekapitulasiAdmin?>(null);
+
   Rx<UserNetwork?> user = Rx<UserNetwork?>(null);
   final box = GetStorage();
 
   @override
   void onInit() {
-    super.onInit();
     loadUser();
+    rekapKaryawan();
+    rekapAdmin();
+    super.onInit();
   }
 
   // login
@@ -116,9 +123,31 @@ class AuthController extends GetxController {
 
   // verifikasiWajah
 
-  // getRekapPresensiKaryawan
+  // rekapitulasiKaryawan
+  Future<void> rekapKaryawan() async {
+    try {
+      final rekapKaryawan = await authRepository.recapForStaff();
+      rekapitulasiKaryawan.value = rekapKaryawan;
+      print(rekapKaryawan);
+    } catch (e) {
+      Get.snackbar(
+          Dictionary.defaultError, "Gagal mendapatkan rekap presensi.");
+      print(e);
+    }
+  }
 
-  // getRekapPresensiAdmin
+  // rekapitulasiAdmin
+  Future<void> rekapAdmin() async {
+    try {
+      final rekapAdmin = await authRepository.recapForAdmin();
+      rekapitulasiAdmin.value = rekapAdmin;
+      print(rekapAdmin);
+    } catch (e) {
+      Get.snackbar(
+          Dictionary.defaultError, "Gagal mendapatkan rekap presensi.");
+      print(e);
+    }
+  }
 
   // logout
   Future<void> logout() async {

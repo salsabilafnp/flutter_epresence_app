@@ -97,7 +97,7 @@ class Dictionary {
 
   // Auth
   static const logIn = 'Masuk';
-  static const logOut = 'Pulang';
+  static const logOut = 'Keluar';
   static const email = 'Email';
   static const password = 'Kata Sandi';
   static const gantiAkses = 'Ganti Hak Akses';

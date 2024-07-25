@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter_epresence_app/app/modules/models/rekapitulasi.dart';
 import 'package:flutter_epresence_app/app/modules/models/response/auth_response.dart';
 import 'package:flutter_epresence_app/app/modules/models/user.dart';
 import 'package:flutter_epresence_app/services/network_endpoint.dart';
@@ -112,6 +113,7 @@ class AuthRepository extends GetConnect {
         if (response.statusCode == 200) {
           final user = response.body['user'];
           box.write('user', user);
+          // return UserNetwork.fromJson(response.body);
         } else {
           throw Dictionary.defaultError;
         }
@@ -120,5 +122,55 @@ class AuthRepository extends GetConnect {
         rethrow;
       }
     }
+  }
+
+  // recapForStaff
+  Future<RekapitulasiKaryawan?> recapForStaff() async {
+    final String? accessToken = box.read('token');
+
+    if (accessToken != null) {
+      try {
+        final response = await get(
+          NetworkEndpoint.rekapKaryawan,
+          headers: {'Authorization': 'Bearer $accessToken'},
+        );
+
+        if (response.statusCode == 200) {
+          log(response.body.toString());
+          return RekapitulasiKaryawan.fromJson(response.body);
+        } else {
+          throw Dictionary.defaultError;
+        }
+      } catch (e) {
+        inspect('Terjadi kesalahan saat melihat rekap presensi karyawan: $e');
+        rethrow;
+      }
+    }
+    return null;
+  }
+
+  // recapForAdmin
+  Future<RekapitulasiAdmin?> recapForAdmin() async {
+    final String? accessToken = box.read('token');
+
+    if (accessToken != null) {
+      try {
+        final response = await get(
+          NetworkEndpoint.rekapAdmin,
+          headers: {'Authorization': 'Bearer $accessToken'},
+        );
+
+        if (response.statusCode == 200) {
+          log(response.body.toString());
+          return RekapitulasiAdmin.fromJson(response.body);
+        } else {
+          throw Dictionary.defaultError;
+        }
+      } catch (e) {
+        inspect('Terjadi kesalahan saat melihat rekap presensi admin: $e');
+        rethrow;
+      }
+    }
+    return null;
   }
 }
