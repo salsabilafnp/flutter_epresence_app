@@ -28,7 +28,7 @@ class RiwayatPresensiView extends StatelessWidget {
               if (scrollInfo.metrics.pixels ==
                       scrollInfo.metrics.maxScrollExtent &&
                   !_presensiController.isLoading.value) {
-                _presensiController.getRiwayatPresensi(isLoadMore: true);
+                _presensiController.getRiwayatPresensi();
               }
               return false;
             },

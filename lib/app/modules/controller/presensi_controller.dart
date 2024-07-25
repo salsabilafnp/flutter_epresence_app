@@ -14,6 +14,7 @@ class PresensiController extends GetxController {
   final TextEditingController tanggalAkhir = TextEditingController();
 
   RxList<PresensiNetwork?> presensi = RxList<PresensiNetwork?>([]);
+  RxList<PresensiNetwork?> semuaPresensi = RxList<PresensiNetwork?>([]);
   Rx<PresensiNetwork?> presensiHariIni = Rx<PresensiNetwork?>(null);
   RxList<RxBool> isExpandedList = RxList<RxBool>();
   Rx<DateTime?> dariTanggal = Rx<DateTime?>(null);
@@ -27,12 +28,11 @@ class PresensiController extends GetxController {
   @override
   void onInit() {
     cekPresensiHariIni();
-    getRiwayatPresensi();
     super.onInit();
   }
 
   // getRiwayatPresensi dengan paginasi
-  Future<void> getRiwayatPresensi({bool isLoadMore = false}) async {
+  Future<void> getRiwayatPresensi() async {
     if (isLoading.value) return;
     isLoading.value = true;
 
@@ -42,12 +42,9 @@ class PresensiController extends GetxController {
 
       if (riwayatPresensiResponse != null &&
           riwayatPresensiResponse.presensi != null) {
-        if (isLoadMore) {
-          presensi.addAll(riwayatPresensiResponse.presensi!);
-        } else {
-          presensi.value = riwayatPresensiResponse.presensi!;
-        }
+        presensi.value = riwayatPresensiResponse.presensi!;
       }
+
       isExpandedList.value =
           List.generate(presensi.length, (index) => false.obs);
       _terapkanFilter();
@@ -66,6 +63,7 @@ class PresensiController extends GetxController {
   Future<void> reloadData() async {
     presensi.clear();
     await getRiwayatPresensi();
+    await getSemuaPresensi();
   }
 
   // filtePresensi
@@ -176,13 +174,14 @@ class PresensiController extends GetxController {
 
   // getSemuaPresensi()
   Future<void> getSemuaPresensi() async {
+    if (isLoading.value) return;
+    isLoading.value = true;
+
     try {
-      final RiwayatPresensiResponse? semuaPresensiResponse =
+      final RiwayatPresensiResponse? response =
           await _presensiRepository.getSemuaPresensi();
-      if (semuaPresensiResponse != null &&
-          semuaPresensiResponse.presensi != null) {
-        presensi.value = semuaPresensiResponse.presensi!;
-        _terapkanFilter();
+      if (response != null && response.presensi != null) {
+        semuaPresensi.value = response.presensi!;
       }
     } catch (e) {
       Get.snackbar(
@@ -190,6 +189,8 @@ class PresensiController extends GetxController {
         e.toString(),
         margin: const EdgeInsets.all(20),
       );
+    } finally {
+      isLoading.value = false;
     }
   }
 

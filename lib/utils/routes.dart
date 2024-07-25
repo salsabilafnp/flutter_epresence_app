@@ -1,4 +1,5 @@
 import 'package:flutter_epresence_app/app/components/nav_component.dart';
+import 'package:flutter_epresence_app/app/modules/controller/presensi_controller.dart';
 import 'package:flutter_epresence_app/app/modules/views/admin/akses_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/admin/cuti_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/admin/detail_cuti_view.dart';
@@ -79,9 +80,11 @@ class Routes {
       page: () => NotifikasiView(),
     ),
     GetPage(
-      name: RouteNames.riwayatPresensiStaff,
-      page: () => RiwayatPresensiView(),
-    ),
+        name: RouteNames.riwayatPresensiStaff,
+        page: () {
+          PresensiController().getRiwayatPresensi();
+          return RiwayatPresensiView();
+        }),
     GetPage(
       name: RouteNames.kameraPresensi,
       page: () => KameraView(),
@@ -118,9 +121,11 @@ class Routes {
       page: () => NotifikasiAdminView(),
     ),
     GetPage(
-      name: RouteNames.riwayatPresensiAdmin,
-      page: () => PresensiView(),
-    ),
+        name: RouteNames.riwayatPresensiAdmin,
+        page: () {
+          PresensiController().getSemuaPresensi();
+          return PresensiView();
+        }),
     GetPage(
       name: RouteNames.detailPresensi,
       page: () => DetailPresensiView(),

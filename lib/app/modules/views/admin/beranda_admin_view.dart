@@ -2,16 +2,14 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/time_date_display.dart';
+import 'package:flutter_epresence_app/app/modules/controller/auth_controller.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:get/get.dart';
 
 class BerandaAdminView extends StatelessWidget {
-  final int _totalHadir = 40;
-  final int _totalAbsen = 10;
-  final int _cutiDiajukan = 5;
-  final int _cutiDisetujui = 3;
-  final int _cutiDitolak = 2;
+  final AuthController _authController = Get.find();
 
-  const BerandaAdminView({super.key});
+  BerandaAdminView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +25,30 @@ class BerandaAdminView extends StatelessWidget {
           children: [
             TimeDateDisplay(),
             const SizedBox(height: 50),
-            _buildRekapPresensi(context, _totalHadir, _totalAbsen),
-            const SizedBox(height: 20),
-            _buildRekapStatusCuti(
-              context,
-              _cutiDiajukan,
-              _cutiDisetujui,
-              _cutiDitolak,
-            ),
+            Obx(() {
+              final rekapAdmin = _authController.rekapitulasiAdmin.value;
+
+              if (rekapAdmin != null) {
+                return Column(
+                  children: [
+                    _buildRekapPresensi(
+                      context,
+                      rekapAdmin.totalPresensi!,
+                      rekapAdmin.totalCuti!,
+                    ),
+                    const SizedBox(height: 20),
+                    _buildRekapStatusCuti(
+                      context,
+                      rekapAdmin.totalCutiDiajukan!,
+                      rekapAdmin.totalCutiDisetujui!,
+                      rekapAdmin.totalCutiDitolak!,
+                    ),
+                  ],
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
+            }),
           ],
         ),
       ),
@@ -63,7 +77,7 @@ class BerandaAdminView extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      _totalHadir.toString(),
+                      totalHadir.toString(),
                       style:
                           Theme.of(context).textTheme.headlineSmall!.copyWith(
                                 color: Theme.of(context).colorScheme.tertiary,
@@ -76,7 +90,7 @@ class BerandaAdminView extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      _totalAbsen.toString(),
+                      totalAbsen.toString(),
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall!
@@ -118,7 +132,7 @@ class BerandaAdminView extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      _cutiDiajukan.toString(),
+                      cutiDiajukan.toString(),
                       style:
                           Theme.of(context).textTheme.headlineSmall!.copyWith(
                                 color: Theme.of(context).colorScheme.secondary,
@@ -131,7 +145,7 @@ class BerandaAdminView extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      _cutiDisetujui.toString(),
+                      cutiDisetujui.toString(),
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall!
@@ -147,7 +161,7 @@ class BerandaAdminView extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      _cutiDitolak.toString(),
+                      cutiDitolak.toString(),
                       style:
                           Theme.of(context).textTheme.headlineSmall!.copyWith(
                                 color: Theme.of(context).colorScheme.error,

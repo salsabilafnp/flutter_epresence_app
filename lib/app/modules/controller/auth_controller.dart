@@ -23,10 +23,19 @@ class AuthController extends GetxController {
 
   @override
   void onInit() {
-    loadUser();
-    rekapKaryawan();
-    rekapAdmin();
+    loadData();
     super.onInit();
+  }
+
+  // loadData
+  Future<void> loadData() async {
+    try {
+      await recapForAdmin();
+      await recapForStaff();
+      await loadUser();
+    } catch (e) {
+      Get.snackbar(Dictionary.defaultError, 'Gagal memuat data.');
+    }
   }
 
   // login
@@ -124,7 +133,7 @@ class AuthController extends GetxController {
   // verifikasiWajah
 
   // rekapitulasiKaryawan
-  Future<void> rekapKaryawan() async {
+  Future<void> recapForStaff() async {
     try {
       final rekapKaryawan = await authRepository.recapForStaff();
       rekapitulasiKaryawan.value = rekapKaryawan;
@@ -137,7 +146,7 @@ class AuthController extends GetxController {
   }
 
   // rekapitulasiAdmin
-  Future<void> rekapAdmin() async {
+  Future<void> recapForAdmin() async {
     try {
       final rekapAdmin = await authRepository.recapForAdmin();
       rekapitulasiAdmin.value = rekapAdmin;

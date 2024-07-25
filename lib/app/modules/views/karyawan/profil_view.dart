@@ -23,49 +23,39 @@ class ProfilView extends StatelessWidget {
         child: Center(
           child: Obx(() {
             UserNetwork? userData = _authController.user.value;
-            if (userData != null) {
-              // Memanggil metode untuk mendapatkan rekapitulasi
-              if (userData.employeeType == 'staff') {
-                _authController.rekapitulasiKaryawan();
-              } else {
-                _authController.rekapitulasiAdmin();
-              }
 
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildIdentityCard(context, userData),
-                  const SizedBox(height: 30),
-                  _buildAttendanceSummaryCard(context),
-                  const SizedBox(height: 30),
-                  FilledButton(
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildIdentitas(context, userData!),
+                const SizedBox(height: 30),
+                _buildRekapitulasiKaryawan(context),
+                const SizedBox(height: 30),
+                FilledButton(
+                  onPressed: () {
+                    _authController.logout();
+                  },
+                  style: AppTheme.secondaryButtonStyle,
+                  child: const Text(Dictionary.logOut),
+                ),
+                if (userData.employeeType != 'staff') ...[
+                  const SizedBox(height: 20),
+                  OutlinedButton(
                     onPressed: () {
-                      _authController.logout();
+                      Get.offAndToNamed(RouteNames.aksesAdmin);
                     },
-                    style: AppTheme.secondaryButtonStyle,
-                    child: const Text(Dictionary.logOut),
+                    child: const Text(Dictionary.gantiAkses),
                   ),
-                  if (userData.employeeType == 'staff') ...[
-                    const SizedBox(height: 20),
-                    OutlinedButton(
-                      onPressed: () {
-                        Get.offAndToNamed(RouteNames.aksesAdmin);
-                      },
-                      child: const Text(Dictionary.gantiAkses),
-                    ),
-                  ],
                 ],
-              );
-            } else {
-              return const CircularProgressIndicator();
-            }
+              ],
+            );
           }),
         ),
       ),
     );
   }
 
-  Widget _buildIdentityCard(BuildContext context, UserNetwork userData) {
+  Widget _buildIdentitas(BuildContext context, UserNetwork userData) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -91,16 +81,16 @@ class ProfilView extends StatelessWidget {
             const SizedBox(height: 5),
             Text('${userData.department} - ${userData.position}'),
             const SizedBox(height: 5),
-            Text(userData.email ?? 'Email Pengguna'),
+            Text(userData.email ?? 'Email belum terdaftar'),
             const SizedBox(height: 5),
-            Text(userData.phoneNumber ?? 'Nomor Telepon Pengguna'),
+            Text(userData.phoneNumber ?? 'Nomor HP belum terdaftar'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildAttendanceSummaryCard(BuildContext context) {
+  Widget _buildRekapitulasiKaryawan(BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
