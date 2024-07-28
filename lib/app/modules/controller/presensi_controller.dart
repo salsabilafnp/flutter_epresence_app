@@ -29,10 +29,21 @@ class PresensiController extends GetxController {
   @override
   void onInit() {
     cekPresensiHariIni();
+    loadData();
     super.onInit();
   }
 
-  // getRiwayatPresensi dengan paginasi
+  // loadData
+  void loadData() {
+    if (_authController.user.value!.role == 'admin') {
+      getSemuaPresensi();
+      getRiwayatPresensi();
+    } else {
+      getRiwayatPresensi();
+    }
+  }
+
+  // getRiwayatPresensi
   Future<void> getRiwayatPresensi() async {
     if (isLoading.value) return;
     isLoading.value = true;

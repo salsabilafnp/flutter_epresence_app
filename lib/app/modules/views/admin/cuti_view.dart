@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/color_status_cuti.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
+import 'package:flutter_epresence_app/app/modules/controller/cuti_controller.dart';
 import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/routes.dart';
@@ -9,30 +10,10 @@ import 'package:flutter_epresence_app/utils/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class CutiView extends StatefulWidget {
-  const CutiView({super.key});
+class CutiView extends StatelessWidget {
+  final CutiController _cutiController = Get.put(CutiController());
 
-  @override
-  _CutiViewState createState() => _CutiViewState();
-}
-
-class _CutiViewState extends State<CutiView> {
-  final List<Cuti> _cutiData = cutiData.toList();
-
-  DateTime? _fromDate;
-  DateTime? _toDate;
-  String _selectedPermitType = 'Semua';
-  String _selectedStatus = 'Semua';
-
-  final TextEditingController _fromDateController = TextEditingController();
-  final TextEditingController _toDateController = TextEditingController();
-
-  @override
-  void dispose() {
-    _fromDateController.dispose();
-    _toDateController.dispose();
-    super.dispose();
-  }
+  CutiView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,33 +23,54 @@ class _CutiViewState extends State<CutiView> {
       ),
       body: Container(
         margin: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            FilledButton.icon(
-              onPressed: () {
-                _showFilterDialog();
-              },
-              label: const Text(Dictionary.filter),
-              icon: const Icon(Icons.filter_alt_outlined),
+        child: RefreshIndicator(
+          onRefresh: _cutiController.reloadData,
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (ScrollNotification scrollInfo) {
+              if (scrollInfo.metrics.pixels ==
+                      scrollInfo.metrics.maxScrollExtent &&
+                  !_cutiController.isLoading.value) {
+                _cutiController.getSemuaCuti();
+              }
+              return false;
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FilledButton.icon(
+                  onPressed: () {
+                    _showFilterDialog(context);
+                  },
+                  label: const Text(Dictionary.filter),
+                  icon: const Icon(Icons.filter_alt_outlined),
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: Obx(
+                    () => ListView.builder(
+                      itemCount: _cutiController.semuaCuti.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == _cutiController.semuaCuti.length) {
+                          return _cutiController.isLoading.value
+                              ? const Center(child: CircularProgressIndicator())
+                              : const SizedBox.shrink();
+                        }
+                        final data = _cutiController.semuaCuti[index];
+                        return _buildCutiCard(context, data!, index);
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _cutiData.length,
-                itemBuilder: (context, index) {
-                  final cuti = _cutiData[index];
-                  return _buildCutiCard(cuti);
-                },
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
   // filter dialog
-  void _showFilterDialog() {
+  void _showFilterDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -87,7 +89,7 @@ class _CutiViewState extends State<CutiView> {
                     ),
                     const SizedBox(height: 5),
                     CustomTextField(
-                      controller: _fromDateController,
+                      controller: _cutiController.tanggalAwal,
                       inputLabel: Dictionary.tanggalMulai,
                       isDate: true,
                       icon: Icons.calendar_today_outlined,
@@ -95,21 +97,22 @@ class _CutiViewState extends State<CutiView> {
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
                           context: context,
-                          initialDate: _fromDate ?? DateTime.now(),
+                          initialDate: _cutiController.dariTanggal.value ??
+                              DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                         );
                         if (pickedDate != null) {
                           setState(() {
-                            _fromDate = pickedDate;
-                            _fromDateController.text =
+                            _cutiController.dariTanggal.value = pickedDate;
+                            _cutiController.tanggalAwal.text =
                                 DateFormat.yMMMMd().format(pickedDate);
                           });
                         }
                       },
                     ),
                     CustomTextField(
-                      controller: _toDateController,
+                      controller: _cutiController.tanggalAkhir,
                       inputLabel: Dictionary.tanggalAkhir,
                       isDate: true,
                       icon: Icons.calendar_today_outlined,
@@ -117,14 +120,15 @@ class _CutiViewState extends State<CutiView> {
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
                           context: context,
-                          initialDate: _toDate ?? DateTime.now(),
+                          initialDate: _cutiController.sampaiTanggal.value ??
+                              DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                         );
                         if (pickedDate != null) {
                           setState(() {
-                            _toDate = pickedDate;
-                            _toDateController.text =
+                            _cutiController.sampaiTanggal.value = pickedDate;
+                            _cutiController.tanggalAkhir.text =
                                 DateFormat.yMMMMd().format(pickedDate);
                           });
                         }
@@ -138,19 +142,19 @@ class _CutiViewState extends State<CutiView> {
                     ),
                     const SizedBox(height: 5),
                     CustomTextField(
-                      controller:
-                          TextEditingController(text: _selectedPermitType),
+                      controller: TextEditingController(
+                          text: _cutiController.selectedPermitType!.value),
                       inputLabel: Dictionary.jenisPengajuan,
                       isDropdown: true,
                       dropdownItems: [
-                        _selectedPermitType,
+                        _cutiController.selectedPermitType!.value,
                         Dictionary.sakit,
                         Dictionary.cuti,
                         Dictionary.wfh,
                       ],
                       onChanged: (String? newValue) {
                         setState(() {
-                          _selectedPermitType = newValue!;
+                          _cutiController.selectedPermitType!.value = newValue!;
                         });
                       },
                     ),
@@ -162,18 +166,19 @@ class _CutiViewState extends State<CutiView> {
                     ),
                     const SizedBox(height: 5),
                     CustomTextField(
-                      controller: TextEditingController(text: _selectedStatus),
+                      controller: TextEditingController(
+                          text: _cutiController.selectedStatus!.value),
                       inputLabel: Dictionary.statusAjuan,
                       isDropdown: true,
                       dropdownItems: [
-                        _selectedStatus,
+                        _cutiController.selectedStatus!.value,
                         Dictionary.diajukan,
                         Dictionary.disetujui,
                         Dictionary.ditolak,
                       ],
                       onChanged: (String? newValue) {
                         setState(() {
-                          _selectedStatus = newValue!;
+                          _cutiController.selectedStatus!.value = newValue!;
                         });
                       },
                     ),
@@ -205,7 +210,7 @@ class _CutiViewState extends State<CutiView> {
   }
 
   // Cuti Card
-  Widget _buildCutiCard(Cuti cuti) {
+  Widget _buildCutiCard(BuildContext context, Cuti cuti, int index) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: Padding(
@@ -217,10 +222,11 @@ class _CutiViewState extends State<CutiView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  cuti.userId!,
+                  cuti.user!.name!,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
-                ColorStatusCuti(statusAjuan: cuti.status),
+                ColorStatusCuti(
+                    statusAjuan: Dictionary.mapStatus(cuti.status!)),
                 TextButton.icon(
                   label: const Text(Dictionary.konfirmasi),
                   icon: const Icon(
@@ -245,9 +251,8 @@ class _CutiViewState extends State<CutiView> {
                   children: [
                     Text(Dictionary.tanggalCuti),
                     Text(
-                      DateFormat('d MMMM yyyy').format(DateTime.parse(
-                        cuti.tanggalMulai,
-                      )),
+                      DateFormat('d MMMM yyyy')
+                          .format(DateTime.parse(cuti.leaveDate!)),
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge!
@@ -259,7 +264,7 @@ class _CutiViewState extends State<CutiView> {
                   children: [
                     Text(Dictionary.durasi),
                     Text(
-                      cuti.durasi.toString(),
+                      cuti.duration!.toString(),
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge!
@@ -271,7 +276,7 @@ class _CutiViewState extends State<CutiView> {
                   children: [
                     Text(Dictionary.jenisPengajuan),
                     Text(
-                      cuti.jenisCuti.capitalize!,
+                      Dictionary.mapTipe(cuti.permitType!).capitalize!,
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge!

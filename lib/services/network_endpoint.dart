@@ -22,5 +22,5 @@ class NetworkEndpoint {
   // cuti
   static const cuti = '$baseUrl/permission';
   static const cutiSemuaRiwayat = '$baseUrl/permission/all-history';
-  static const cutiKonfirmasi = '$baseUrl/permission/history/confirm';
+  static const cutiKonfirmasi = '$baseUrl/permission/confirm';
 }

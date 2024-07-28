@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
 import 'package:flutter_epresence_app/app/modules/models/request/cuti_request.dart';
 import 'package:flutter_epresence_app/app/modules/models/response/cuti_response.dart';
 import 'package:flutter_epresence_app/services/network_endpoint.dart';
@@ -11,7 +12,7 @@ class CutiRepository extends GetConnect {
   final box = GetStorage();
 
   // getRiwayatCuti()
-  Future<CutiResponse?> getRiwayatCuti() async {
+  Future<RiwayatCutiResponse?> getRiwayatCuti() async {
     final String? accessToken = box.read('token');
     if (accessToken != null) {
       try {
@@ -21,7 +22,7 @@ class CutiRepository extends GetConnect {
         );
 
         if (response.statusCode == 200) {
-          return CutiResponse.fromJson(response.body);
+          return RiwayatCutiResponse.fromJson(response.body);
         } else {
           throw Dictionary.defaultError;
         }
@@ -34,7 +35,7 @@ class CutiRepository extends GetConnect {
   }
 
   // ajukanCuti(cuti)
-  Future<CutiResponse?> ajukanCuti(PermissionsRequest cuti) async {
+  Future<RiwayatCutiResponse?> ajukanCuti(PermissionsRequest cuti) async {
     final String? accessToken = box.read('token');
 
     if (accessToken != null) {
@@ -46,7 +47,7 @@ class CutiRepository extends GetConnect {
         );
 
         if (response.statusCode == 200 || response.statusCode == 201) {
-          return CutiResponse.fromJson(response.body);
+          return RiwayatCutiResponse.fromJson(response.body);
         } else {
           throw Dictionary.defaultError;
         }
@@ -59,7 +60,7 @@ class CutiRepository extends GetConnect {
   }
 
   // perbaruiCuti(cuti)
-  Future<CutiResponse?> perbaruiCuti(
+  Future<RiwayatCutiResponse?> perbaruiCuti(
       int idCuti, PermissionsRequest cuti) async {
     final String? accessToken = box.read('token');
 
@@ -72,7 +73,7 @@ class CutiRepository extends GetConnect {
         );
 
         if (response.statusCode == 200) {
-          return CutiResponse.fromJson(response.body);
+          return RiwayatCutiResponse.fromJson(response.body);
         } else {
           throw Dictionary.defaultError;
         }
@@ -85,9 +86,30 @@ class CutiRepository extends GetConnect {
   }
 
   // getSemuaCuti()
+  Future<RiwayatCutiResponse?> getSemuaCuti() async {
+    final String? accessToken = box.read('token');
+    if (accessToken != null) {
+      try {
+        final response = await get(
+          NetworkEndpoint.cutiSemuaRiwayat,
+          headers: {'Authorization': 'Bearer $accessToken'},
+        );
+
+        if (response.statusCode == 200) {
+          return RiwayatCutiResponse.fromJson(response.body);
+        } else {
+          throw Dictionary.defaultError;
+        }
+      } catch (e) {
+        log('Error fetching all cuti(s) history: $e');
+        rethrow;
+      }
+    }
+    return null;
+  }
 
   // getDetailAjuan(id)
-  Future<CutiResponse?> getDetailCuti(int id) async {
+  Future<CutiResponse?> detailCuti(int id) async {
     final String? accessToken = box.read('token');
     if (accessToken != null) {
       try {
@@ -102,7 +124,7 @@ class CutiRepository extends GetConnect {
           throw Dictionary.defaultError;
         }
       } catch (e) {
-        log('Error fetching cuti detail: $e');
+        log('Error fetching detail cuti: $e');
         rethrow;
       }
     }
@@ -110,6 +132,28 @@ class CutiRepository extends GetConnect {
   }
 
   // konfirmasiAjuan(id, status)
+  Future<Cuti?> konfirmasiAjuan(int id, String status) async {
+    final String? accessToken = box.read('token');
+    if (accessToken != null) {
+      try {
+        final response = await post(
+          '${NetworkEndpoint.cutiKonfirmasi}/$id',
+          headers: {'Authorization': 'Bearer $accessToken'},
+          ({'status': status}),
+        );
+
+        if (response.statusCode == 200) {
+          return Cuti.fromJson(response.body);
+        } else {
+          throw Dictionary.defaultError;
+        }
+      } catch (e) {
+        log('Error confirming cuti: $e');
+        rethrow;
+      }
+    }
+    return null;
+  }
 
   // notifAjuanBaru()
 

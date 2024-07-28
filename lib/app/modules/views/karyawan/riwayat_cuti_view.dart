@@ -222,7 +222,7 @@ class RiwayatCutiView extends StatelessWidget {
     );
   }
 
-  Widget _buildCutiCard(BuildContext context, CutiNetwork ajuanCuti) {
+  Widget _buildCutiCard(BuildContext context, Cuti ajuanCuti) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: InkWell(
