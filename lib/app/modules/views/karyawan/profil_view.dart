@@ -9,8 +9,9 @@ import 'package:get/get.dart';
 
 class ProfilView extends StatelessWidget {
   final AuthController _authController = Get.find();
+  final bool isAdminAccessingAsStaff;
 
-  ProfilView({super.key});
+  ProfilView({super.key, required this.isAdminAccessingAsStaff});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,7 @@ class ProfilView extends StatelessWidget {
                   style: AppTheme.secondaryButtonStyle,
                   child: const Text(Dictionary.logOut),
                 ),
-                if (userData.employeeType != 'staff') ...[
+                if (isAdminAccessingAsStaff) ...[
                   const SizedBox(height: 20),
                   OutlinedButton(
                     onPressed: () {

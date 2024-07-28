@@ -16,8 +16,11 @@ class NavComponent extends StatefulWidget {
   final String role;
   final bool isAdminAccessingAsStaff;
 
-  NavComponent(
-      {super.key, required this.role, this.isAdminAccessingAsStaff = false});
+  const NavComponent({
+    super.key,
+    required this.role,
+    this.isAdminAccessingAsStaff = false,
+  });
 
   @override
   State<NavComponent> createState() => _NavComponentState();
@@ -47,7 +50,7 @@ class _NavComponentState extends State<NavComponent> {
           if (widget.role == Dictionary.staff ||
               widget.isAdminAccessingAsStaff) ...[
             BerandaView(),
-            ProfilView(),
+            ProfilView(isAdminAccessingAsStaff: widget.isAdminAccessingAsStaff),
           ],
           // Views for admin
           if (widget.role == Dictionary.admin &&

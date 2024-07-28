@@ -102,7 +102,7 @@ class Routes {
     ),
     GetPage(
       name: RouteNames.profilStaff,
-      page: () => ProfilView(),
+      page: () => ProfilView(isAdminAccessingAsStaff: false),
     ),
     // Admin routes
     GetPage(
