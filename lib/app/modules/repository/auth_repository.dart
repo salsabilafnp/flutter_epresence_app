@@ -48,7 +48,7 @@ class AuthRepository extends GetConnect {
   }
 
   // userProfil()
-  Future<UserNetwork?> userProfil() async {
+  Future<User?> userProfil() async {
     final String? accessToken = box.read('token');
 
     if (accessToken != null) {
@@ -59,7 +59,7 @@ class AuthRepository extends GetConnect {
         );
 
         if (response.statusCode == 200) {
-          return UserNetwork.fromJson(response.body);
+          return User.fromJson(response.body);
         } else {
           throw Dictionary.defaultError;
         }
@@ -113,7 +113,7 @@ class AuthRepository extends GetConnect {
         if (response.statusCode == 200) {
           final user = response.body['user'];
           box.write('user', user);
-          // return UserNetwork.fromJson(response.body);
+          // return User.fromJson(response.body);
         } else {
           throw Dictionary.defaultError;
         }

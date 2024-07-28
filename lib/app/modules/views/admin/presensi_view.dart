@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
-import 'package:flutter_epresence_app/app/modules/controller/auth_controller.dart';
 import 'package:flutter_epresence_app/app/modules/controller/presensi_controller.dart';
 import 'package:flutter_epresence_app/app/modules/models/presensi.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
@@ -11,7 +10,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class PresensiView extends StatelessWidget {
-  final AuthController _authController = Get.find();
   final PresensiController _presensiController = Get.put(PresensiController());
 
   PresensiView({super.key});
@@ -163,7 +161,9 @@ class PresensiView extends StatelessWidget {
   }
 
   Widget _buildPresensiCard(
-      BuildContext context, PresensiNetwork presensi, int index) {
+      BuildContext context, Presensi presensi, int index) {
+    final user = presensi.user;
+
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: Padding(
@@ -174,9 +174,7 @@ class PresensiView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  _authController.user.value!.id! == presensi.userId
-                      ? _authController.user.value!.name!
-                      : '-',
+                  user != null ? user.name ?? '-' : '-',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 Text(

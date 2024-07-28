@@ -16,7 +16,7 @@ class CardInfoUser extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              user.nama,
+              user.name!,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 20),
@@ -26,17 +26,23 @@ class CardInfoUser extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(user.employeeType.capitalize!),
+                    Text(user.employeeType!.capitalize!),
                     const SizedBox(height: 10),
                     Text('${user.department} - ${user.position}'),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(user.email),
                     const SizedBox(height: 10),
-                    Text(user.phoneNumber),
+                    Text(user.email!),
+                    const SizedBox(height: 10),
+                    Text(
+                      user.phoneNumber ?? 'Nomor HP belum tercatat',
+                      style: TextStyle(
+                        fontStyle: user.phoneNumber == null
+                            ? FontStyle.italic
+                            : FontStyle.normal,
+                        color: user.phoneNumber == null
+                            ? Theme.of(context).disabledColor
+                            : Theme.of(context).textTheme.bodySmall!.color,
+                      ),
+                    ),
                   ],
                 ),
               ],

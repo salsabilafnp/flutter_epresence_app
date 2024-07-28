@@ -23,7 +23,7 @@ class ProfilView extends StatelessWidget {
         margin: const EdgeInsets.all(20),
         child: Center(
           child: Obx(() {
-            UserNetwork? userData = _authController.user.value;
+            User? userData = _authController.user.value;
 
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -56,7 +56,7 @@ class ProfilView extends StatelessWidget {
     );
   }
 
-  Widget _buildIdentitas(BuildContext context, UserNetwork userData) {
+  Widget _buildIdentitas(BuildContext context, User userData) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(

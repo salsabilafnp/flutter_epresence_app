@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_epresence_app/app/components/card_info_user.dart';
+// import 'package:flutter_epresence_app/app/components/card_info_user.dart';
 import 'package:flutter_epresence_app/app/components/color_status_cuti.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
-import 'package:flutter_epresence_app/app/modules/models/user.dart';
+// import 'package:flutter_epresence_app/app/modules/models/user.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
 import 'package:get/get.dart';
@@ -17,7 +17,7 @@ class DetailCutiView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Cuti cuti = cutiData.firstWhere((cuti) => cuti.id == cutiId);
-    final User user = users.firstWhere((user) => user.userId == cuti.userId);
+    // final User user = users.firstWhere((user) => user.userId == cuti.userId);
 
     return Scaffold(
       appBar: const CustomAppBar(
@@ -30,7 +30,7 @@ class DetailCutiView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CardInfoUser(user: user),
+                // CardInfoUser(user: user),
                 const SizedBox(height: 10),
                 _buildDetailCuti(context, cuti),
               ],

@@ -24,7 +24,7 @@ class ProfilAdminView extends StatelessWidget {
         child: Center(
           child: Obx(
             () {
-              UserNetwork? userData = _authController.user.value;
+              User? userData = _authController.user.value;
 
               if (userData != null) {
                 return Column(
@@ -58,7 +58,7 @@ class ProfilAdminView extends StatelessWidget {
     );
   }
 
-  Widget _buildIdentitas(BuildContext context, UserNetwork userData) {
+  Widget _buildIdentitas(BuildContext context, User userData) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(

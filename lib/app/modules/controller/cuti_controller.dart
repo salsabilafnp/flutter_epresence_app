@@ -182,6 +182,26 @@ class CutiController extends GetxController {
   }
 
   // getSemuaCuti()
+  // Future<void> getSemuaCuti() async {
+  //   if (isLoading.value) return;
+  //   isLoading.value = true;
+
+  //   try {
+  //     final RiwayatPresensiResponse? response =
+  //         await _presensiRepository.getSemuaPresensi();
+  //     if (response != null && response.presensi != null) {
+  //       semuaPresensi.value = response.presensi!;
+  //     }
+  //   } catch (e) {
+  //     Get.snackbar(
+  //       Dictionary.defaultError,
+  //       e.toString(),
+  //       margin: const EdgeInsets.all(20),
+  //     );
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
 
   // getDetailAjuan(id)
 

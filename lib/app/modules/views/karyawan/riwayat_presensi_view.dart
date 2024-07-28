@@ -160,7 +160,7 @@ class RiwayatPresensiView extends StatelessWidget {
 
   Widget _buildPresensiCard(
     BuildContext context,
-    PresensiNetwork presensi,
+    Presensi presensi,
     int index,
   ) {
     return Card(

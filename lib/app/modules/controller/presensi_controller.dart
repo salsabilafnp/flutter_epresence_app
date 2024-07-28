@@ -13,13 +13,14 @@ class PresensiController extends GetxController {
   final TextEditingController tanggalAwal = TextEditingController();
   final TextEditingController tanggalAkhir = TextEditingController();
 
-  RxList<PresensiNetwork?> presensi = RxList<PresensiNetwork?>([]);
-  RxList<PresensiNetwork?> semuaPresensi = RxList<PresensiNetwork?>([]);
-  Rx<PresensiNetwork?> presensiHariIni = Rx<PresensiNetwork?>(null);
+  RxList<Presensi?> presensi = RxList<Presensi?>([]);
+  Rxn<PresensiResponse?> detailPresensi = Rxn<PresensiResponse?>();
+  RxList<Presensi?> semuaPresensi = RxList<Presensi?>([]);
+  Rx<Presensi?> presensiHariIni = Rx<Presensi?>(null);
   RxList<RxBool> isExpandedList = RxList<RxBool>();
   Rx<DateTime?> dariTanggal = Rx<DateTime?>(null);
   Rx<DateTime?> sampaiTanggal = Rx<DateTime?>(null);
-  RxList<PresensiNetwork?> presensiFilter = RxList<PresensiNetwork?>([]);
+  RxList<Presensi?> presensiFilter = RxList<Presensi?>([]);
 
   RxBool isPresensiHariIni = false.obs;
   RxBool isPulangHariIni = true.obs;
@@ -194,7 +195,28 @@ class PresensiController extends GetxController {
     }
   }
 
-  // detailPresensi()
+  // detailPresensi(id)
+  Future<void> getDetailPresensi(int id) async {
+    try {
+      final PresensiResponse? response =
+          await _presensiRepository.detailPresensi(id);
+      if (response != null) {
+        detailPresensi.value = response;
+      } else {
+        Get.snackbar(
+          Dictionary.defaultError,
+          'No data found',
+          margin: const EdgeInsets.all(20),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        Dictionary.defaultError,
+        e.toString(),
+        margin: const EdgeInsets.all(20),
+      );
+    }
+  }
 
   // pengingatPresensi()
 }

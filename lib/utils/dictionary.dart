@@ -5,6 +5,8 @@ class Dictionary {
   static const ya = "Ya";
   static const tidak = "Tidak";
 
+  static const noData = "Tidak ada data";
+
   // Menu
   static const beranda = "Beranda";
   static const notifikasi = "Notifikasi";

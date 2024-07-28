@@ -1,63 +1,6 @@
+import 'package:flutter_epresence_app/app/modules/models/user.dart';
+
 class Presensi {
-  final int id;
-  final String? userId;
-  final String tanggal;
-  final String waktuMasuk;
-  final String waktuPulang;
-  final String lokasiMasuk;
-  final String lokasiPulang;
-
-  Presensi({
-    required this.id,
-    this.userId,
-    required this.tanggal,
-    required this.waktuMasuk,
-    required this.waktuPulang,
-    required this.lokasiMasuk,
-    required this.lokasiPulang,
-  });
-}
-
-List<Presensi> presensiData = [
-  Presensi(
-    id: 1,
-    userId: 'stf01',
-    tanggal: '2024-07-01',
-    waktuMasuk: '08:00',
-    waktuPulang: '17:00',
-    lokasiMasuk: '114.56789012\n-8.1234567',
-    lokasiPulang: '114.56789012\n-8.1234567',
-  ),
-  Presensi(
-    id: 2,
-    userId: 'stf01',
-    tanggal: '2024-07-02',
-    waktuMasuk: '08:15',
-    waktuPulang: '17:05',
-    lokasiMasuk: '114.56789012\n-8.1234567',
-    lokasiPulang: '114.56789012\n-8.1234567',
-  ),
-  Presensi(
-    id: 3,
-    userId: 'adm01',
-    tanggal: '2024-07-03',
-    waktuMasuk: '07:50',
-    waktuPulang: '17:10',
-    lokasiMasuk: '114.56789012\n-8.1234567',
-    lokasiPulang: '114.56789012\n-8.1234567',
-  ),
-  Presensi(
-    id: 4,
-    userId: 'adm01',
-    tanggal: '2024-07-04',
-    waktuMasuk: '08:01',
-    waktuPulang: '16:59',
-    lokasiMasuk: '114.56789012\n-8.1234567',
-    lokasiPulang: '114.56789012\n-8.1234567',
-  ),
-];
-
-class PresensiNetwork {
   int? id;
   int? userId;
   String? date;
@@ -67,8 +10,9 @@ class PresensiNetwork {
   String? latlonOut;
   String? createdAt;
   String? updatedAt;
+  User? user;
 
-  PresensiNetwork({
+  Presensi({
     this.id,
     this.userId,
     this.date,
@@ -78,8 +22,9 @@ class PresensiNetwork {
     this.latlonOut,
     this.createdAt,
     this.updatedAt,
+    this.user,
   });
-  PresensiNetwork.fromJson(Map<String, dynamic> json) {
+  Presensi.fromJson(Map<String, dynamic> json) {
     id = json['id']?.toInt();
     userId = json['user_id']?.toInt();
     date = json['date']?.toString();
@@ -89,6 +34,7 @@ class PresensiNetwork {
     latlonOut = json['latlon_out']?.toString();
     createdAt = json['created_at']?.toString();
     updatedAt = json['updated_at']?.toString();
+    user = (json['user'] != null) ? User.fromJson(json['user']) : null;
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
@@ -101,6 +47,9 @@ class PresensiNetwork {
     data['latlon_out'] = latlonOut;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
+    if (user != null) {
+      data['user'] = user!.toJson();
+    }
     return data;
   }
 }

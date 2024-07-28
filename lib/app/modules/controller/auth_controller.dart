@@ -18,7 +18,7 @@ class AuthController extends GetxController {
       Rx<RekapitulasiKaryawan?>(null);
   Rx<RekapitulasiAdmin?> rekapitulasiAdmin = Rx<RekapitulasiAdmin?>(null);
 
-  Rx<UserNetwork?> user = Rx<UserNetwork?>(null);
+  Rx<User?> user = Rx<User?>(null);
   final box = GetStorage();
 
   @override
@@ -85,7 +85,7 @@ class AuthController extends GetxController {
   Future<void> loadUser() async {
     final userData = box.read('user');
     if (userData != null) {
-      user.value = UserNetwork.fromJson(userData);
+      user.value = User.fromJson(userData);
     }
   }
 
@@ -96,7 +96,6 @@ class AuthController extends GetxController {
       Get.snackbar(Dictionary.defaultSuccess, "Profil berhasil diperbarui.");
     } catch (e) {
       Get.snackbar(Dictionary.defaultError, "Gagal memperbarui profil.");
-      print(e);
     }
   }
 
@@ -107,11 +106,9 @@ class AuthController extends GetxController {
     try {
       final rekapKaryawan = await authRepository.recapForStaff();
       rekapitulasiKaryawan.value = rekapKaryawan;
-      print(rekapKaryawan);
     } catch (e) {
       Get.snackbar(
           Dictionary.defaultError, "Gagal mendapatkan rekap presensi.");
-      print(e);
     }
   }
 
@@ -120,11 +117,9 @@ class AuthController extends GetxController {
     try {
       final rekapAdmin = await authRepository.recapForAdmin();
       rekapitulasiAdmin.value = rekapAdmin;
-      print(rekapAdmin);
     } catch (e) {
       Get.snackbar(
           Dictionary.defaultError, "Gagal mendapatkan rekap presensi.");
-      print(e);
     }
   }
 

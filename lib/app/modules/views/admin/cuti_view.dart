@@ -3,7 +3,6 @@ import 'package:flutter_epresence_app/app/components/color_status_cuti.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
 import 'package:flutter_epresence_app/app/components/custom_text_field.dart';
 import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
-import 'package:flutter_epresence_app/app/modules/models/user.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
@@ -205,25 +204,6 @@ class _CutiViewState extends State<CutiView> {
     );
   }
 
-  // Fungsi untuk mendapatkan nama pengguna berdasarkan userId
-  String _getUserName(String? userId) {
-    final user = users.firstWhere(
-      (u) => u.userId == userId,
-      orElse: () => User(
-        userId: '',
-        nama: 'Unknown',
-        email: '',
-        phoneNumber: '',
-        role: '',
-        employeeType: '',
-        department: '',
-        position: '',
-        imageUrl: '',
-      ),
-    );
-    return user.nama;
-  }
-
   // Cuti Card
   Widget _buildCutiCard(Cuti cuti) {
     return Card(
@@ -237,7 +217,7 @@ class _CutiViewState extends State<CutiView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  _getUserName(cuti.userId),
+                  cuti.userId!,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 ColorStatusCuti(statusAjuan: cuti.status),
