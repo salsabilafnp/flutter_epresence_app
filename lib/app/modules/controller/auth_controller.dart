@@ -23,19 +23,8 @@ class AuthController extends GetxController {
 
   @override
   void onInit() {
-    loadData();
+    loadUser();
     super.onInit();
-  }
-
-  // loadData
-  Future<void> loadData() async {
-    try {
-      await recapForAdmin();
-      await recapForStaff();
-      await loadUser();
-    } catch (e) {
-      Get.snackbar(Dictionary.defaultError, 'Gagal memuat data.');
-    }
   }
 
   // login
@@ -45,9 +34,6 @@ class AuthController extends GetxController {
           await authRepository.login(email.text, kataSandi.text);
 
       if (authResponse != null && authResponse.token != null) {
-        // cek role
-        final String role = authResponse.user?.role ?? '';
-
         // Simpan informasi user di GetStorage
         box.write('user', authResponse.user?.toJson());
         loadUser();
@@ -59,23 +45,7 @@ class AuthController extends GetxController {
         //   Get.offAllNamed(RouteNames.registrasiWajah);
         // } else {
         // Redirect ke halaman sesuai role
-        if (role == 'admin') {
-          Get.offAllNamed(
-            RouteNames.bottomNavBar,
-            parameters: {'role': Dictionary.admin},
-          );
-        } else if (role == 'staff') {
-          Get.offAllNamed(
-            RouteNames.bottomNavBar,
-            parameters: {'role': Dictionary.staff},
-          );
-        } else {
-          Get.snackbar(
-            Dictionary.defaultError,
-            'Role tidak dikenal',
-            margin: const EdgeInsets.all(20),
-          );
-        }
+        cekRole();
 
         Get.snackbar(
           Dictionary.defaultSuccess,
@@ -181,10 +151,19 @@ class AuthController extends GetxController {
         RouteNames.bottomNavBar,
         parameters: {'role': Dictionary.admin},
       );
+      recapForAdmin();
+      recapForStaff();
     } else if (role == 'staff') {
       Get.offAllNamed(
         RouteNames.bottomNavBar,
         parameters: {'role': Dictionary.staff},
+      );
+      recapForStaff();
+    } else {
+      Get.snackbar(
+        Dictionary.defaultError,
+        'Role tidak dikenal',
+        margin: const EdgeInsets.all(20),
       );
     }
   }

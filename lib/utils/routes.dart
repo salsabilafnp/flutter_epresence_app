@@ -1,11 +1,11 @@
 import 'package:flutter_epresence_app/app/components/nav_component.dart';
-import 'package:flutter_epresence_app/app/modules/controller/presensi_controller.dart';
 import 'package:flutter_epresence_app/app/modules/views/admin/akses_view.dart';
+import 'package:flutter_epresence_app/app/modules/views/admin/beranda_admin_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/admin/cuti_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/admin/detail_cuti_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/admin/detail_presensi_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/admin/notifikasi_admin_view.dart';
-import 'package:flutter_epresence_app/app/modules/views/admin/presensi_view.dart';
+import 'package:flutter_epresence_app/app/modules/views/admin/profil_admin_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/beranda_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/edit_cuti_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/kamera_view.dart';
@@ -65,12 +65,13 @@ class Routes {
     ),
     GetPage(
       name: RouteNames.bottomNavBar,
-      page: () {
-        final role = Get.parameters['role'];
-        return NavComponent(role: role!);
-      },
+      page: () => NavComponent(
+        role: Get.parameters['role'] ?? '',
+        isAdminAccessingAsStaff:
+            Get.parameters['isAdminAccessingAsStaff'] == 'true',
+      ),
     ),
-    // For Staff
+    // Staff routes
     GetPage(
       name: RouteNames.berandaStaff,
       page: () => BerandaView(),
@@ -80,24 +81,8 @@ class Routes {
       page: () => NotifikasiView(),
     ),
     GetPage(
-        name: RouteNames.riwayatPresensiStaff,
-        page: () {
-          PresensiController().getRiwayatPresensi();
-          return RiwayatPresensiView();
-        }),
-    GetPage(
       name: RouteNames.kameraPresensi,
       page: () => KameraView(),
-    ),
-    GetPage(
-      name: RouteNames.riwayatCutiStaff,
-      page: () => RiwayatCutiView(),
-    ),
-    GetPage(
-      name: RouteNames.kameraCuti,
-      page: () => KameraView(
-        kameraCuti: true,
-      ),
     ),
     GetPage(
       name: RouteNames.pengajuanCuti,
@@ -108,24 +93,34 @@ class Routes {
       page: () => EditCutiView(),
     ),
     GetPage(
+      name: RouteNames.riwayatPresensiStaff,
+      page: () => RiwayatPresensiView(),
+    ),
+    GetPage(
+      name: RouteNames.riwayatCutiStaff,
+      page: () => RiwayatCutiView(),
+    ),
+    GetPage(
       name: RouteNames.profilStaff,
       page: () => ProfilView(),
     ),
-    // For Admin
+    // Admin routes
     GetPage(
       name: RouteNames.aksesAdmin,
       page: () => AksesView(),
+    ),
+    GetPage(
+      name: RouteNames.berandaAdmin,
+      page: () => BerandaAdminView(),
     ),
     GetPage(
       name: RouteNames.notifAdmin,
       page: () => NotifikasiAdminView(),
     ),
     GetPage(
-        name: RouteNames.riwayatPresensiAdmin,
-        page: () {
-          PresensiController().getSemuaPresensi();
-          return PresensiView();
-        }),
+      name: RouteNames.riwayatPresensiAdmin,
+      page: () => RiwayatPresensiView(),
+    ),
     GetPage(
       name: RouteNames.detailPresensi,
       page: () => DetailPresensiView(),
@@ -137,6 +132,10 @@ class Routes {
     GetPage(
       name: RouteNames.detailCuti,
       page: () => DetailCutiView(),
+    ),
+    GetPage(
+      name: RouteNames.profilAdmin,
+      page: () => ProfilAdminView(),
     ),
   ];
 }

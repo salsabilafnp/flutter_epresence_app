@@ -5,13 +5,15 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 class CustomBottomNavbar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTabTapped;
-  final String role;
+  final String? role;
+  final bool isAdminAccessingAsStaff;
 
   const CustomBottomNavbar({
     super.key,
     required this.currentIndex,
     required this.onTabTapped,
-    required this.role,
+    this.role,
+    this.isAdminAccessingAsStaff = false,
   });
 
   @override
@@ -27,7 +29,7 @@ class CustomBottomNavbar extends StatelessWidget {
       selectedItemColor: Theme.of(context).colorScheme.primary,
       selectedLabelStyle: const TextStyle(fontSize: 14),
       unselectedLabelStyle: const TextStyle(fontSize: 12),
-      items: role == Dictionary.admin
+      items: role == Dictionary.admin && !isAdminAccessingAsStaff
           ? _buildAdminMenuItems()
           : _buildStaffMenuItems(),
     );

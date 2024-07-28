@@ -14,8 +14,10 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class NavComponent extends StatefulWidget {
   final String role;
+  final bool isAdminAccessingAsStaff;
 
-  NavComponent({super.key, required this.role});
+  NavComponent(
+      {super.key, required this.role, this.isAdminAccessingAsStaff = false});
 
   @override
   State<NavComponent> createState() => _NavComponentState();
@@ -34,17 +36,22 @@ class _NavComponentState extends State<NavComponent> {
 
   @override
   Widget build(BuildContext context) {
+    bool showFloatingButton =
+        widget.role == Dictionary.staff || widget.isAdminAccessingAsStaff;
+
     return Scaffold(
       body: IndexedStack(
         index: _tabIndex,
         children: [
           // Views for staff
-          if (widget.role == Dictionary.staff) ...[
+          if (widget.role == Dictionary.staff ||
+              widget.isAdminAccessingAsStaff) ...[
             BerandaView(),
             ProfilView(),
           ],
           // Views for admin
-          if (widget.role == Dictionary.admin) ...[
+          if (widget.role == Dictionary.admin &&
+              !widget.isAdminAccessingAsStaff) ...[
             BerandaAdminView(),
             PresensiView(),
             CutiView(),
@@ -54,24 +61,25 @@ class _NavComponentState extends State<NavComponent> {
       ),
       bottomNavigationBar: CustomBottomNavbar(
         role: widget.role,
+        isAdminAccessingAsStaff: widget.isAdminAccessingAsStaff,
         currentIndex: _tabIndex,
         onTabTapped: changeTabIndex,
       ),
-      floatingActionButton: widget.role == Dictionary.staff &&
-              _presensiController.isPulangHariIni.value == false
-          ? Obx(() {
-              return FloatingActionButton(
-                onPressed: () {
-                  Get.toNamed(RouteNames.kameraPresensi);
-                },
-                shape: const CircleBorder(),
-                backgroundColor: _presensiController.isPresensiHariIni.value
-                    ? Theme.of(context).colorScheme.secondary
-                    : Theme.of(context).colorScheme.primary,
-                child: const Icon(Symbols.familiar_face_and_zone),
-              );
-            })
-          : null,
+      floatingActionButton:
+          showFloatingButton || !_presensiController.isPulangHariIni.value
+              ? Obx(() {
+                  return FloatingActionButton(
+                    onPressed: () {
+                      Get.toNamed(RouteNames.kameraPresensi);
+                    },
+                    shape: const CircleBorder(),
+                    backgroundColor: _presensiController.isPresensiHariIni.value
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.primary,
+                    child: const Icon(Symbols.familiar_face_and_zone),
+                  );
+                })
+              : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
