@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/modules/controller/auth_controller.dart';
 import 'package:flutter_epresence_app/app/modules/models/presensi.dart';
 import 'package:flutter_epresence_app/app/modules/models/response/presensi_response.dart';
 import 'package:flutter_epresence_app/app/modules/repository/presensi_repository.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:get/get.dart';
 
 class PresensiController extends GetxController {
@@ -30,17 +29,16 @@ class PresensiController extends GetxController {
 
   @override
   void onInit() {
+    cekPresensiHariIni();
     loadData();
     super.onInit();
   }
 
   // loadData
   void loadData() {
-    log(_authController.user.value!.role.toString());
-    cekPresensiHariIni();
     if (_authController.user.value!.role == 'admin') {
-      getRiwayatPresensi();
       getSemuaPresensi();
+      getRiwayatPresensi();
     } else {
       getRiwayatPresensi();
     }
@@ -149,7 +147,12 @@ class PresensiController extends GetxController {
           Dictionary.suksesPresensiMasuk,
           margin: const EdgeInsets.all(20),
         );
-        _authController.cekRole();
+        if (_authController.user.value!.role == 'admin') {
+          Get.offAllNamed(RouteNames.bottomNavBar,
+              parameters: {'role': Dictionary.staff});
+        } else {
+          _authController.cekRole();
+        }
       }
     } catch (e) {
       Get.snackbar(
@@ -174,7 +177,12 @@ class PresensiController extends GetxController {
           Dictionary.suksesPresensiPulang,
           margin: const EdgeInsets.all(20),
         );
-        _authController.cekRole();
+        if (_authController.user.value!.role == 'admin') {
+          Get.offAllNamed(RouteNames.bottomNavBar,
+              parameters: {'role': Dictionary.staff});
+        } else {
+          _authController.cekRole();
+        }
       }
     } catch (e) {
       Get.snackbar(
@@ -231,6 +239,4 @@ class PresensiController extends GetxController {
       );
     }
   }
-
-  // pengingatPresensi()
 }
