@@ -115,7 +115,7 @@ class PresensiRepository extends GetConnect {
           throw Dictionary.defaultError;
         }
       } catch (e) {
-        log('Error checking in: $e');
+        log('Error checking out: $e');
         rethrow;
       }
     }
@@ -127,23 +127,53 @@ class PresensiRepository extends GetConnect {
 
   // getSemuaPresensi()
   Future<RiwayatPresensiResponse?> getSemuaPresensi() async {
-    try {
-      final response = await get(
-        NetworkEndpoint.presensiSemuaRiwayat,
-      );
+    final String? accessToken = box.read('token');
+    if (accessToken != null) {
+      try {
+        final response = await get(
+          NetworkEndpoint.presensiSemuaRiwayat,
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
+        );
 
-      if (response.statusCode == 200) {
-        return RiwayatPresensiResponse.fromJson(response.body);
-      } else {
-        throw Dictionary.defaultError;
+        if (response.statusCode == 200) {
+          return RiwayatPresensiResponse.fromJson(response.body);
+        } else {
+          throw Dictionary.defaultError;
+        }
+      } catch (e) {
+        log('Error fetching all attendance history: $e');
+        rethrow;
       }
-    } catch (e) {
-      log('Error fetching attendance history: $e');
-      rethrow;
     }
+    return null;
   }
 
-  // detailPresensi()
+  // detailPresensi(id)
+  Future<PresensiResponse?> detailPresensi(int id) async {
+    final String? accessToken = box.read('token');
+    if (accessToken != null) {
+      try {
+        final response = await get(
+          '${NetworkEndpoint.presensi}/$id',
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          return PresensiResponse.fromJson(response.body);
+        } else {
+          throw Dictionary.defaultError;
+        }
+      } catch (e) {
+        log('Error fetching detail attendance $id: $e');
+        rethrow;
+      }
+    }
+    return null;
+  }
 
   // pengingatPresensi()
 }

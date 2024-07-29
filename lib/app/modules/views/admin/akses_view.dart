@@ -57,7 +57,10 @@ class AksesView extends StatelessWidget {
                     onPressed: () {
                       Get.offAllNamed(
                         RouteNames.bottomNavBar,
-                        parameters: {'role': Dictionary.staff},
+                        parameters: {
+                          'role': Dictionary.admin,
+                          'isAdminAccessingAsStaff': 'true',
+                        },
                       );
                     },
                     child: Text(Dictionary.staff),

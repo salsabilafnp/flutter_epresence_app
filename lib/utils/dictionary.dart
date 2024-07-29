@@ -5,6 +5,9 @@ class Dictionary {
   static const ya = "Ya";
   static const tidak = "Tidak";
 
+  static const loadData = "Reload halaman";
+  static const noData = "Tidak ada data";
+
   // Menu
   static const beranda = "Beranda";
   static const notifikasi = "Notifikasi";
@@ -97,7 +100,7 @@ class Dictionary {
 
   // Auth
   static const logIn = 'Masuk';
-  static const logOut = 'Pulang';
+  static const logOut = 'Keluar';
   static const email = 'Email';
   static const password = 'Kata Sandi';
   static const gantiAkses = 'Ganti Hak Akses';

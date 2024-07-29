@@ -4,6 +4,7 @@ import 'package:flutter_epresence_app/app/modules/models/presensi.dart';
 import 'package:flutter_epresence_app/app/modules/models/response/presensi_response.dart';
 import 'package:flutter_epresence_app/app/modules/repository/presensi_repository.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:get/get.dart';
 
 class PresensiController extends GetxController {
@@ -13,26 +14,38 @@ class PresensiController extends GetxController {
   final TextEditingController tanggalAwal = TextEditingController();
   final TextEditingController tanggalAkhir = TextEditingController();
 
-  RxList<PresensiNetwork?> presensi = RxList<PresensiNetwork?>([]);
-  Rx<PresensiNetwork?> presensiHariIni = Rx<PresensiNetwork?>(null);
+  RxList<Presensi?> presensi = RxList<Presensi?>([]);
+  Rxn<PresensiResponse?> detailPresensi = Rxn<PresensiResponse?>();
+  RxList<Presensi?> semuaPresensi = RxList<Presensi?>([]);
+  Rx<Presensi?> presensiHariIni = Rx<Presensi?>(null);
   RxList<RxBool> isExpandedList = RxList<RxBool>();
   Rx<DateTime?> dariTanggal = Rx<DateTime?>(null);
   Rx<DateTime?> sampaiTanggal = Rx<DateTime?>(null);
-  RxList<PresensiNetwork?> presensiFilter = RxList<PresensiNetwork?>([]);
+  RxList<Presensi?> presensiFilter = RxList<Presensi?>([]);
 
   RxBool isPresensiHariIni = false.obs;
-  RxBool isPulangHariIni = true.obs;
+  RxBool isPulangHariIni = false.obs;
   RxBool isLoading = false.obs;
 
   @override
   void onInit() {
     cekPresensiHariIni();
-    getRiwayatPresensi();
+    loadData();
     super.onInit();
   }
 
-  // getRiwayatPresensi dengan paginasi
-  Future<void> getRiwayatPresensi({bool isLoadMore = false}) async {
+  // loadData
+  void loadData() {
+    if (_authController.user.value!.role == 'admin') {
+      getSemuaPresensi();
+      getRiwayatPresensi();
+    } else {
+      getRiwayatPresensi();
+    }
+  }
+
+  // getRiwayatPresensi
+  Future<void> getRiwayatPresensi() async {
     if (isLoading.value) return;
     isLoading.value = true;
 
@@ -42,12 +55,9 @@ class PresensiController extends GetxController {
 
       if (riwayatPresensiResponse != null &&
           riwayatPresensiResponse.presensi != null) {
-        if (isLoadMore) {
-          presensi.addAll(riwayatPresensiResponse.presensi!);
-        } else {
-          presensi.value = riwayatPresensiResponse.presensi!;
-        }
+        presensi.value = riwayatPresensiResponse.presensi!;
       }
+
       isExpandedList.value =
           List.generate(presensi.length, (index) => false.obs);
       _terapkanFilter();
@@ -66,6 +76,7 @@ class PresensiController extends GetxController {
   Future<void> reloadData() async {
     presensi.clear();
     await getRiwayatPresensi();
+    await getSemuaPresensi();
   }
 
   // filtePresensi
@@ -106,8 +117,8 @@ class PresensiController extends GetxController {
         if (response.presensi != null) {
           isPresensiHariIni.value = true;
           presensiHariIni.value = response.presensi!;
-          if (response.presensi!.checkOutTime == null) {
-            isPulangHariIni.value = false;
+          if (response.presensi!.checkOutTime != null) {
+            isPulangHariIni.value = true;
           }
         } else {
           isPresensiHariIni.value = false;
@@ -136,7 +147,12 @@ class PresensiController extends GetxController {
           Dictionary.suksesPresensiMasuk,
           margin: const EdgeInsets.all(20),
         );
-        _authController.cekRole();
+        if (_authController.user.value!.role == 'admin') {
+          Get.offAllNamed(RouteNames.bottomNavBar,
+              parameters: {'role': Dictionary.staff});
+        } else {
+          _authController.cekRole();
+        }
       }
     } catch (e) {
       Get.snackbar(
@@ -161,7 +177,12 @@ class PresensiController extends GetxController {
           Dictionary.suksesPresensiPulang,
           margin: const EdgeInsets.all(20),
         );
-        _authController.cekRole();
+        if (_authController.user.value!.role == 'admin') {
+          Get.offAllNamed(RouteNames.bottomNavBar,
+              parameters: {'role': Dictionary.staff});
+        } else {
+          _authController.cekRole();
+        }
       }
     } catch (e) {
       Get.snackbar(
@@ -176,13 +197,39 @@ class PresensiController extends GetxController {
 
   // getSemuaPresensi()
   Future<void> getSemuaPresensi() async {
+    if (isLoading.value) return;
+    isLoading.value = true;
+
     try {
-      final RiwayatPresensiResponse? semuaPresensiResponse =
+      final RiwayatPresensiResponse? response =
           await _presensiRepository.getSemuaPresensi();
-      if (semuaPresensiResponse != null &&
-          semuaPresensiResponse.presensi != null) {
-        presensi.value = semuaPresensiResponse.presensi!;
-        _terapkanFilter();
+      if (response != null && response.presensi != null) {
+        semuaPresensi.value = response.presensi!;
+      }
+    } catch (e) {
+      Get.snackbar(
+        Dictionary.defaultError,
+        e.toString(),
+        margin: const EdgeInsets.all(20),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // detailPresensi(id)
+  Future<void> getDetailPresensi(int id) async {
+    try {
+      final PresensiResponse? response =
+          await _presensiRepository.detailPresensi(id);
+      if (response != null) {
+        detailPresensi.value = response;
+      } else {
+        Get.snackbar(
+          Dictionary.defaultError,
+          'No data found',
+          margin: const EdgeInsets.all(20),
+        );
       }
     } catch (e) {
       Get.snackbar(
@@ -192,8 +239,4 @@ class PresensiController extends GetxController {
       );
     }
   }
-
-  // detailPresensi()
-
-  // pengingatPresensi()
 }

@@ -7,6 +7,10 @@ class NetworkEndpoint {
   static const logout = '$baseUrl/logout';
   static const updateProfile = '$baseUrl/update-profile';
 
+  // rekapitulasi
+  static const rekapAdmin = '$baseUrl/recap/admin';
+  static const rekapKaryawan = '$baseUrl/recap/staff';
+
   // presensi
   static const presensi = '$baseUrl/attendance';
   static const presensiHariIni = '$baseUrl/attendance/today';
@@ -18,5 +22,5 @@ class NetworkEndpoint {
   // cuti
   static const cuti = '$baseUrl/permission';
   static const cutiSemuaRiwayat = '$baseUrl/permission/all-history';
-  static const cutiKonfirmasi = '$baseUrl/permission/history/confirm';
+  static const cutiKonfirmasi = '$baseUrl/permission/confirm';
 }

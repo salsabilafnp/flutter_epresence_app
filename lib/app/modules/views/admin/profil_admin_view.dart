@@ -24,13 +24,13 @@ class ProfilAdminView extends StatelessWidget {
         child: Center(
           child: Obx(
             () {
-              UserNetwork? userData = _authController.user.value;
+              User? userData = _authController.user.value;
 
               if (userData != null) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildIdentityCard(context, userData),
+                    _buildIdentitas(context, userData),
                     const SizedBox(height: 30),
                     FilledButton(
                       onPressed: () {
@@ -58,7 +58,7 @@ class ProfilAdminView extends StatelessWidget {
     );
   }
 
-  Widget _buildIdentityCard(BuildContext context, UserNetwork userData) {
+  Widget _buildIdentitas(BuildContext context, User userData) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -84,9 +84,9 @@ class ProfilAdminView extends StatelessWidget {
             const SizedBox(height: 5),
             Text('${userData.department} - ${userData.position}'),
             const SizedBox(height: 5),
-            Text(userData.email ?? 'Email Pengguna'),
+            Text(userData.email ?? 'Email belum terdaftar'),
             const SizedBox(height: 5),
-            Text(userData.phoneNumber ?? 'Nomor Telepon Pengguna'),
+            Text(userData.phoneNumber ?? 'Nomor HP belum terdaftar'),
           ],
         ),
       ),

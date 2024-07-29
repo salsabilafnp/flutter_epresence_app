@@ -9,8 +9,9 @@ import 'package:get/get.dart';
 
 class ProfilView extends StatelessWidget {
   final AuthController _authController = Get.find();
+  final bool isAdminAccessingAsStaff;
 
-  ProfilView({super.key});
+  ProfilView({super.key, required this.isAdminAccessingAsStaff});
 
   @override
   Widget build(BuildContext context) {
@@ -22,45 +23,40 @@ class ProfilView extends StatelessWidget {
         margin: const EdgeInsets.all(20),
         child: Center(
           child: Obx(() {
-            UserNetwork? userData = _authController.user.value;
+            User? userData = _authController.user.value;
 
-            if (userData != null) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildIdentityCard(context, userData),
-                  const SizedBox(height: 30),
-                  _buildAttendanceSummaryCard(context),
-                  const SizedBox(height: 30),
-                  FilledButton(
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildIdentitas(context, userData!),
+                const SizedBox(height: 30),
+                _buildRekapitulasiKaryawan(context),
+                const SizedBox(height: 30),
+                FilledButton(
+                  onPressed: () {
+                    _authController.logout();
+                  },
+                  style: AppTheme.secondaryButtonStyle,
+                  child: const Text(Dictionary.logOut),
+                ),
+                if (isAdminAccessingAsStaff) ...[
+                  const SizedBox(height: 20),
+                  OutlinedButton(
                     onPressed: () {
-                      _authController.logout();
+                      Get.offAndToNamed(RouteNames.aksesAdmin);
                     },
-                    style: AppTheme.secondaryButtonStyle,
-                    child: const Text(Dictionary.logOut),
+                    child: const Text(Dictionary.gantiAkses),
                   ),
-                  if (userData.employeeType == 'staff') ...[
-                    // Tombol untuk admin
-                    const SizedBox(height: 20),
-                    OutlinedButton(
-                      onPressed: () {
-                        Get.offAndToNamed(RouteNames.aksesAdmin);
-                      },
-                      child: const Text(Dictionary.gantiAkses),
-                    ),
-                  ],
                 ],
-              );
-            } else {
-              return const CircularProgressIndicator();
-            }
+              ],
+            );
           }),
         ),
       ),
     );
   }
 
-  Widget _buildIdentityCard(BuildContext context, UserNetwork userData) {
+  Widget _buildIdentitas(BuildContext context, User userData) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -86,16 +82,16 @@ class ProfilView extends StatelessWidget {
             const SizedBox(height: 5),
             Text('${userData.department} - ${userData.position}'),
             const SizedBox(height: 5),
-            Text(userData.email ?? 'Email Pengguna'),
+            Text(userData.email ?? 'Email belum terdaftar'),
             const SizedBox(height: 5),
-            Text(userData.phoneNumber ?? 'Nomor Telepon Pengguna'),
+            Text(userData.phoneNumber ?? 'Nomor HP belum terdaftar'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildAttendanceSummaryCard(BuildContext context) {
+  Widget _buildRekapitulasiKaryawan(BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -110,51 +106,58 @@ class ProfilView extends StatelessWidget {
                   .copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
+            Obx(() {
+              final rekapitulasi = _authController.rekapitulasiKaryawan.value;
+              if (rekapitulasi != null) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(
-                      'Hadir',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Column(
+                      children: [
+                        const Text(
+                          Dictionary.hadir,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 5),
+                        Text('${rekapitulasi.totalPresensi} hari'),
+                      ],
                     ),
-                    const SizedBox(height: 5),
-                    Text('20 hari'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      'Sakit',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Column(
+                      children: [
+                        const Text(
+                          Dictionary.sakit,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 5),
+                        Text('${rekapitulasi.totalSakit} hari'),
+                      ],
                     ),
-                    const SizedBox(height: 5),
-                    Text('20 hari'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      'Cuti',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Column(
+                      children: [
+                        const Text(
+                          Dictionary.cuti,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 5),
+                        Text('${rekapitulasi.totalCuti} hari'),
+                      ],
                     ),
-                    const SizedBox(height: 5),
-                    Text('20 hari'),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      'WFH',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Column(
+                      children: [
+                        const Text(
+                          Dictionary.wfh,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 5),
+                        Text('${rekapitulasi.totalWFH} hari'),
+                      ],
                     ),
-                    const SizedBox(height: 5),
-                    Text('20 hari'),
                   ],
-                ),
-              ],
-            ),
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
+            }),
           ],
         ),
       ),

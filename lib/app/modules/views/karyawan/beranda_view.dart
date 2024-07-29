@@ -95,7 +95,6 @@ class BerandaView extends StatelessWidget {
               style: AppTheme.primaryButtonStyle,
               onPressed: () {
                 Get.toNamed(RouteNames.kameraCuti);
-                // Get.toNamed(RouteNames.pengajuanCuti);
               },
               icon: Icon(Symbols.note_alt),
               label: Text(Dictionary.pengajuanCuti),

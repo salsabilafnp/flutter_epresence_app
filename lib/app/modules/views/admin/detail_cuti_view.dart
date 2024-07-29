@@ -2,51 +2,68 @@ import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/card_info_user.dart';
 import 'package:flutter_epresence_app/app/components/color_status_cuti.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
+import 'package:flutter_epresence_app/app/modules/controller/cuti_controller.dart';
 import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
-import 'package:flutter_epresence_app/app/modules/models/user.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class DetailCutiView extends StatelessWidget {
-  final int cutiId = Get.arguments as int;
+class DetailCutiView extends StatefulWidget {
+  final int cutiId;
 
-  DetailCutiView({super.key});
+  DetailCutiView({super.key}) : cutiId = Get.arguments as int;
+
+  @override
+  _DetailCutiViewState createState() => _DetailCutiViewState();
+}
+
+class _DetailCutiViewState extends State<DetailCutiView> {
+  final CutiController cutiController = Get.put(CutiController());
+
+  @override
+  void initState() {
+    super.initState();
+    cutiController.getDetailAjuan(widget.cutiId);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final Cuti cuti = cutiData.firstWhere((cuti) => cuti.id == cutiId);
-    final User user = users.firstWhere((user) => user.userId == cuti.userId);
+    final data = cutiController.detailCuti.value!;
 
     return Scaffold(
       appBar: const CustomAppBar(
         pageTitle: Dictionary.detailAjuanCuti,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: SingleChildScrollView(
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Obx(() {
+          if (cutiController.detailCuti.value == null) {
+            return const Center(child: Text('No data available'));
+          }
+          return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CardInfoUser(user: user),
+                if (data.cuti!.user != null)
+                  CardInfoUser(user: data.cuti!.user!),
                 const SizedBox(height: 10),
-                _buildDetailCuti(context, cuti),
+                _buildDetailCuti(context, data.cuti!),
               ],
             ),
-          ),
-        ),
+          );
+        }),
       ),
       bottomNavigationBar: Container(
-        margin: EdgeInsets.all(20),
+        margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             FilledButton(
               style: AppTheme.approveButonStyle,
               onPressed: () {
-                // Disetujui
+                // Handle approval action
+                cutiController.konfirmasiAjuan(data.cuti!.id!, "approved");
               },
               child: const Text(Dictionary.disetujui),
             ),
@@ -54,7 +71,8 @@ class DetailCutiView extends StatelessWidget {
             FilledButton(
               style: AppTheme.rejectButtonStyle,
               onPressed: () {
-                // Ditolak
+                // Handle rejection action
+                cutiController.konfirmasiAjuan(data.cuti!.id!, "rejected");
               },
               child: const Text(Dictionary.ditolak),
             )
@@ -77,157 +95,66 @@ class DetailCutiView extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Tanggal Awal Ajuan
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          Dictionary.tanggalCuti,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          DateFormat('EEEE, d MMMM yyyy')
-                              .format(DateTime.parse(cuti.tanggalMulai)),
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
+                    _buildDetailItem(
+                        context,
+                        Dictionary.tanggalCuti,
+                        DateFormat('EEEE, d MMMM yyyy')
+                            .format(DateTime.parse(cuti.leaveDate!))),
                     const SizedBox(height: 10),
-                    // Status Ajuan
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          Dictionary.statusAjuan,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary),
-                        ),
-                        const SizedBox(height: 5),
-                        ColorStatusCuti(
-                          statusAjuan: cuti.status,
-                          isForDetail: true,
-                        ),
-                      ],
-                    ),
+                    _buildDetailItem(context, Dictionary.statusAjuan, ''),
+                    ColorStatusCuti(
+                        statusAjuan: Dictionary.mapStatus(cuti.status!),
+                        isForDetail: true),
                   ],
                 ),
-                const SizedBox(height: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Durasi
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          Dictionary.durasi,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          '${cuti.durasi.toString()} Hari',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
+                    _buildDetailItem(context, Dictionary.durasi,
+                        '${cuti.duration.toString()} Hari'),
                     const SizedBox(height: 10),
-                    // Jenis Pengajuan
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          Dictionary.durasi,
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          cuti.jenisCuti.capitalize!,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
+                    _buildDetailItem(context, Dictionary.jenisPengajuan,
+                        Dictionary.mapTipe(cuti.permitType!).capitalize!),
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 10),
-            // Alasan
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  Dictionary.alasan,
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.secondary),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  cuti.alasan,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
+            _buildDetailItem(context, Dictionary.alasan, cuti.reason!),
             const SizedBox(height: 10),
-            // Bukti File
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  Dictionary.buktiFile,
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.secondary),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  cuti.fileUrl,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                // Preview Bukti Ajuan
-                // Image.asset(),
-              ],
-            ),
+            _buildDetailItem(context, Dictionary.buktiFile,
+                cuti.fileUrl ?? 'Tidak ada bukti pendukung'),
             const SizedBox(height: 10),
-            // Waktu Pengajuan
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  Dictionary.waktuPengajuan,
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.secondary),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  DateFormat('EEEE, d MMMM yyyy HH:MM').format(DateTime.now()),
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
+            _buildDetailItem(
+                context,
+                Dictionary.waktuPengajuan,
+                DateFormat('EEEE, d MMMM yyyy HH:MM')
+                    .format(DateTime.parse(cuti.createdAt!))),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildDetailItem(BuildContext context, String title, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+        ),
+        const SizedBox(height: 5),
+        if (value != '') ...[
+          Text(
+            value,
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(fontWeight: FontWeight.bold),
+          ),
+        ]
+      ],
     );
   }
 }

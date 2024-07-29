@@ -15,7 +15,7 @@ class EditCutiView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CutiNetwork? selectedCuti = _cutiController.cuti.firstWhere(
+    Cuti? selectedCuti = _cutiController.cuti.firstWhere(
       (element) => element!.id == cutiId,
       orElse: () => null,
     );

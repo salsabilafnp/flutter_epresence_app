@@ -1,40 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/card_info_user.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
+import 'package:flutter_epresence_app/app/modules/controller/presensi_controller.dart';
 import 'package:flutter_epresence_app/app/modules/models/presensi.dart';
-import 'package:flutter_epresence_app/app/modules/models/user.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class DetailPresensiView extends StatelessWidget {
-  final int presensiId = Get.arguments as int;
+class DetailPresensiView extends StatefulWidget {
+  final int presensiId;
 
-  DetailPresensiView({super.key});
+  DetailPresensiView({super.key}) : presensiId = Get.arguments as int;
+
+  @override
+  _DetailPresensiViewState createState() => _DetailPresensiViewState();
+}
+
+class _DetailPresensiViewState extends State<DetailPresensiView> {
+  final PresensiController presensiController = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+    presensiController.getDetailPresensi(widget.presensiId);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final Presensi presensi =
-        presensiData.firstWhere((presensi) => presensi.id == presensiId);
-    final User user =
-        users.firstWhere((user) => user.userId == presensi.userId);
-
     return Scaffold(
       appBar: const CustomAppBar(
         pageTitle: Dictionary.detailPresensi,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CardInfoUser(user: user),
-              const SizedBox(height: 10),
-              _buildDetailPresensi(context, presensi),
-            ],
-          ),
-        ),
+        child: Obx(() {
+          if (presensiController.detailPresensi.value == null) {
+            return const Center(child: Text('No data available'));
+          }
+
+          // log(presensiController.detailPresensi.value!.date.toString());
+          final data = presensiController.detailPresensi.value!;
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (data.presensi!.user != null)
+                  CardInfoUser(user: data.presensi!.user!),
+                const SizedBox(height: 10),
+                _buildDetailPresensi(context, data.presensi!),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }
@@ -48,7 +65,7 @@ class DetailPresensiView extends StatelessWidget {
           children: [
             Text(
               DateFormat('EEEE, d MMMM yyyy')
-                  .format(DateTime.parse(presensi.tanggal)),
+                  .format(DateTime.parse(presensi.date ?? '-')),
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 20),
@@ -74,7 +91,7 @@ class DetailPresensiView extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          presensi.waktuMasuk,
+                          presensi.checkInTime ?? '-',
                           textAlign: TextAlign.center,
                           style: Theme.of(context)
                               .textTheme
@@ -92,9 +109,9 @@ class DetailPresensiView extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          presensi.lokasiMasuk,
+                          _formatLocation(presensi.latlonIn) ?? '-',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -114,12 +131,12 @@ class DetailPresensiView extends StatelessWidget {
                     Row(
                       children: [
                         Icon(
-                          Icons.login_outlined,
+                          Icons.logout_outlined,
                           color: Theme.of(context).colorScheme.error,
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          presensi.waktuPulang,
+                          presensi.checkOutTime ?? '-',
                           textAlign: TextAlign.center,
                           style: Theme.of(context)
                               .textTheme
@@ -137,9 +154,9 @@ class DetailPresensiView extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          presensi.lokasiPulang,
+                          _formatLocation(presensi.latlonOut) ?? '-',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -151,5 +168,12 @@ class DetailPresensiView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String? _formatLocation(String? location) {
+    if (location == null) {
+      return null;
+    }
+    return location.split(',').join('\n');
   }
 }

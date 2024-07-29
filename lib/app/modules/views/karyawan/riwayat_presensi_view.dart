@@ -28,7 +28,7 @@ class RiwayatPresensiView extends StatelessWidget {
               if (scrollInfo.metrics.pixels ==
                       scrollInfo.metrics.maxScrollExtent &&
                   !_presensiController.isLoading.value) {
-                _presensiController.getRiwayatPresensi(isLoadMore: true);
+                _presensiController.getRiwayatPresensi();
               }
               return false;
             },
@@ -43,6 +43,13 @@ class RiwayatPresensiView extends StatelessWidget {
                   icon: const Icon(Icons.filter_alt_outlined),
                 ),
                 const SizedBox(height: 20),
+                Obx(
+                  () => _presensiController.presensi.isEmpty
+                      ? const Center(
+                          child: Text(Dictionary.loadData),
+                        )
+                      : const SizedBox.shrink(),
+                ),
                 Expanded(
                   child: Obx(
                     () => ListView.builder(
@@ -160,7 +167,7 @@ class RiwayatPresensiView extends StatelessWidget {
 
   Widget _buildPresensiCard(
     BuildContext context,
-    PresensiNetwork presensi,
+    Presensi presensi,
     int index,
   ) {
     return Card(

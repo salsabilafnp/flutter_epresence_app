@@ -2,7 +2,7 @@ import 'package:flutter_epresence_app/app/modules/models/presensi.dart';
 
 class PresensiResponse {
   String? pesan;
-  PresensiNetwork? presensi;
+  Presensi? presensi;
 
   PresensiResponse({
     this.pesan,
@@ -12,7 +12,7 @@ class PresensiResponse {
   PresensiResponse.fromJson(Map<String, dynamic> json) {
     pesan = json['message']?.toString();
     presensi = (json['attendance'] != null && (json['attendance'] is Map))
-        ? PresensiNetwork.fromJson(json['attendance'])
+        ? Presensi.fromJson(json['attendance'])
         : null;
   }
   Map<String, dynamic> toJson() {
@@ -26,7 +26,7 @@ class PresensiResponse {
 }
 
 class RiwayatPresensiResponse {
-  List<PresensiNetwork?>? presensi;
+  List<Presensi?>? presensi;
 
   RiwayatPresensiResponse({
     this.presensi,
@@ -35,9 +35,9 @@ class RiwayatPresensiResponse {
   RiwayatPresensiResponse.fromJson(Map<String, dynamic> json) {
     if (json['attendances'] != null) {
       final v = json['attendances'];
-      final arr0 = <PresensiNetwork>[];
+      final arr0 = <Presensi>[];
       v.forEach((v) {
-        arr0.add(PresensiNetwork.fromJson(v));
+        arr0.add(Presensi.fromJson(v));
       });
       presensi = arr0;
     }

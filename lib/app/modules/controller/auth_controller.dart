@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_epresence_app/app/modules/models/rekapitulasi.dart';
 import 'package:flutter_epresence_app/app/modules/models/response/auth_response.dart';
 import 'package:flutter_epresence_app/app/modules/models/user.dart';
 import 'package:flutter_epresence_app/app/modules/repository/auth_repository.dart';
@@ -13,13 +14,17 @@ class AuthController extends GetxController {
   final TextEditingController email = TextEditingController();
   final TextEditingController kataSandi = TextEditingController();
 
-  Rx<UserNetwork?> user = Rx<UserNetwork?>(null);
+  Rx<RekapitulasiKaryawan?> rekapitulasiKaryawan =
+      Rx<RekapitulasiKaryawan?>(null);
+  Rx<RekapitulasiAdmin?> rekapitulasiAdmin = Rx<RekapitulasiAdmin?>(null);
+
+  Rx<User?> user = Rx<User?>(null);
   final box = GetStorage();
 
   @override
   void onInit() {
-    super.onInit();
     loadUser();
+    super.onInit();
   }
 
   // login
@@ -29,9 +34,6 @@ class AuthController extends GetxController {
           await authRepository.login(email.text, kataSandi.text);
 
       if (authResponse != null && authResponse.token != null) {
-        // cek role
-        final String role = authResponse.user?.role ?? '';
-
         // Simpan informasi user di GetStorage
         box.write('user', authResponse.user?.toJson());
         loadUser();
@@ -43,23 +45,7 @@ class AuthController extends GetxController {
         //   Get.offAllNamed(RouteNames.registrasiWajah);
         // } else {
         // Redirect ke halaman sesuai role
-        if (role == 'admin') {
-          Get.offAllNamed(
-            RouteNames.bottomNavBar,
-            parameters: {'role': Dictionary.admin},
-          );
-        } else if (role == 'staff') {
-          Get.offAllNamed(
-            RouteNames.bottomNavBar,
-            parameters: {'role': Dictionary.staff},
-          );
-        } else {
-          Get.snackbar(
-            Dictionary.defaultError,
-            'Role tidak dikenal',
-            margin: const EdgeInsets.all(20),
-          );
-        }
+        cekRole();
 
         Get.snackbar(
           Dictionary.defaultSuccess,
@@ -99,7 +85,7 @@ class AuthController extends GetxController {
   Future<void> loadUser() async {
     final userData = box.read('user');
     if (userData != null) {
-      user.value = UserNetwork.fromJson(userData);
+      user.value = User.fromJson(userData);
     }
   }
 
@@ -110,15 +96,32 @@ class AuthController extends GetxController {
       Get.snackbar(Dictionary.defaultSuccess, "Profil berhasil diperbarui.");
     } catch (e) {
       Get.snackbar(Dictionary.defaultError, "Gagal memperbarui profil.");
-      print(e);
     }
   }
 
   // verifikasiWajah
 
-  // getRekapPresensiKaryawan
+  // rekapitulasiKaryawan
+  Future<void> recapForStaff() async {
+    try {
+      final rekapKaryawan = await authRepository.recapForStaff();
+      rekapitulasiKaryawan.value = rekapKaryawan;
+    } catch (e) {
+      Get.snackbar(
+          Dictionary.defaultError, "Gagal mendapatkan rekap presensi.");
+    }
+  }
 
-  // getRekapPresensiAdmin
+  // rekapitulasiAdmin
+  Future<void> recapForAdmin() async {
+    try {
+      final rekapAdmin = await authRepository.recapForAdmin();
+      rekapitulasiAdmin.value = rekapAdmin;
+    } catch (e) {
+      Get.snackbar(
+          Dictionary.defaultError, "Gagal mendapatkan rekap presensi.");
+    }
+  }
 
   // logout
   Future<void> logout() async {
@@ -143,10 +146,19 @@ class AuthController extends GetxController {
         RouteNames.bottomNavBar,
         parameters: {'role': Dictionary.admin},
       );
+      recapForAdmin();
+      recapForStaff();
     } else if (role == 'staff') {
       Get.offAllNamed(
         RouteNames.bottomNavBar,
         parameters: {'role': Dictionary.staff},
+      );
+      recapForStaff();
+    } else {
+      Get.snackbar(
+        Dictionary.defaultError,
+        'Role tidak dikenal',
+        margin: const EdgeInsets.all(20),
       );
     }
   }
