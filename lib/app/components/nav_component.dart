@@ -19,7 +19,7 @@ class NavComponent extends StatefulWidget {
   const NavComponent({
     super.key,
     required this.role,
-    this.isAdminAccessingAsStaff = false,
+    required this.isAdminAccessingAsStaff,
   });
 
   @override
@@ -65,23 +65,22 @@ class _NavComponentState extends State<NavComponent> {
         currentIndex: _tabIndex,
         onTabTapped: changeTabIndex,
       ),
-      floatingActionButton: (widget.role == Dictionary.staff &&
-                  !_presensiController.isPulangHariIni.value) ||
-              (widget.isAdminAccessingAsStaff &&
-                  !_presensiController.isPulangHariIni.value)
-          ? Obx(() {
-              return FloatingActionButton(
-                onPressed: () {
-                  Get.toNamed(RouteNames.kameraPresensi);
-                },
-                shape: const CircleBorder(),
-                backgroundColor: _presensiController.isPresensiHariIni.value
-                    ? Theme.of(context).colorScheme.secondary
-                    : Theme.of(context).colorScheme.primary,
-                child: const Icon(Symbols.familiar_face_and_zone),
-              );
-            })
-          : null,
+      floatingActionButton:
+          (widget.role == Dictionary.staff || widget.isAdminAccessingAsStaff) &&
+                  !_presensiController.isPulangHariIni.value
+              ? Obx(() {
+                  return FloatingActionButton(
+                    onPressed: () {
+                      Get.toNamed(RouteNames.kameraPresensi);
+                    },
+                    shape: const CircleBorder(),
+                    backgroundColor: _presensiController.isPresensiHariIni.value
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).colorScheme.primary,
+                    child: const Icon(Symbols.familiar_face_and_zone),
+                  );
+                })
+              : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }

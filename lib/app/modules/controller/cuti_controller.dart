@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/modules/controller/auth_controller.dart';
 import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
@@ -43,6 +45,7 @@ class CutiController extends GetxController {
 
   // loadData
   void loadData() {
+    log(_authController.user.value!.role.toString());
     if (_authController.user.value!.role == 'admin') {
       getSemuaCuti();
       getRiwayatCuti();

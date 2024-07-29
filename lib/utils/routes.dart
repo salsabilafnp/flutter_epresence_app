@@ -17,6 +17,7 @@ import 'package:flutter_epresence_app/app/modules/views/karyawan/riwayat_presens
 import 'package:flutter_epresence_app/app/modules/views/login_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/registrasi_wajah.dart';
 import 'package:flutter_epresence_app/app/modules/views/splash_screen.dart';
+import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:get/get.dart';
 
 class RouteNames {
@@ -66,9 +67,9 @@ class Routes {
     GetPage(
       name: RouteNames.bottomNavBar,
       page: () => NavComponent(
-        role: Get.parameters['role'] ?? '',
+        role: Get.parameters['role'] ?? Dictionary.staff,
         isAdminAccessingAsStaff:
-            Get.parameters['isAdminAccessingAsStaff'] == 'true',
+            Get.parameters['isAdminAccessingAsStaff'] == 'true' ? true : false,
       ),
     ),
     // Staff routes
@@ -83,6 +84,10 @@ class Routes {
     GetPage(
       name: RouteNames.kameraPresensi,
       page: () => KameraView(),
+    ),
+    GetPage(
+      name: RouteNames.kameraCuti,
+      page: () => KameraView(kameraCuti: true),
     ),
     GetPage(
       name: RouteNames.pengajuanCuti,

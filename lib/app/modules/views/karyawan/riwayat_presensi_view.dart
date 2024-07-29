@@ -43,6 +43,13 @@ class RiwayatPresensiView extends StatelessWidget {
                   icon: const Icon(Icons.filter_alt_outlined),
                 ),
                 const SizedBox(height: 20),
+                Obx(
+                  () => _presensiController.presensi.isEmpty
+                      ? const Center(
+                          child: Text(Dictionary.loadData),
+                        )
+                      : const SizedBox.shrink(),
+                ),
                 Expanded(
                   child: Obx(
                     () => ListView.builder(

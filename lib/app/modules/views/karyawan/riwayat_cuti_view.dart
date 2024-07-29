@@ -45,6 +45,13 @@ class RiwayatCutiView extends StatelessWidget {
                   icon: const Icon(Icons.filter_alt_outlined),
                 ),
                 const SizedBox(height: 20),
+                Obx(
+                  () => _cutiController.cuti.isEmpty
+                      ? const Center(
+                          child: Text(Dictionary.loadData),
+                        )
+                      : const SizedBox.shrink(),
+                ),
                 Expanded(
                   child: Obx(
                     () => ListView.builder(

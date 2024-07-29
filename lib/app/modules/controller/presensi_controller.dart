@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/modules/controller/auth_controller.dart';
 import 'package:flutter_epresence_app/app/modules/models/presensi.dart';
@@ -23,21 +25,22 @@ class PresensiController extends GetxController {
   RxList<Presensi?> presensiFilter = RxList<Presensi?>([]);
 
   RxBool isPresensiHariIni = false.obs;
-  RxBool isPulangHariIni = true.obs;
+  RxBool isPulangHariIni = false.obs;
   RxBool isLoading = false.obs;
 
   @override
   void onInit() {
-    cekPresensiHariIni();
     loadData();
     super.onInit();
   }
 
   // loadData
   void loadData() {
+    log(_authController.user.value!.role.toString());
+    cekPresensiHariIni();
     if (_authController.user.value!.role == 'admin') {
-      getSemuaPresensi();
       getRiwayatPresensi();
+      getSemuaPresensi();
     } else {
       getRiwayatPresensi();
     }
@@ -116,8 +119,8 @@ class PresensiController extends GetxController {
         if (response.presensi != null) {
           isPresensiHariIni.value = true;
           presensiHariIni.value = response.presensi!;
-          if (response.presensi!.checkOutTime == null) {
-            isPulangHariIni.value = false;
+          if (response.presensi!.checkOutTime != null) {
+            isPulangHariIni.value = true;
           }
         } else {
           isPresensiHariIni.value = false;
