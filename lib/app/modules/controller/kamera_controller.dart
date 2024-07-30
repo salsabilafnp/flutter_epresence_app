@@ -29,7 +29,7 @@ class KameraController extends GetxController {
 
     try {
       await cameraController.initialize();
-      cameraController.startImageStream(_processCameraImage);
+      // cameraController.startImageStream(_processCameraImage);
 
       faceDetector = FaceDetector(
         options: FaceDetectorOptions(
