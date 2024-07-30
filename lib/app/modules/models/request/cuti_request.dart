@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-class PermissionsRequest {
+class CutiRequest {
   String? permitType;
   String? leaveDate;
   int? duration;
@@ -8,7 +8,7 @@ class PermissionsRequest {
   String? fileUrl;
   String? status;
 
-  PermissionsRequest({
+  CutiRequest({
     this.permitType,
     this.leaveDate,
     this.duration,

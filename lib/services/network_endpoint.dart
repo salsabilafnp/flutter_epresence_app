@@ -11,6 +11,9 @@ class NetworkEndpoint {
   static const rekapAdmin = '$baseUrl/recap/admin';
   static const rekapKaryawan = '$baseUrl/recap/staff';
 
+  // kantor
+  static const kantor = '$baseUrl/company';
+
   // presensi
   static const presensi = '$baseUrl/attendance';
   static const presensiHariIni = '$baseUrl/attendance/today';

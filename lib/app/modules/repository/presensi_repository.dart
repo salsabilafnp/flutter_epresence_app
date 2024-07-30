@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter_epresence_app/app/modules/models/response/kantor_response.dart';
 import 'package:flutter_epresence_app/app/modules/models/response/presensi_response.dart';
 import 'package:flutter_epresence_app/services/network_endpoint.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
@@ -44,8 +45,6 @@ class PresensiRepository extends GetConnect {
           },
         );
 
-        log(response.body.toString());
-
         if (response.statusCode == 200) {
           return PresensiResponse.fromJson(response.body);
         } else {
@@ -76,7 +75,6 @@ class PresensiRepository extends GetConnect {
             'Authorization': 'Bearer $accessToken',
           },
         );
-        log(response.body.toString());
 
         if (response.statusCode == 200) {
           return PresensiResponse.fromJson(response.body);
@@ -176,4 +174,29 @@ class PresensiRepository extends GetConnect {
   }
 
   // pengingatPresensi()
+
+  // getDetailKantor($id)
+  Future<KantorResponse?> getDetailKantor(int id) async {
+    final String? accessToken = box.read('token');
+    if (accessToken != null) {
+      try {
+        final response = await get(
+          '${NetworkEndpoint.kantor}/$id',
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          return KantorResponse.fromJson(response.body);
+        } else {
+          throw Dictionary.defaultError;
+        }
+      } catch (e) {
+        log('Error fetching office detail: $e');
+        rethrow;
+      }
+    }
+    return null;
+  }
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/modules/controller/auth_controller.dart';
+import 'package:flutter_epresence_app/app/modules/models/kantor.dart';
 import 'package:flutter_epresence_app/app/modules/models/presensi.dart';
+import 'package:flutter_epresence_app/app/modules/models/response/kantor_response.dart';
 import 'package:flutter_epresence_app/app/modules/models/response/presensi_response.dart';
 import 'package:flutter_epresence_app/app/modules/repository/presensi_repository.dart';
+import 'package:flutter_epresence_app/services/geolocation_service.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:flutter_epresence_app/utils/routes.dart';
 import 'package:get/get.dart';
@@ -10,6 +13,7 @@ import 'package:get/get.dart';
 class PresensiController extends GetxController {
   final AuthController _authController = Get.find();
   final PresensiRepository _presensiRepository = Get.put(PresensiRepository());
+  final GeolocationService _geolocationService = Get.put(GeolocationService());
 
   final TextEditingController tanggalAwal = TextEditingController();
   final TextEditingController tanggalAkhir = TextEditingController();
@@ -22,26 +26,25 @@ class PresensiController extends GetxController {
   Rx<DateTime?> dariTanggal = Rx<DateTime?>(null);
   Rx<DateTime?> sampaiTanggal = Rx<DateTime?>(null);
   RxList<Presensi?> presensiFilter = RxList<Presensi?>([]);
+  Rx<Kantor?> detailKantor = Rx<Kantor?>(null);
 
   RxBool isPresensiHariIni = false.obs;
   RxBool isPulangHariIni = false.obs;
   RxBool isLoading = false.obs;
+  RxBool isLokasiValid = false.obs;
+  RxString pesanLokasiValid = ''.obs;
 
   @override
   void onInit() {
     cekPresensiHariIni();
-    loadData();
-    super.onInit();
-  }
-
-  // loadData
-  void loadData() {
+    getDetailKantor();
     if (_authController.user.value!.role == 'admin') {
       getSemuaPresensi();
       getRiwayatPresensi();
     } else {
       getRiwayatPresensi();
     }
+    super.onInit();
   }
 
   // getRiwayatPresensi
@@ -75,8 +78,12 @@ class PresensiController extends GetxController {
   // reloadData
   Future<void> reloadData() async {
     presensi.clear();
-    await getRiwayatPresensi();
-    await getSemuaPresensi();
+    if (_authController.user.value!.role == 'admin') {
+      await getSemuaPresensi();
+      await getRiwayatPresensi();
+    } else {
+      await getRiwayatPresensi();
+    }
   }
 
   // filtePresensi
@@ -134,10 +141,11 @@ class PresensiController extends GetxController {
   }
 
   // catatPresensiMasuk(presensi)
-  Future<void> catatPresensiMasuk(double latitude, double longitude) async {
+  Future<void> catatPresensiMasuk() async {
     try {
-      final response =
-          await _presensiRepository.catatPresensiMasuk(latitude, longitude);
+      final response = await _presensiRepository.catatPresensiMasuk(
+          _geolocationService.currentPosition.value!.latitude,
+          _geolocationService.currentPosition.value!.longitude);
 
       if (response!.presensi != null) {
         onInit();
@@ -163,11 +171,12 @@ class PresensiController extends GetxController {
     }
   }
 
-  // catatPresensiKeluar(presensi)
-  Future<void> catatPresensiKeluar(double latitude, double longitude) async {
+  // catatPresensiPulang(presensi)
+  Future<void> catatPresesiPulang() async {
     try {
-      final response =
-          await _presensiRepository.catatPresensiPulang(latitude, longitude);
+      final response = await _presensiRepository.catatPresensiPulang(
+          _geolocationService.currentPosition.value!.latitude,
+          _geolocationService.currentPosition.value!.longitude);
 
       if (response != null) {
         onInit();
@@ -237,6 +246,45 @@ class PresensiController extends GetxController {
         e.toString(),
         margin: const EdgeInsets.all(20),
       );
+    }
+  }
+
+  // detailKantor
+  Future<void> getDetailKantor() async {
+    const idKantor = 1;
+
+    try {
+      final KantorResponse? kantor =
+          await _presensiRepository.getDetailKantor(idKantor);
+      if (kantor != null) {
+        detailKantor.value = kantor.kantor;
+      }
+    } catch (e) {
+      Get.snackbar(
+        Dictionary.defaultError,
+        e.toString(),
+        margin: const EdgeInsets.all(20),
+      );
+    }
+  }
+
+  // pengingatPresensi()
+
+  // cekLokasi()
+  Future<void> cekLokasi() async {
+    final latitude = double.parse(detailKantor.value!.latitude!);
+    final longitude = double.parse(detailKantor.value!.longitude!);
+    final radiusInMeters = double.parse(detailKantor.value!.radiusKm!) * 1000;
+
+    if (_geolocationService.isValidLocation(
+        latitude, longitude, radiusInMeters)) {
+      isLokasiValid.value = true;
+      pesanLokasiValid.value =
+          'Lokasi Anda berada di dalam area ${detailKantor.value!.name} (${detailKantor.value!.address}).';
+    } else {
+      isLokasiValid.value = false;
+      pesanLokasiValid.value =
+          'Lokasi Anda berada di luar area ${detailKantor.value!.name} (${detailKantor.value!.address}).';
     }
   }
 }

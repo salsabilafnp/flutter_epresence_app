@@ -35,7 +35,7 @@ class CutiRepository extends GetConnect {
   }
 
   // ajukanCuti(cuti)
-  Future<RiwayatCutiResponse?> ajukanCuti(PermissionsRequest cuti) async {
+  Future<RiwayatCutiResponse?> ajukanCuti(CutiRequest cuti) async {
     final String? accessToken = box.read('token');
 
     if (accessToken != null) {
@@ -61,7 +61,7 @@ class CutiRepository extends GetConnect {
 
   // perbaruiCuti(cuti)
   Future<RiwayatCutiResponse?> perbaruiCuti(
-      int idCuti, PermissionsRequest cuti) async {
+      int idCuti, CutiRequest cuti) async {
     final String? accessToken = box.read('token');
 
     if (accessToken != null) {

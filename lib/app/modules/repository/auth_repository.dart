@@ -30,7 +30,6 @@ class AuthRepository extends GetConnect {
         box.write('user', user);
 
         log(accessToken);
-        log(response.body.toString());
 
         return AuthResponse.fromJson(response.body);
       } else {
@@ -137,7 +136,6 @@ class AuthRepository extends GetConnect {
         );
 
         if (response.statusCode == 200) {
-          log(response.body.toString());
           return RekapitulasiKaryawan.fromJson(response.body);
         } else {
           throw Dictionary.defaultError;
@@ -162,7 +160,6 @@ class AuthRepository extends GetConnect {
         );
 
         if (response.statusCode == 200) {
-          log(response.body.toString());
           return RekapitulasiAdmin.fromJson(response.body);
         } else {
           throw Dictionary.defaultError;

@@ -12,8 +12,7 @@ import 'package:get/get.dart';
 class KameraView extends StatelessWidget {
   final bool kameraCuti;
   final KameraController kameraController = Get.put(KameraController());
-  final GeolocationService geolocationController =
-      Get.put(GeolocationService());
+  final GeolocationService geoService = Get.put(GeolocationService());
   final PresensiController presensiController = Get.put(PresensiController());
 
   KameraView({
@@ -62,8 +61,10 @@ class KameraView extends StatelessWidget {
           if (kameraCuti) {
             Get.toNamed(RouteNames.pengajuanCuti);
           } else {
+            // cek lokasi
+            presensiController.cekLokasi();
             // dialog konfirmasi catat presensi
-            dialogCatatPresensi();
+            dialogCatatPresensi(context);
           }
         },
       ),
@@ -71,41 +72,52 @@ class KameraView extends StatelessWidget {
     );
   }
 
-  void dialogCatatPresensi() {
-    final currentPosition = geolocationController.currentPosition.value;
+  void dialogCatatPresensi(BuildContext context) {
+    final currentPosition = geoService.currentPosition.value;
+    final pesan = presensiController.isLokasiValid.value
+        ? presensiController.pesanLokasiValid
+        : presensiController.pesanLokasiValid;
+
     Get.defaultDialog(
       title: presensiController.isPresensiHariIni.value
           ? "${Dictionary.konfirmasi} ${Dictionary.catatPresensiPulang}"
           : "${Dictionary.konfirmasi} ${Dictionary.catatPresensiMasuk}",
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text(
-            'Lokasi saat ini:',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            'Latitude: ${currentPosition!.latitude}',
-          ),
-          Text(
-            'Longitude: ${currentPosition.longitude}',
-          ),
-          const SizedBox(height: 20),
-        ],
+      content: Container(
+        margin: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Lokasi saat ini:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              '${Dictionary.latitude}: ${currentPosition!.latitude}',
+            ),
+            Text(
+              '${Dictionary.longitude}: ${currentPosition.longitude}',
+            ),
+            const SizedBox(height: 10),
+            Text(
+              pesan.value,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: presensiController.isLokasiValid.value
+                    ? Theme.of(context).colorScheme.onErrorContainer
+                    : Theme.of(context).colorScheme.error,
+              ),
+            ),
+          ],
+        ),
       ),
       textConfirm: Dictionary.ya,
       textCancel: Dictionary.tidak,
       onConfirm: () {
         presensiController.isPresensiHariIni.value
-            ? presensiController.catatPresensiKeluar(
-                currentPosition.latitude,
-                currentPosition.longitude,
-              )
-            : presensiController.catatPresensiMasuk(
-                currentPosition.latitude,
-                currentPosition.longitude,
-              );
+            ? presensiController.catatPresesiPulang()
+            : presensiController.catatPresensiMasuk();
       },
     );
   }
@@ -140,20 +152,20 @@ class KameraView extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Obx(() {
-                    if (geolocationController.currentPosition.value == null) {
+                    if (geoService.currentPosition.value == null) {
                       return const CircularProgressIndicator();
                     } else {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Latitude: ${geolocationController.currentPosition.value!.latitude}',
+                            '${Dictionary.latitude}: ${geoService.currentPosition.value!.latitude}',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onPrimary,
                             ),
                           ),
                           Text(
-                            'Longitude: ${geolocationController.currentPosition.value!.longitude}',
+                            '${Dictionary.longitude}: ${geoService.currentPosition.value!.longitude}',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onPrimary,
                             ),
@@ -167,14 +179,13 @@ class KameraView extends StatelessWidget {
               // Lihat Lokasi
               ElevatedButton.icon(
                 onPressed: () {
-                  if (geolocationController.currentPosition.value != null) {
+                  if (geoService.currentPosition.value != null) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => LokasiView(
-                          latitude: geolocationController
-                              .currentPosition.value!.latitude,
-                          longitude: geolocationController
-                              .currentPosition.value!.longitude,
+                          latitude: geoService.currentPosition.value!.latitude,
+                          longitude:
+                              geoService.currentPosition.value!.longitude,
                         ),
                       ),
                     );
