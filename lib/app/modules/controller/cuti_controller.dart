@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/modules/controller/auth_controller.dart';
 import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
@@ -39,19 +37,13 @@ class CutiController extends GetxController {
 
   @override
   void onInit() {
-    loadData();
-    super.onInit();
-  }
-
-  // loadData
-  void loadData() {
-    log(_authController.user.value!.role.toString());
     if (_authController.user.value!.role == 'admin') {
       getSemuaCuti();
       getRiwayatCuti();
     } else {
       getRiwayatCuti();
     }
+    super.onInit();
   }
 
   // getRiwayatCuti()
@@ -128,7 +120,7 @@ class CutiController extends GetxController {
     try {
       final RiwayatCutiResponse? cutiResponse =
           await _cutiRepository.ajukanCuti(
-        PermissionsRequest(
+        CutiRequest(
           leaveDate: tanggalCutiController.text,
           permitType: jenisAjuanController.text,
           duration: int.parse(durasiController.text),
@@ -168,7 +160,7 @@ class CutiController extends GetxController {
       final RiwayatCutiResponse? cutiResponse =
           await _cutiRepository.perbaruiCuti(
         idCuti,
-        PermissionsRequest(
+        CutiRequest(
           leaveDate: tanggalCutiController.text,
           permitType: jenisAjuanController.text,
           duration: int.parse(durasiController.text),

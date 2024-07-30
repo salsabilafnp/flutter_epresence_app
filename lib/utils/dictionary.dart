@@ -44,8 +44,14 @@ class Dictionary {
   static const presensiPulang = 'Presensi Pulang';
   static const hadirMasuk = 'Masuk';
   static const hadirPulang = 'Pulang';
+  static const latitude = 'Latitude';
+  static const longitude = 'Longitude';
   static const lokasiMasuk = "Lokasi Masuk";
   static const lokasiPulang = "Lokasi Pulang";
+
+  // Kantor
+  static const kantorUtama = 'Kantor Utama';
+  static const kantorCabang = 'Kantor Cabang - Setiabudi';
 
   // Cuti
   static const jenisPengajuan = 'Jenis Pengajuan';

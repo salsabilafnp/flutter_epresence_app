@@ -1,7 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_epresence_app/app/components/custom_app_bar.dart';
-import 'package:flutter_epresence_app/app/components/face_painter.dart';
 import 'package:flutter_epresence_app/app/modules/controller/kamera_controller.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:get/get.dart';
@@ -21,7 +20,7 @@ class RegistrasiWajah extends StatelessWidget {
       ),
       body: Obx(
         () {
-          if (!kameraController.isCameraInitialized.value) {
+          if (!kameraController.isCameraInit.value) {
             return const Center(child: CircularProgressIndicator());
           } else {
             return Stack(
@@ -29,20 +28,19 @@ class RegistrasiWajah extends StatelessWidget {
                 // Kamera
                 Positioned(
                   height: screenHeight,
-                  child:
-                      CameraPreview(kameraController.cameraController.value!),
+                  child: CameraPreview(kameraController.cameraController),
                 ),
                 // frame
-                if (kameraController.frame != null)
-                  CustomPaint(
-                    painter: FacePainter(
-                      kameraController.faces,
-                      Size(
-                        kameraController.frame!.width.toDouble(),
-                        kameraController.frame!.height.toDouble(),
-                      ),
-                    ),
-                  ),
+                // if (kameraController.faces != null)
+                //   CustomPaint(
+                //     painter: FacePainter(
+                //       kameraController.faces,
+                //       Size(
+                //         kameraController.frame!.width.toDouble(),
+                //         kameraController.frame!.height.toDouble(),
+                //       ),
+                //     ),
+                //   ),
               ],
             );
           }
@@ -54,7 +52,7 @@ class RegistrasiWajah extends StatelessWidget {
         iconSize: 75,
         color: Theme.of(context).colorScheme.error,
         onPressed: () async {
-          await kameraController.verifikasiWajah();
+          // await kameraController.verifikasiWajah();
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

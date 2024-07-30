@@ -5,10 +5,10 @@ class GeolocationService extends GetxController {
   Rx<Position?> currentPosition = Rx<Position?>(null);
 
   GeolocationService() {
-    _determinePosition();
+    _getCurrentLocation();
   }
 
-  Future<void> _determinePosition() async {
+  Future<void> _getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -32,5 +32,25 @@ class GeolocationService extends GetxController {
 
     currentPosition.value = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+    if (currentPosition.value!.accuracy < 50) {
+      currentPosition.value;
+    }
+  }
+
+  // isValidLocation - memastikan lokasi saat ini berada dalam radius yang ada di data kantor
+  bool isValidLocation(
+      double latitude, double longitude, double radiusInMeters) {
+    if (currentPosition.value == null) {
+      return false;
+    }
+
+    double distanceInMeters = Geolocator.distanceBetween(
+      latitude,
+      longitude,
+      currentPosition.value!.latitude,
+      currentPosition.value!.longitude,
+    );
+
+    return distanceInMeters <= radiusInMeters;
   }
 }
