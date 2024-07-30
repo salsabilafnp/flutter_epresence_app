@@ -62,7 +62,7 @@ class KameraView extends StatelessWidget {
             Get.toNamed(RouteNames.pengajuanCuti);
           } else {
             // cek lokasi
-            presensiController.cekLokasi();
+            presensiController.validasiLokasi();
             // dialog konfirmasi catat presensi
             dialogCatatPresensi(context);
           }

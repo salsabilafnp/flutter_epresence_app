@@ -119,7 +119,7 @@ class ProfilView extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 5),
-                        Text('${rekapitulasi.totalPresensi} hari'),
+                        Text('${rekapitulasi.totalPresensiKaryawan} hari'),
                       ],
                     ),
                     Column(
@@ -139,7 +139,7 @@ class ProfilView extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 5),
-                        Text('${rekapitulasi.totalCuti} hari'),
+                        Text('${rekapitulasi.totalCutiKaryawan} hari'),
                       ],
                     ),
                     Column(

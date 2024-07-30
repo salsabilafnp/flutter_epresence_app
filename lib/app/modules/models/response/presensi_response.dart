@@ -26,10 +26,10 @@ class PresensiResponse {
 }
 
 class RiwayatPresensiResponse {
-  List<Presensi?>? presensi;
+  List<Presensi?>? daftarPresensi;
 
   RiwayatPresensiResponse({
-    this.presensi,
+    this.daftarPresensi,
   });
 
   RiwayatPresensiResponse.fromJson(Map<String, dynamic> json) {
@@ -39,13 +39,13 @@ class RiwayatPresensiResponse {
       v.forEach((v) {
         arr0.add(Presensi.fromJson(v));
       });
-      presensi = arr0;
+      daftarPresensi = arr0;
     }
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-    if (presensi != null) {
-      final v = presensi;
+    if (daftarPresensi != null) {
+      final v = daftarPresensi;
       final arr0 = [];
       v!.forEach((v) {
         arr0.add(v!.toJson());

@@ -5,10 +5,10 @@ class GeolocationService extends GetxController {
   Rx<Position?> currentPosition = Rx<Position?>(null);
 
   GeolocationService() {
-    _getCurrentLocation();
+    getCurrentLocation();
   }
 
-  Future<void> _getCurrentLocation() async {
+  Future<void> getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
 

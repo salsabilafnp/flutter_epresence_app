@@ -20,10 +20,10 @@ class CutiResponse {
 }
 
 class RiwayatCutiResponse {
-  List<Cuti?>? cuti;
+  List<Cuti?>? daftarCuti;
 
   RiwayatCutiResponse({
-    this.cuti,
+    this.daftarCuti,
   });
   RiwayatCutiResponse.fromJson(Map<String, dynamic> json) {
     if (json['permissions'] != null) {
@@ -32,13 +32,13 @@ class RiwayatCutiResponse {
       v.forEach((v) {
         arr0.add(Cuti.fromJson(v));
       });
-      cuti = arr0;
+      daftarCuti = arr0;
     }
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
-    if (cuti != null) {
-      final v = cuti;
+    if (daftarCuti != null) {
+      final v = daftarCuti;
       final arr0 = [];
       v!.forEach((v) {
         arr0.add(v!.toJson());

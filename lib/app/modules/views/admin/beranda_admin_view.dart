@@ -33,8 +33,8 @@ class BerandaAdminView extends StatelessWidget {
                   children: [
                     _buildRekapPresensi(
                       context,
-                      rekapAdmin.totalPresensi!,
-                      rekapAdmin.totalCuti!,
+                      rekapAdmin.totalPresensiAdmin!,
+                      rekapAdmin.totalCutiAdmin!,
                     ),
                     const SizedBox(height: 20),
                     _buildRekapStatusCuti(

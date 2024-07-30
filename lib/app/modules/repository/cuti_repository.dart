@@ -109,7 +109,7 @@ class CutiRepository extends GetConnect {
   }
 
   // getDetailAjuan(id)
-  Future<CutiResponse?> detailCuti(int id) async {
+  Future<CutiResponse?> getDetailAjuan(int id) async {
     final String? accessToken = box.read('token');
     if (accessToken != null) {
       try {

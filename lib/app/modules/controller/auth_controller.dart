@@ -89,8 +89,8 @@ class AuthController extends GetxController {
     }
   }
 
-  // updateProfil
-  Future<void> updateProfil(String faceEmbedding, String imageUrl) async {
+  // perbaruiProfil
+  Future<void> perbaruiProfil(String faceEmbedding, String imageUrl) async {
     try {
       await authRepository.updateProfil(faceEmbedding, imageUrl);
       loadUser();
@@ -103,7 +103,7 @@ class AuthController extends GetxController {
   // verifikasiWajah
 
   // recapitulasiKaryawan
-  Future<void> recapForStaff() async {
+  Future<void> getRekapPresensiKaryawan() async {
     try {
       final rekapKaryawan = await authRepository.recapForStaff();
       rekapitulasiKaryawan.value = rekapKaryawan;
@@ -116,7 +116,7 @@ class AuthController extends GetxController {
   }
 
   // recapitulasiAdmin
-  Future<void> recapForAdmin() async {
+  Future<void> getRekapPresensiAdmin() async {
     try {
       final rekapAdmin = await authRepository.recapForAdmin();
       rekapitulasiAdmin.value = rekapAdmin;
@@ -151,14 +151,14 @@ class AuthController extends GetxController {
         RouteNames.bottomNavBar,
         parameters: {'role': Dictionary.admin},
       );
-      recapForAdmin();
-      recapForStaff();
+      getRekapPresensiAdmin();
+      getRekapPresensiKaryawan();
     } else if (role == 'staff') {
       Get.offAllNamed(
         RouteNames.bottomNavBar,
         parameters: {'role': Dictionary.staff},
       );
-      recapForStaff();
+      getRekapPresensiKaryawan();
     } else {
       Get.snackbar(
         Dictionary.defaultError,

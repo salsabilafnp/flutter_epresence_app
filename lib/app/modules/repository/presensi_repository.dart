@@ -148,8 +148,8 @@ class PresensiRepository extends GetConnect {
     return null;
   }
 
-  // detailPresensi(id)
-  Future<PresensiResponse?> detailPresensi(int id) async {
+  // getDetailPresensi(id)
+  Future<PresensiResponse?> getDetailPresensi(int id) async {
     final String? accessToken = box.read('token');
     if (accessToken != null) {
       try {

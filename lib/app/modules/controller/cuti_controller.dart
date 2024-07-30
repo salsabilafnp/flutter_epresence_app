@@ -52,10 +52,10 @@ class CutiController extends GetxController {
     isLoading.value = true;
 
     try {
-      final RiwayatCutiResponse? cutiResponse =
+      final RiwayatCutiResponse? response =
           await _cutiRepository.getRiwayatCuti();
-      if (cutiResponse != null && cutiResponse.cuti != null) {
-        cuti.value = cutiResponse.cuti!;
+      if (response != null && response.daftarCuti != null) {
+        cuti.value = response.daftarCuti!;
         _terapkanFilter();
       }
     } catch (e) {
@@ -118,8 +118,7 @@ class CutiController extends GetxController {
   // ajukanCuti
   Future<void> ajukanCuti() async {
     try {
-      final RiwayatCutiResponse? cutiResponse =
-          await _cutiRepository.ajukanCuti(
+      final RiwayatCutiResponse? response = await _cutiRepository.ajukanCuti(
         CutiRequest(
           leaveDate: tanggalCutiController.text,
           permitType: jenisAjuanController.text,
@@ -130,7 +129,7 @@ class CutiController extends GetxController {
         ),
       );
 
-      if (cutiResponse != null) {
+      if (response != null) {
         getRiwayatCuti();
         Get.back();
         Get.snackbar(
@@ -157,8 +156,7 @@ class CutiController extends GetxController {
   // perbaruiCuti(cuti)
   Future<void> perbaruiCuti(int idCuti) async {
     try {
-      final RiwayatCutiResponse? cutiResponse =
-          await _cutiRepository.perbaruiCuti(
+      final RiwayatCutiResponse? response = await _cutiRepository.perbaruiCuti(
         idCuti,
         CutiRequest(
           leaveDate: tanggalCutiController.text,
@@ -170,7 +168,7 @@ class CutiController extends GetxController {
         ),
       );
 
-      if (cutiResponse != null) {
+      if (response != null) {
         getRiwayatCuti();
         Get.back();
         Get.snackbar(
@@ -202,8 +200,8 @@ class CutiController extends GetxController {
     try {
       final RiwayatCutiResponse? response =
           await _cutiRepository.getSemuaCuti();
-      if (response != null && response.cuti != null) {
-        semuaCuti.value = response.cuti!;
+      if (response != null && response.daftarCuti != null) {
+        semuaCuti.value = response.daftarCuti!;
       }
     } catch (e) {
       Get.snackbar(
@@ -219,7 +217,7 @@ class CutiController extends GetxController {
   // getDetailAjuan(id)
   Future<void> getDetailAjuan(int id) async {
     try {
-      final CutiResponse? response = await _cutiRepository.detailCuti(id);
+      final CutiResponse? response = await _cutiRepository.getDetailAjuan(id);
       if (response != null) {
         detailCuti.value = response;
       } else {

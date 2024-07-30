@@ -53,12 +53,11 @@ class PresensiController extends GetxController {
     isLoading.value = true;
 
     try {
-      final RiwayatPresensiResponse? riwayatPresensiResponse =
+      final RiwayatPresensiResponse? response =
           await _presensiRepository.getRiwayatPresensi();
 
-      if (riwayatPresensiResponse != null &&
-          riwayatPresensiResponse.presensi != null) {
-        presensi.value = riwayatPresensiResponse.presensi!;
+      if (response != null && response.daftarPresensi != null) {
+        presensi.value = response.daftarPresensi!;
       }
 
       isExpandedList.value =
@@ -202,8 +201,6 @@ class PresensiController extends GetxController {
     }
   }
 
-  // validasiLokasi()
-
   // getSemuaPresensi()
   Future<void> getSemuaPresensi() async {
     if (isLoading.value) return;
@@ -212,8 +209,8 @@ class PresensiController extends GetxController {
     try {
       final RiwayatPresensiResponse? response =
           await _presensiRepository.getSemuaPresensi();
-      if (response != null && response.presensi != null) {
-        semuaPresensi.value = response.presensi!;
+      if (response != null && response.daftarPresensi != null) {
+        semuaPresensi.value = response.daftarPresensi!;
       }
     } catch (e) {
       Get.snackbar(
@@ -230,7 +227,7 @@ class PresensiController extends GetxController {
   Future<void> getDetailPresensi(int id) async {
     try {
       final PresensiResponse? response =
-          await _presensiRepository.detailPresensi(id);
+          await _presensiRepository.getDetailPresensi(id);
       if (response != null) {
         detailPresensi.value = response;
       } else {
@@ -270,8 +267,8 @@ class PresensiController extends GetxController {
 
   // pengingatPresensi()
 
-  // cekLokasi()
-  Future<void> cekLokasi() async {
+  // validasiLokasi()
+  Future<void> validasiLokasi() async {
     final latitude = double.parse(detailKantor.value!.latitude!);
     final longitude = double.parse(detailKantor.value!.longitude!);
     final radiusInMeters = double.parse(detailKantor.value!.radiusKm!) * 1000;

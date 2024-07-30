@@ -46,8 +46,8 @@ class AuthRepository extends GetConnect {
     }
   }
 
-  // userProfil()
-  Future<User?> userProfil() async {
+  // detailProfil()
+  Future<User?> detailProfil() async {
     final String? accessToken = box.read('token');
 
     if (accessToken != null) {
