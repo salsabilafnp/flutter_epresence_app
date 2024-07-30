@@ -113,7 +113,8 @@ class AuthRepository extends GetConnect {
         if (response.statusCode == 200) {
           final user = response.body['user'];
           box.write('user', user);
-          // return User.fromJson(response.body);
+          // Optional: updated User
+          User.fromJson(response.body);
         } else {
           throw Dictionary.defaultError;
         }

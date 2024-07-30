@@ -33,7 +33,7 @@ class KameraView extends StatelessWidget {
       ),
       body: Obx(
         () {
-          if (!kameraController.isCameraInitialized.value) {
+          if (!kameraController.isCameraInit.value) {
             return const Center(child: CircularProgressIndicator());
           } else {
             return Stack(
@@ -41,8 +41,7 @@ class KameraView extends StatelessWidget {
                 // Kamera
                 Positioned(
                   height: screenHeight,
-                  child:
-                      CameraPreview(kameraController.cameraController.value!),
+                  child: CameraPreview(kameraController.cameraController),
                 ),
                 // Card Informasi Lokasi
                 if (!kameraCuti)

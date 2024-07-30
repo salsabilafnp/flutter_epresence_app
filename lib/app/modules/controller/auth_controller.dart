@@ -93,6 +93,7 @@ class AuthController extends GetxController {
   Future<void> updateProfil(String faceEmbedding, String imageUrl) async {
     try {
       await authRepository.updateProfil(faceEmbedding, imageUrl);
+      loadUser();
       Get.snackbar(Dictionary.defaultSuccess, "Profil berhasil diperbarui.");
     } catch (e) {
       Get.snackbar(Dictionary.defaultError, "Gagal memperbarui profil.");
@@ -101,25 +102,29 @@ class AuthController extends GetxController {
 
   // verifikasiWajah
 
-  // rekapitulasiKaryawan
+  // recapitulasiKaryawan
   Future<void> recapForStaff() async {
     try {
       final rekapKaryawan = await authRepository.recapForStaff();
       rekapitulasiKaryawan.value = rekapKaryawan;
     } catch (e) {
       Get.snackbar(
-          Dictionary.defaultError, "Gagal mendapatkan rekap presensi.");
+        Dictionary.defaultError,
+        "Gagal mendapatkan rekap presensi.",
+      );
     }
   }
 
-  // rekapitulasiAdmin
+  // recapitulasiAdmin
   Future<void> recapForAdmin() async {
     try {
       final rekapAdmin = await authRepository.recapForAdmin();
       rekapitulasiAdmin.value = rekapAdmin;
     } catch (e) {
       Get.snackbar(
-          Dictionary.defaultError, "Gagal mendapatkan rekap presensi.");
+        Dictionary.defaultError,
+        "Gagal mendapatkan rekap presensi.",
+      );
     }
   }
 
