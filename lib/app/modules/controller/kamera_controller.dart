@@ -1,13 +1,11 @@
 import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
 class KameraController extends GetxController {
   late CameraController cameraController;
-  late FaceDetector faceDetector;
+  // late FaceDetector faceDetector;
   RxBool isCameraInit = false.obs;
-  List<Face> faces = [];
+  // List<Face> faces = [];
 
   @override
   void onInit() {
@@ -31,12 +29,12 @@ class KameraController extends GetxController {
       await cameraController.initialize();
       // cameraController.startImageStream(_processCameraImage);
 
-      faceDetector = FaceDetector(
-        options: FaceDetectorOptions(
-          enableContours: true,
-          enableClassification: true,
-        ),
-      );
+      // faceDetector = FaceDetector(
+      //   options: FaceDetectorOptions(
+      //     enableContours: true,
+      //     enableClassification: true,
+      //   ),
+      // );
 
       isCameraInit.value = true;
       update();
@@ -45,31 +43,31 @@ class KameraController extends GetxController {
     }
   }
 
-  void _processCameraImage(CameraImage image) async {
-    final inputImage = InputImage.fromBytes(
-      bytes: image.planes[0].bytes,
-      metadata: InputImageMetadata(
-        size: Size(image.width.toDouble(), image.height.toDouble()),
-        rotation: InputImageRotation.rotation0deg,
-        format: InputImageFormat.nv21,
-        bytesPerRow: image.planes[0].bytesPerRow,
-      ),
-    );
+  // void _processCameraImage(CameraImage image) async {
+  //   final inputImage = InputImage.fromBytes(
+  //     bytes: image.planes[0].bytes,
+  //     metadata: InputImageMetadata(
+  //       size: Size(image.width.toDouble(), image.height.toDouble()),
+  //       rotation: InputImageRotation.rotation0deg,
+  //       format: InputImageFormat.nv21,
+  //       bytesPerRow: image.planes[0].bytesPerRow,
+  //     ),
+  //   );
 
-    try {
-      Future.delayed(const Duration(milliseconds: 1000));
-      final detectedFaces = await faceDetector.processImage(inputImage);
-      faces = detectedFaces;
-      update();
-    } catch (e) {
-      print('Error processing image: $e');
-    }
-  }
+  //   try {
+  //     Future.delayed(const Duration(milliseconds: 1000));
+  //     final detectedFaces = await faceDetector.processImage(inputImage);
+  //     faces = detectedFaces;
+  //     update();
+  //   } catch (e) {
+  //     print('Error processing image: $e');
+  //   }
+  // }
 
   @override
   void onClose() {
     cameraController.dispose();
-    faceDetector.close();
+    // faceDetector.close();
     super.onClose();
   }
 }
