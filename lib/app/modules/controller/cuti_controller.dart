@@ -21,8 +21,7 @@ class CutiController extends GetxController {
   final TextEditingController alasanController = TextEditingController();
   final TextEditingController buktiFileController = TextEditingController();
   final TextEditingController statusAjuanController = TextEditingController();
-  final TextEditingController waktuPengajuanController =
-      TextEditingController();
+  final TextEditingController waktuPengajuanController = TextEditingController();
 
   RxList<Cuti?> cuti = RxList<Cuti?>([]);
   Rxn<CutiResponse?> detailCuti = Rxn<CutiResponse?>();
@@ -57,6 +56,28 @@ class CutiController extends GetxController {
       if (response != null && response.daftarCuti != null) {
         cuti.value = response.daftarCuti!;
         _terapkanFilter();
+      }
+    } catch (e) {
+      Get.snackbar(
+        Dictionary.defaultError,
+        e.toString(),
+        margin: const EdgeInsets.all(20),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // getSemuaCuti()
+  Future<void> getSemuaCuti() async {
+    if (isLoading.value) return;
+    isLoading.value = true;
+
+    try {
+      final RiwayatCutiResponse? response =
+          await _cutiRepository.getSemuaCuti();
+      if (response != null && response.daftarCuti != null) {
+        semuaCuti.value = response.daftarCuti!;
       }
     } catch (e) {
       Get.snackbar(
@@ -192,28 +213,6 @@ class CutiController extends GetxController {
     }
   }
 
-  // getSemuaCuti()
-  Future<void> getSemuaCuti() async {
-    if (isLoading.value) return;
-    isLoading.value = true;
-
-    try {
-      final RiwayatCutiResponse? response =
-          await _cutiRepository.getSemuaCuti();
-      if (response != null && response.daftarCuti != null) {
-        semuaCuti.value = response.daftarCuti!;
-      }
-    } catch (e) {
-      Get.snackbar(
-        Dictionary.defaultError,
-        e.toString(),
-        margin: const EdgeInsets.all(20),
-      );
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
   // getDetailAjuan(id)
   Future<void> getDetailAjuan(int id) async {
     try {
@@ -265,7 +264,8 @@ class CutiController extends GetxController {
     }
   }
 
-  // notifAjuanBaru()
-
-  // notifAjuanDitindaklanjuti()
 }
+
+
+
+

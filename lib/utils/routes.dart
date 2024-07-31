@@ -15,7 +15,7 @@ import 'package:flutter_epresence_app/app/modules/views/karyawan/profil_view.dar
 import 'package:flutter_epresence_app/app/modules/views/karyawan/riwayat_cuti_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/karyawan/riwayat_presensi_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/login_view.dart';
-import 'package:flutter_epresence_app/app/modules/views/registrasi_wajah.dart';
+import 'package:flutter_epresence_app/app/modules/views/registrasi_wajah_view.dart';
 import 'package:flutter_epresence_app/app/modules/views/splash_screen.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:get/get.dart';

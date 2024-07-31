@@ -62,7 +62,7 @@ class LoginView extends StatelessWidget {
                     onPressed: () {
                       _authController.login();
                     },
-                    child: Text(Dictionary.logIn),
+                    child: const Text(Dictionary.logIn),
                   ),
                 ],
               ),

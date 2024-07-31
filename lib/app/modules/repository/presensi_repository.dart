@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter_epresence_app/app/modules/models/response/kantor_response.dart';
 import 'package:flutter_epresence_app/app/modules/models/response/presensi_response.dart';
-import 'package:flutter_epresence_app/services/network_endpoint.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:flutter_epresence_app/utils/network_endpoint.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -27,6 +27,31 @@ class PresensiRepository extends GetConnect {
         }
       } catch (e) {
         log('Error fetching attendance history: $e');
+        rethrow;
+      }
+    }
+    return null;
+  }
+
+  // getSemuaPresensi()
+  Future<RiwayatPresensiResponse?> getSemuaPresensi() async {
+    final String? accessToken = box.read('token');
+    if (accessToken != null) {
+      try {
+        final response = await get(
+          NetworkEndpoint.presensiSemuaRiwayat,
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          return RiwayatPresensiResponse.fromJson(response.body);
+        } else {
+          throw Dictionary.defaultError;
+        }
+      } catch (e) {
+        log('Error fetching all attendance history: $e');
         rethrow;
       }
     }
@@ -121,33 +146,6 @@ class PresensiRepository extends GetConnect {
     return null;
   }
 
-  // validasiLokasi()
-
-  // getSemuaPresensi()
-  Future<RiwayatPresensiResponse?> getSemuaPresensi() async {
-    final String? accessToken = box.read('token');
-    if (accessToken != null) {
-      try {
-        final response = await get(
-          NetworkEndpoint.presensiSemuaRiwayat,
-          headers: {
-            'Authorization': 'Bearer $accessToken',
-          },
-        );
-
-        if (response.statusCode == 200) {
-          return RiwayatPresensiResponse.fromJson(response.body);
-        } else {
-          throw Dictionary.defaultError;
-        }
-      } catch (e) {
-        log('Error fetching all attendance history: $e');
-        rethrow;
-      }
-    }
-    return null;
-  }
-
   // getDetailPresensi(id)
   Future<PresensiResponse?> getDetailPresensi(int id) async {
     final String? accessToken = box.read('token');
@@ -172,8 +170,6 @@ class PresensiRepository extends GetConnect {
     }
     return null;
   }
-
-  // pengingatPresensi()
 
   // getDetailKantor($id)
   Future<KantorResponse?> getDetailKantor(int id) async {

@@ -28,67 +28,67 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: _checkPageName(context, pageTitle),
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       centerTitle: isHomePage ? false : true,
-      actions: _buildActions(isHomePage),
+      actions: _buildActions(isHomePage, role),
     );
   }
+}
 
-  _checkPageName(BuildContext context, String pageName) {
-    String userName = "Pengguna";
+_checkPageName(BuildContext context, String pageName) {
+  String userName = "Pengguna";
 
-    AuthController authController = Get.find();
-    final currentUser = authController.user.value;
+  AuthController authController = Get.find();
+  final currentUser = authController.user.value;
 
-    if (currentUser != null) {
-      userName = currentUser.name ?? "Pengguna";
-    }
-
-    if (pageName == Dictionary.beranda) {
-      return Padding(
-        padding: const EdgeInsets.all(5),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Halo,',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            Text(
-              userName,
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Text(
-        pageTitle,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      );
-    }
+  if (currentUser != null) {
+    userName = currentUser.name ?? "Pengguna";
   }
 
-  List<Widget> _buildActions(bool isHomePage) {
-    List<Widget> actions = [];
-
-    if (isHomePage) {
-      actions.add(
-        IconButton(
-          icon: const Icon(Icons.notifications),
-          onPressed: () {
-            if (role == Dictionary.admin) {
-              Get.toNamed(RouteNames.notifAdmin);
-            } else if (role == Dictionary.staff) {
-              Get.toNamed(RouteNames.notifStaff);
-            }
-          },
-        ),
-      );
-    }
-    return actions;
+  if (pageName == Dictionary.beranda) {
+    return Padding(
+      padding: const EdgeInsets.all(5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Halo,',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          Text(
+            userName,
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+        ],
+      ),
+    );
+  } else {
+    return Text(
+      pageName,
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+      ),
+    );
   }
+}
+
+List<Widget> _buildActions(bool isHomePage, String role) {
+  List<Widget> actions = [];
+
+  if (isHomePage) {
+    actions.add(
+      IconButton(
+        icon: const Icon(Icons.notifications),
+        onPressed: () {
+          if (role == Dictionary.admin) {
+            Get.toNamed(RouteNames.notifAdmin);
+          } else if (role == Dictionary.staff) {
+            Get.toNamed(RouteNames.notifStaff);
+          }
+        },
+      ),
+    );
+  }
+  return actions;
 }

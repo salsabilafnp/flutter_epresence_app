@@ -100,8 +100,6 @@ class AuthController extends GetxController {
     }
   }
 
-  // verifikasiWajah
-
   // recapitulasiKaryawan
   Future<void> getRekapPresensiKaryawan() async {
     try {

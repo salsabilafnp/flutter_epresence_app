@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:flutter_epresence_app/app/modules/models/cuti.dart';
 import 'package:flutter_epresence_app/app/modules/models/request/cuti_request.dart';
 import 'package:flutter_epresence_app/app/modules/models/response/cuti_response.dart';
-import 'package:flutter_epresence_app/services/network_endpoint.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
+import 'package:flutter_epresence_app/utils/network_endpoint.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -28,6 +28,29 @@ class CutiRepository extends GetConnect {
         }
       } catch (e) {
         log('Error fetching riwayat cuti: $e');
+        rethrow;
+      }
+    }
+    return null;
+  }
+
+  // getSemuaCuti()
+  Future<RiwayatCutiResponse?> getSemuaCuti() async {
+    final String? accessToken = box.read('token');
+    if (accessToken != null) {
+      try {
+        final response = await get(
+          NetworkEndpoint.cutiSemuaRiwayat,
+          headers: {'Authorization': 'Bearer $accessToken'},
+        );
+
+        if (response.statusCode == 200) {
+          return RiwayatCutiResponse.fromJson(response.body);
+        } else {
+          throw Dictionary.defaultError;
+        }
+      } catch (e) {
+        log('Error fetching all cuti(s) history: $e');
         rethrow;
       }
     }
@@ -79,29 +102,6 @@ class CutiRepository extends GetConnect {
         }
       } catch (e) {
         log('Error updating cuti: $e');
-        rethrow;
-      }
-    }
-    return null;
-  }
-
-  // getSemuaCuti()
-  Future<RiwayatCutiResponse?> getSemuaCuti() async {
-    final String? accessToken = box.read('token');
-    if (accessToken != null) {
-      try {
-        final response = await get(
-          NetworkEndpoint.cutiSemuaRiwayat,
-          headers: {'Authorization': 'Bearer $accessToken'},
-        );
-
-        if (response.statusCode == 200) {
-          return RiwayatCutiResponse.fromJson(response.body);
-        } else {
-          throw Dictionary.defaultError;
-        }
-      } catch (e) {
-        log('Error fetching all cuti(s) history: $e');
         rethrow;
       }
     }

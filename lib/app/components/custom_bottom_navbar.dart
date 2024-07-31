@@ -34,52 +34,52 @@ class CustomBottomNavbar extends StatelessWidget {
           : _buildStaffMenuItems(),
     );
   }
+}
 
-  List<BottomNavigationBarItem> _buildAdminMenuItems() {
-    List<BottomNavigationBarItem> items = [
-      _bottomNavigationBarItem(
-        icon: const Icon(Symbols.home_rounded),
-        label: Dictionary.beranda,
-      ),
-      _bottomNavigationBarItem(
-        icon: const Icon(Icons.work_history_outlined),
-        label: Dictionary.presensi,
-      ),
-      _bottomNavigationBarItem(
-        icon: const Icon(Icons.edit_calendar_outlined),
-        label: Dictionary.cuti,
-      ),
-      _bottomNavigationBarItem(
-        icon: const Icon(Icons.person_outline),
-        label: Dictionary.profil,
-      ),
-    ];
+List<BottomNavigationBarItem> _buildAdminMenuItems() {
+  List<BottomNavigationBarItem> items = [
+    _bottomNavigationBarItem(
+      icon: const Icon(Symbols.home_rounded),
+      label: Dictionary.beranda,
+    ),
+    _bottomNavigationBarItem(
+      icon: const Icon(Icons.work_history_outlined),
+      label: Dictionary.presensi,
+    ),
+    _bottomNavigationBarItem(
+      icon: const Icon(Icons.edit_calendar_outlined),
+      label: Dictionary.cuti,
+    ),
+    _bottomNavigationBarItem(
+      icon: const Icon(Icons.person_outline),
+      label: Dictionary.profil,
+    ),
+  ];
 
-    return items;
-  }
+  return items;
+}
 
-  List<BottomNavigationBarItem> _buildStaffMenuItems() {
-    List<BottomNavigationBarItem> items = [
-      _bottomNavigationBarItem(
-        icon: const Icon(Symbols.home_rounded),
-        label: Dictionary.beranda,
-      ),
-      _bottomNavigationBarItem(
-        icon: const Icon(Icons.person_outline),
-        label: Dictionary.profil,
-      ),
-    ];
+List<BottomNavigationBarItem> _buildStaffMenuItems() {
+  List<BottomNavigationBarItem> items = [
+    _bottomNavigationBarItem(
+      icon: const Icon(Symbols.home_rounded),
+      label: Dictionary.beranda,
+    ),
+    _bottomNavigationBarItem(
+      icon: const Icon(Icons.person_outline),
+      label: Dictionary.profil,
+    ),
+  ];
 
-    return items;
-  }
+  return items;
+}
 
-  BottomNavigationBarItem _bottomNavigationBarItem({
-    required Widget icon,
-    required String label,
-  }) {
-    return BottomNavigationBarItem(
-      icon: icon,
-      label: label,
-    );
-  }
+BottomNavigationBarItem _bottomNavigationBarItem({
+  required Widget icon,
+  required String label,
+}) {
+  return BottomNavigationBarItem(
+    icon: icon,
+    label: label,
+  );
 }

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter_epresence_app/app/modules/models/rekapitulasi.dart';
 import 'package:flutter_epresence_app/app/modules/models/response/auth_response.dart';
 import 'package:flutter_epresence_app/app/modules/models/user.dart';
-import 'package:flutter_epresence_app/services/network_endpoint.dart';
+import 'package:flutter_epresence_app/utils/network_endpoint.dart';
 import 'package:flutter_epresence_app/utils/dictionary.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';

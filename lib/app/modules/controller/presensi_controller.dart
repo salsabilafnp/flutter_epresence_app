@@ -74,6 +74,28 @@ class PresensiController extends GetxController {
     }
   }
 
+  // getSemuaPresensi()
+  Future<void> getSemuaPresensi() async {
+    if (isLoading.value) return;
+    isLoading.value = true;
+
+    try {
+      final RiwayatPresensiResponse? response =
+          await _presensiRepository.getSemuaPresensi();
+      if (response != null && response.daftarPresensi != null) {
+        semuaPresensi.value = response.daftarPresensi!;
+      }
+    } catch (e) {
+      Get.snackbar(
+        Dictionary.defaultError,
+        e.toString(),
+        margin: const EdgeInsets.all(20),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   // reloadData
   Future<void> reloadData() async {
     presensi.clear();
@@ -85,7 +107,7 @@ class PresensiController extends GetxController {
     }
   }
 
-  // filtePresensi
+  // filterPresensi
   void _terapkanFilter() {
     if (dariTanggal.value != null && sampaiTanggal.value != null) {
       presensiFilter.value = presensi.where((attendance) {
@@ -142,24 +164,32 @@ class PresensiController extends GetxController {
   // catatPresensiMasuk(presensi)
   Future<void> catatPresensiMasuk() async {
     try {
-      final response = await _presensiRepository.catatPresensiMasuk(
-          _geolocationService.currentPosition.value!.latitude,
-          _geolocationService.currentPosition.value!.longitude);
+      if (isLokasiValid.value) {
+        final response = await _presensiRepository.catatPresensiMasuk(
+            _geolocationService.currentPosition.value!.latitude,
+            _geolocationService.currentPosition.value!.longitude);
 
-      if (response!.presensi != null) {
-        onInit();
-        Get.back();
+        if (response!.presensi != null) {
+          onInit();
+          Get.back();
+          Get.snackbar(
+            Dictionary.defaultSuccess,
+            Dictionary.suksesPresensiMasuk,
+            margin: const EdgeInsets.all(20),
+          );
+          if (_authController.user.value!.role == 'admin') {
+            Get.offAllNamed(RouteNames.bottomNavBar,
+                parameters: {'role': Dictionary.staff});
+          } else {
+            _authController.cekRole();
+          }
+        }
+      } else {
         Get.snackbar(
-          Dictionary.defaultSuccess,
-          Dictionary.suksesPresensiMasuk,
+          Dictionary.defaultError,
+          pesanLokasiValid.value,
           margin: const EdgeInsets.all(20),
         );
-        if (_authController.user.value!.role == 'admin') {
-          Get.offAllNamed(RouteNames.bottomNavBar,
-              parameters: {'role': Dictionary.staff});
-        } else {
-          _authController.cekRole();
-        }
       }
     } catch (e) {
       Get.snackbar(
@@ -173,24 +203,32 @@ class PresensiController extends GetxController {
   // catatPresensiPulang(presensi)
   Future<void> catatPresesiPulang() async {
     try {
-      final response = await _presensiRepository.catatPresensiPulang(
-          _geolocationService.currentPosition.value!.latitude,
-          _geolocationService.currentPosition.value!.longitude);
+      if (isLokasiValid.value) {
+        final response = await _presensiRepository.catatPresensiPulang(
+            _geolocationService.currentPosition.value!.latitude,
+            _geolocationService.currentPosition.value!.longitude);
 
-      if (response != null) {
-        onInit();
-        Get.back();
+        if (response != null) {
+          onInit();
+          Get.back();
+          Get.snackbar(
+            Dictionary.defaultSuccess,
+            Dictionary.suksesPresensiPulang,
+            margin: const EdgeInsets.all(20),
+          );
+          if (_authController.user.value!.role == 'admin') {
+            Get.offAllNamed(RouteNames.bottomNavBar,
+                parameters: {'role': Dictionary.staff});
+          } else {
+            _authController.cekRole();
+          }
+        }
+      } else {
         Get.snackbar(
-          Dictionary.defaultSuccess,
-          Dictionary.suksesPresensiPulang,
+          Dictionary.defaultError,
+          pesanLokasiValid.value,
           margin: const EdgeInsets.all(20),
         );
-        if (_authController.user.value!.role == 'admin') {
-          Get.offAllNamed(RouteNames.bottomNavBar,
-              parameters: {'role': Dictionary.staff});
-        } else {
-          _authController.cekRole();
-        }
       }
     } catch (e) {
       Get.snackbar(
@@ -198,28 +236,6 @@ class PresensiController extends GetxController {
         Dictionary.gagalPresensiPulang,
         margin: const EdgeInsets.all(20),
       );
-    }
-  }
-
-  // getSemuaPresensi()
-  Future<void> getSemuaPresensi() async {
-    if (isLoading.value) return;
-    isLoading.value = true;
-
-    try {
-      final RiwayatPresensiResponse? response =
-          await _presensiRepository.getSemuaPresensi();
-      if (response != null && response.daftarPresensi != null) {
-        semuaPresensi.value = response.daftarPresensi!;
-      }
-    } catch (e) {
-      Get.snackbar(
-        Dictionary.defaultError,
-        e.toString(),
-        margin: const EdgeInsets.all(20),
-      );
-    } finally {
-      isLoading.value = false;
     }
   }
 
@@ -264,8 +280,6 @@ class PresensiController extends GetxController {
       );
     }
   }
-
-  // pengingatPresensi()
 
   // validasiLokasi()
   Future<void> validasiLokasi() async {
